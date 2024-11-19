@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lab: Install MicroShift from RPM Packages :: Deploying MicroShift on Red Hat Device Edge</title>
+    <link rel="prev" href="index.html">
+    <link rel="next" href="../ch3-image/index.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Deploying MicroShift on Red Hat Device Edge</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/rhde-microshift/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header><div class="body">
+<div class="nav-container" data-component="rhde-microshift" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../ch1-microshift/index.html">Introduction to Red Hat Build of MicroShift</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Deploy MicroShift on RHEL Servers</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="s2-install.html">Lab: Install MicroShift from RPM Packages</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../ch3-image/index.html">Deploy MicroShift on Edge Devices</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Deploying MicroShift on Red Hat Device Edge</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Deploying MicroShift on Red Hat Device Edge</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <a class="title" href="../../../samples/1/index.html">samples</a>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../samples/1/index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></li>
+    <li><a href="index.html">Deploy MicroShift on RHEL Servers</a></li>
+    <li><a href="s2-install.html">Lab: Install MicroShift from RPM Packages</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Lab: Install MicroShift from RPM Packages</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Estimated reading time: <strong>5 minutes</strong>.</em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Objective</dt>
+<dd>
+<p>Install MicroShift in a RHEL VM.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Work In Progress
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_before_you_begin"><a class="anchor" href="#_before_you_begin"></a>Before you Begin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need a <em>test machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install MicroShift.</p>
+</div>
+<div class="paragraph">
+<p>You also need a <em>package server machine</em> already configured to serve DNF repositories for the RHEL BaseOS, RHEL AppStream, RHEL Fast Data Path, and Red Hat OpenShift Container Platform. Make sure that your <em>package server machine</em> machine was configured and verified by following the instructions from the <a href="#ch1-microshift:s3-prepare-lab.adoc" class="xref unresolved">first lab</a>.</p>
+</div>
+<div class="paragraph">
+<p>These instructions were tested on RHEL 9.4 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the course classroom, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>, and you start SSH sessions from <code>workstation</code> VM to the <code>serverb</code> VM, which is your <em>test machine</em>, using the same user. If not, please adapt the instructions to your test environment.</p>
+</div>
+<div class="paragraph">
+<p>You will perform most steps in this lab on your <em>test machine</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log in on your <em>test machine</em> and verify that you have the prerequisites from previous labs.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Check that the required package repositories from RHEL and OpenShift are available. If you are connected to the Internet and registed your <em>test machine</em> with a valid Red Hat subscription, you would see something similar to:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf repolist</strong>
+Updating Subscription Management repositories.
+repo id                                                         repo name
+fast-datapath-for-rhel-9-x86_64-rpms                            Fast Datapath for RHEL 9 x86_64 (RPMs)
+rhel-9-for-x86_64-appstream-rpms                                Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+rhel-9-for-x86_64-baseos-rpms                                   Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+rhocp-4.17-for-rhel-9-x86_64-rpms                               Red Hat OpenShift Container Platform 4.17 for RHEL 9 x86_64 (RPMs)</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Please, do <em>not</em> register any VM on your virtual labs. Please conserve the limited Internet bandwidth which is shared by all learners using ROLE.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>On the classroom environment, you will find configuration files which point to the <em>package server machine</em> and the names of its DNF repositories match the names of Red Hat DNF repositories.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ls /etc/yum.repos.d</strong>
+[GRAB OUTPUT]
+$ <strong>cat /etc/yum.repos.d/ocp4.repo</strong>
+[rhocp-4.17-for-rhel-9-x86_64-rpms]
+baseurl = http://servera.lab.example.com/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms
+enabled = true
+gpgcheck = true
+gpgkey = http://content.example.com/rhel9.4/x86_64/dvd/RPM-GPG-KEY-redhat-release
+name = Red Hat OpenShift 4.17</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>As an additional sanity check, search from packages from the OpenShift and RHEL Fast Data Path repositories.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>dnf search microshift</strong>
+[GRAB OUTPUT]
+$ <strong>dnf search ovn24.09-central</strong>
+[GRAB OUTPUT]</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Get a pull secret with access to the MicroShift container images</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>In a system connected to the internet, you would get the pull secret from your Red Hat account from the Red Hat Hybrid Cloud Console.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Please, do <em>not</em> use your pull secret with VMs on your virtual labs. Please stick to the scenario of an air-gapped deployment of MicroShift, where your IT Operations already configured all local network infrastructure required for deploying Red Hat Device Edge.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>On the classroom environment, there is a pre-generated pull secret with provides access to your mirror registry.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cat [FILE NAME TBD]</strong>
+[rhocp-4.17-for-rhel-9-x86_64-rpms]
+baseurl = http://servera.lab.example.com/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms
+enabled = true
+gpgcheck = true
+gpgkey = http://content.example.com/rhel9.4/x86_64/dvd/RPM-GPG-KEY-redhat-release
+name = Red Hat OpenShift 4.17</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>As a sanity check, use the pull secret to inspect container images on the mirror registry.</p>
+<div class="paragraph">
+<p>[ NEED AN IMAGE FROM REDHAT REGISTRIES THAT IS MIRROED IN CLASSROOM, WITH AN EASY NAME&#8230;&#8203; LIKE ONE I WOULD USE FOR AN SMOKE TEST]</p>
+</div>
+<div class="paragraph">
+<p>[ UBI IMAGES HAVE DIFFERENT NAMES IN RED HAT AND DOCKER HUB :-(]</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ * skopeo --authfile inspect docker://registry.lab.example.com/ubi9/ubi | head -n 5*
+[GRAB OUTPUT]</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The command above should work with your actual Red Hat pull secret if you change the hostname to <code>redhat.registry.io</code>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Install the MicroShift packages.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>You need only one package called <code>microshift</code> but pay attention to its dependency list. You will see packages that provide CRI-O and other components of OpenShift, and also packages from Open Virtual Networking (OVN).</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If your system prompts about importing GPG keys, answer "Y".
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ sudo dnf install microshift
+[GRAB PACKAGE LIST]</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Configure MicroShift</p>
+</li>
+<li>
+<p>Start and Enable MicroShift</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_next_steps"><a class="anchor" href="#_next_steps"></a>Next Steps</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Lorem ipsum</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="index.html">Deploy MicroShift on RHEL Servers</a></span>
+  <span class="next"><a href="../ch3-image/index.html">Deploy MicroShift on Edge Devices</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
