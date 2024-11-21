@@ -127,7 +127,7 @@
 <dl>
 <dt class="hdlist1">Objective</dt>
 <dd>
-<p>Install MicroShift in a RHEL VM that is not connected to the Internet.</p>
+<p>Install MicroShift in a RHEL VM that is <em>not</em> connected to the Internet.</p>
 </dd>
 </dl>
 </div>
@@ -152,7 +152,10 @@ Work In Progress
 <p>You need a <em>test machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install MicroShift.</p>
 </div>
 <div class="paragraph">
-<p>You also need a <em>package server machine</em> already configured to serve DNF repositories for the RHEL BaseOS, RHEL AppStream, Fast Data Path for RHEL 9, and Red Hat OpenShift Container Platform. Make sure that your <em>package server machine</em> machine was configured and verified by following the instructions from the <a href="#ch1-microshift:s3-prepare-lab.adoc" class="xref unresolved">first lab</a>.</p>
+<p>You also need a <em>package server machine</em> already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, Fast Data Path, and Red Hat OpenShift Container Platform. Make sure that your <em>package server machine</em> machine was configured and verified by following the instructions from the <a href="#ch1-microshift:s3-prepare-lab.adoc" class="xref unresolved">first lab</a>.</p>
+</div>
+<div class="paragraph">
+<p>Finally, you need a <em>mirror registry</em> machine, already configured with a mirror registry for Red Hat OpenShift and pre-populared with container images required by MicroShift and applications samples. Make sure that your <em>mirror registry machine</em> machine was configured and verified by following the instructions from the <a href="#ch1-microshift:s3-prepare-lab.adoc" class="xref unresolved">first lab</a>.</p>
 </div>
 <div class="paragraph">
 <p>These instructions were tested on RHEL 9.4 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
@@ -161,7 +164,7 @@ Work In Progress
 <p>If you are using the course classroom, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>, and you start SSH sessions from <code>workstation</code> VM to the <code>serverb</code> VM, which is your <em>test machine</em>, using the same user. If not, please adapt the instructions to your test environment.</p>
 </div>
 <div class="paragraph">
-<p>You will perform most steps in this lab on your <em>test machine</em>.</p>
+<p>You will perform all steps in this lab on your <em>test machine</em>.</p>
 </div>
 </div>
 </div>
@@ -218,7 +221,7 @@ enabled = true
 </div>
 </li>
 <li>
-<p>As an additional sanity check, search from packages from the OpenShift and RHEL Fast Data Path repositories.</p>
+<p>As an additional sanity check, search for packages from the OpenShift and RHEL Fast Data Path repositories.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>dnf search microshift</strong>
@@ -239,6 +242,28 @@ ovn24.09-central.x86_64 : Open Virtual Network support</code></pre>
 <p>Verify that your <em>test machine</em> can access a mirror container image registry that is pre-populared with the container images required by MicroShift.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
+<li>
+<p>Install the container tools packages, if they are not already installed on your <em>test machine</em>. They are <em>not</em> strictly required to run MicroShift, but they do provide some troubleshooting tools which can be valuable in a development environment.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If your <em>test machine</em> prompts about importing GPG keys, answer "y".
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install container-tools</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
 <li>
 <p>Download a pull secret with enables access to the MicroShift container images.</p>
 <div class="paragraph">
@@ -264,7 +289,7 @@ Please, do <em>not</em> use your pull secret with VMs on your virtual labs. Plea
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cat mirror-pull-registry</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cat mirror-pull-secret</strong>
 {
 	"auths": {
 		"registry.lab.example.com:8443": {
@@ -273,6 +298,9 @@ Please, do <em>not</em> use your pull secret with VMs on your virtual labs. Plea
 	}
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Encoded in the <code>auth</code> field of that pull secret are the <code>microshift</code> username and <code>redhat123</code> password.</p>
 </div>
 </li>
 <li>
@@ -288,7 +316,7 @@ $ <strong>sudo update-ca-trust</strong></code></pre>
 <p>As a sanity check, use the pull secret to inspect container images on the mirror registry. It should worth with TLS validation enabled, which is the default for all container tools.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>skopeo inspect --authfile mirror-pull-secret '{{.RepoTags}}' docker://registry.lab.example.com:8443/ubi9/ubi</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>skopeo inspect --authfile mirror-pull-secret -f '{{.RepoTags}}' docker://registry.lab.example.com:8443/ubi9/ubi</strong>
 [latest]</code></pre>
 </div>
 </div>
@@ -343,9 +371,22 @@ public (active)
 </div>
 </li>
 <li>
+<p>Check that you have two CPU cores and at least 2GB of memory. If you are using the classroom environment, you have more memory than required on the <code>serverb</code> VM.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>nproc</strong>
+2
+$ <strong>free -h</strong>
+               total        used        free      shared  buff/cache   available
+Mem:           3.6Gi       803Mi       2.6Gi        27Mi       456Mi       2.8Gi
+Swap:             0B          0B          0B</code></pre>
+</div>
+</div>
+</li>
+<li>
 <p>Check that you have some GB of free disk space on whatever filesystem holds <code>/var/lib/containers</code> so you can store container images and ephemeral storage layers from CRI-O containers.</p>
 <div class="paragraph">
-<p>In the classroom environment, it is on the root partition of your <em>test machine</em>.</p>
+<p>In the classroom environment, it is on the root partition of the <code>serverb</code> VM.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -371,24 +412,39 @@ Filesystem             Size  Used Avail Use% Mounted on
 <li>
 <p>Install the MicroShift packages.</p>
 <div class="paragraph">
-<p>You need only one package called <code>microshift</code> but pay attention to its dependency list. You will see packages that provide CRI-O and other components of OpenShift, and also packages from Open Virtual Networking (OVN).</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-If your system prompts about importing GPG keys, answer "Y".
-</td>
-</tr>
-</table>
+<p>You need only one package, called <code>microshift</code>, but pay attention to its dependency list. You will see packages from OpenShift, such as <code>crio</code>; packages from RHEL for Edge, like <code>greenboot</code>; and also packages from Fast Data Path for RHEl 9, which provide Open Virtual Networking (OVN).</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install microshift</strong>
-[GRAB PACKAGE LIST]</code></pre>
+...
+Installing:
+ microshift                            x86_64      4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9        rhocp-4.17-for-rhel-9-x86_64-rpms          53 M
+Installing dependencies:
+ NetworkManager-ovs                    x86_64      1:1.46.0-4.el9_4                                           rhel-9.4-for-x86_64-appstream-rpms         65 k
+ conntrack-tools                       x86_64      1.4.7-2.el9                                                rhel-9.4-for-x86_64-appstream-rpms        239 k
+ cri-o                                 x86_64      1.30.6-6.rhaos4.17.git6ac6e96.el9                          rhocp-4.17-for-rhel-9-x86_64-rpms          18 M
+ cri-tools                             x86_64      1.30.0-5.el9                                               rhocp-4.17-for-rhel-9-x86_64-rpms          10 M
+ greenboot                             x86_64      0.15.4-1.el9                                               rhel-9.4-for-x86_64-appstream-rpms         41 k
+ libnetfilter_cthelper                 x86_64      1.0.0-22.el9                                               rhel-9.4-for-x86_64-appstream-rpms         26 k
+ libnetfilter_cttimeout                x86_64      1.0.0-19.el9                                               rhel-9.4-for-x86_64-appstream-rpms         25 k
+ libnetfilter_queue                    x86_64      1.0.5-1.el9                                                rhel-9.4-for-x86_64-appstream-rpms         31 k
+ microshift-greenboot                  noarch      4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9        rhocp-4.17-for-rhel-9-x86_64-rpms          21 k
+ microshift-networking                 x86_64      4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9        rhocp-4.17-for-rhel-9-x86_64-rpms          21 k
+ microshift-selinux                    noarch      4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9        rhocp-4.17-for-rhel-9-x86_64-rpms          26 k
+ openshift-clients                     x86_64      4.17.0-202410161505.p0.g897ef0b.assembly.stream.el9        rhocp-4.17-for-rhel-9-x86_64-rpms          54 M
+ openvswitch-selinux-extra-policy      noarch      1.0-36.el9fdp                                              fast-datapath-for-rhel-9-x86_64-rpms       11 k
+ openvswitch3.4                        x86_64      3.4.0-1.el9fdp                                             fast-datapath-for-rhel-9-x86_64-rpms      6.8 M
+ rpm-ostree                            x86_64      2024.3-1.el9                                               rhel-9.4-for-x86_64-appstream-rpms        4.1 M
+ rpm-ostree-libs                       x86_64      2024.3-1.el9                                               rhel-9.4-for-x86_64-appstream-rpms         25 k
+ runc                                  x86_64      4:1.1.14-2.rhaos4.17.el9                                   rhocp-4.17-for-rhel-9-x86_64-rpms         3.2 M
+ unbound-libs                          x86_64      1.16.2-3.el9_3.3                                           rhel-9.4-for-x86_64-appstream-rpms        553 k
+
+Transaction Summary
+==============================================================================================================================================================
+Install  19 Packages
+...
+Complete!</code></pre>
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -408,6 +464,15 @@ Do not try to start MicroShift yet!
 <p>Configure MicroShift to use your mirror registry.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
+<li>
+<p>Copy the pull secret to the CRI-O configuration directory, so MicroShift uses it for pulling container images for any pod, in any namespace.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo cp mirror-pull-secret /etc/crio/openshift-pull-secret</strong>
+$ <strong>sudo chmod 600 /etc/crio/openshift-pull-secret</strong></code></pre>
+</div>
+</div>
+</li>
 <li>
 <p>Download a CRI-O registry configuration, from <a href="https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/999-microshift-mirror.conf">GitHub</a>, that redirects contaimer images from Red Hat Registries and Quay.io to the
 mirror registry.</p>
@@ -481,20 +546,25 @@ If you skip that step, some Red Hat add-on operator images will fail to run from
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Be patient, it will take a few moments until MicroShift generates Kubernetes configuration files, pulls all its containers, and starts its services and pods. Be warned that it will NOT be ready when the <code>systemctl start</code> command returns.</p>
+<p>Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Be warned that it will <em>not</em> be ready yet when the <code>systemctl start</code> command returns.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>systemctl enable microshift</strong>
-$ <strong>systemctl start microshift</strong></code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl enable microshift</strong>
+Created symlink /etc/systemd/system/multi-user.target.wants/microshift.service → /usr/lib/systemd/system/microshift.service.
+Created symlink /etc/systemd/system/multi-user.target.wants/microshift-cleanup-kubelet.service → /usr/lib/systemd/system/microshift-cleanup-kubelet.service.
+$ <strong>sudo systemctl start microshift</strong></code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Check that the microshift service, which includes the Kubernetes core daemons, has started, and shows no errors on its logs, but be warned that having a healthy MicroShift service does NOT mean it&#8217;s fully ready and available.</p>
+<p>Check that the microshift service, which includes the Kubernetes core daemons, has started, and shows no errors on its logs, but be warned that having a healthy MicroShift service does <em>not</em> mean it&#8217;s fully ready and available.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl status microshift</strong>
-[GRAB OUTPUT]</code></pre>
+● microshift.service - MicroShift
+     Loaded: loaded (/usr/lib/systemd/system/microshift.service; enabled; preset: disabled)
+     Active: active (running) since Thu 2024-11-21 22:30:19 UTC; 4s ago
+...</code></pre>
 </div>
 </div>
 </li>
@@ -515,7 +585,19 @@ $ <strong>sudo chown student:student ~/local-admin</strong></code></pre>
 </div>
 </li>
 <li>
-<p>Check all pods running on MicroShift. It may take a while until all of them are ready and running.</p>
+<p>Check all pods running on MicroShift. It may take a while, so repeat the following command until all pods are ready and running.</p>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Some pods may enter a error state for a while, and recover by themselves after a few minutes. Do not panic if you see a status of <code>CrashLoopBackOff</code> or <code>Error</code>.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/local-admin get pod -A</strong>
@@ -535,9 +617,12 @@ openshift-storage      	vg-manager-tjrs2                       	1/1 	Running   0
 </li>
 <li>
 <p>As an additional sanity check, verify that your Kubernetes cluster contains one node which takes the roles of both control plane and worker node.</p>
+<div class="paragraph">
+<p>[ PODS ARE NOT RECOVERING :-( but node reports ready ]</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig local-admin get node</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/local-admin get node</strong>
 NAME 	STATUS   ROLES                     	AGE 	VERSION
 rhelvm   Ready	control-plane,master,worker   7m31s   v1.30.5</code></pre>
 </div>
@@ -558,7 +643,7 @@ rhelvm   Ready	control-plane,master,worker   7m31s   v1.30.5</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The way we configured MicroShift, it does NOT contain a pull secret to download container images from Red Hat, even if it has access to the Internet. It can only pull containers from its mirror registry, which is usually what organizations with stricty security policies demand.
+The way we configured MicroShift, it does <em>not</em> contain a pull secret to download container images from Red Hat, even if it has access to the Internet. It can only pull containers from its mirror registry, which is usually what organizations with stricty security policies demand.
 </td>
 </tr>
 </table>
