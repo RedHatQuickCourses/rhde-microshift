@@ -224,7 +224,7 @@ enabled = true
 </div>
 </li>
 <li>
-<p>As an additional sanity check, search for packages from the OpenShift and RHEL Fast Data Path repositories.</p>
+<p>As an additional validation, search for packages from the OpenShift and RHEL Fast Data Path repositories.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>dnf search microshift</strong>
@@ -316,7 +316,7 @@ $ <strong>sudo update-ca-trust</strong></code></pre>
 </div>
 </li>
 <li>
-<p>As a sanity check, use the pull secret to inspect container images on the mirror registry. It should work with TLS validation enabled, which is the default for all container tools.</p>
+<p>As a validation, use the pull secret to inspect container images on the mirror registry. It should work with TLS validation enabled, which is the default for all container tools.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>skopeo inspect --authfile mirror-pull-secret -f '{{.RepoTags}}' docker://registry.lab.example.com:8443/ubi9/ubi</strong>
@@ -656,7 +656,7 @@ openshift-storage      	vg-manager-tjrs2                       	1/1 	Running   0
 </div>
 </li>
 <li>
-<p>As an additional sanity check, verify that your Kubernetes cluster contains one node which takes the roles of both control plane and worker node.</p>
+<p>As an additional validation, verify that your Kubernetes cluster contains one node which takes the roles of both control plane and worker node.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/local-admin get node</strong>
