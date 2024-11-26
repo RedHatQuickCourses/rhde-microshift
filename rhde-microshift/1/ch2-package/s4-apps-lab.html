@@ -564,6 +564,10 @@ deployment.apps "hello" deleted</code></pre>
 <p>[ didn&#8217;t need firewall updates on the test machine to use ingress or load balancer. shouldn&#8217;t it? because it&#8217;s on a trusted network on workstation, and it would fail from serverb? ]</p>
 </div>
 <div class="paragraph">
+<p>[ looks like MicroShift automatically adds firewall rules for ingress, load balancers, and node ports
+<a href="https://docs.redhat.com/en/documentation/red_hat_build_of_microshift/4.17/html/networking/microshift-using-a-firewall#microshift-firewall-update-for-service_microshift-firewall" class="bare">https://docs.redhat.com/en/documentation/red_hat_build_of_microshift/4.17/html/networking/microshift-using-a-firewall#microshift-firewall-update-for-service_microshift-firewall</a> ]</p>
+</div>
+<div class="paragraph">
 <p>With these two test deployments, you verified that your MicroShift instance can provide persistent storage and ingress network connectivity to its applications.</p>
 </div>
 </div>
