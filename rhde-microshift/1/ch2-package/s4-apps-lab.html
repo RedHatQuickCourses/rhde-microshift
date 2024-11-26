@@ -271,8 +271,6 @@ mysql&gt;
 mysql&gt; create table test (id integer primary key, data varchar(200)) ;
 Query OK, 0 rows affected (0.17 sec)
 
-mysql&gt; insert into test (1, 'one');
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1, 'one')' at line 1
 mysql&gt; insert into test values (1, 'one');
 Query OK, 1 row affected (0.02 sec)
 
@@ -314,7 +312,10 @@ $ sudo lvs rhel/$LV
 <div class="paragraph">
 <p>$ oc delete deployment db
 deployment.apps "db" deleted
-$ oc delete pvc dbdata</p>
+$ oc delete pvc dbdata
+persistentvolumeclaim "dbdata" deleted
+$ oc --as admin get pv
+No resources found</p>
 </div>
 </li>
 </ol>
@@ -326,11 +327,111 @@ $ oc delete pvc dbdata</p>
 <li>
 <p>Lorem ipsum</p>
 <div class="paragraph">
-<p>[ quotes app from helm chart to test declarative (or from simple manifests?)]</p>
+<p>[ Show an LB service with the mysql pod? Seems very easy: <a href="https://github.com/openshift/microshift/blob/main/docs/user/howto_load_balancer.md" class="bare">https://github.com/openshift/microshift/blob/main/docs/user/howto_load_balancer.md</a>]</p>
 </div>
+</li>
+<li>
+<p>Lorem ipsum</p>
 </li>
 </ol>
 </div>
+</div>
+</div>
+<div class="paragraph">
+<p>[student@workstation ~]$ oc create deployment hellophp --image quay.io/flozanorht/php-ubi:9
+deployment.apps/hellophp created
+[student@workstation ~]$ oc get deployment.pod
+error: the server doesn&#8217;t have a resource type "deployment"
+[student@workstation ~]$ oc get deployment,pod
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/hellophp   1/1     1            1           37s</p>
+</div>
+<div class="paragraph">
+<p>NAME                            READY   STATUS    RESTARTS   AGE
+pod/hellophp-7fd66dd674-2bnjc   1/1     Running   0          37s
+[student@workstation ~]$
+[student@workstation ~]$ oc logs pod/hellophp-7fd66dd674-2bnjc
+[26-Nov-2024 15:51:47] NOTICE: [pool www] 'user' directive is ignored when FPM is not running as root
+[26-Nov-2024 15:51:47] NOTICE: [pool www] 'group' directive is ignored when FPM is not running as root
+AH00558: httpd: Could not reliably determine the server&#8217;s fully qualified domain name, using 10.42.0.11. Set the 'ServerName' directive globally to suppress this message</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>+</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>[student@workstation ~]$ oc port-forward 8080:8080 pod/hellophp-7fd66dd674-2bnjc
+Error from server (NotFound): pods "8080:8080" not found
+[student@workstation ~]$ oc port-forward -p 8080:8080 pod/hellophp-7fd66dd674-2bnjc
+error: unknown shorthand flag: 'p' in -p
+See 'oc port-forward --help' for usage.
+[student@workstation ~]$ oc port-forward pod/hellophp-7fd66dd674-2bnjc 8080:8080
+Forwarding from 127.0.0.1:8080 &#8594; 8080
+Forwarding from [::1]:8080 &#8594; 8080
+Handling connection for 8080
+^C[student@workstation ~]$
+[student@workstation ~]$ oc expose deployment/hellophp
+error: couldn&#8217;t find port via --port flag or introspection
+[student@workstation ~]$ oc expose deployment/hellophp --port 8080
+service/hellophp exposed</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>+</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>[student@workstation ~]$ oc get service
+NAME       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+hellophp   ClusterIP   10.43.136.146   &lt;none&gt;        8080/TCP   10s
+[student@workstation ~]$ oc expose service hellophp
+Error from server (Forbidden): routes.route.openshift.io is forbidden: User "system:serviceaccount:user:user" cannot create resource "routes" in API group "route.openshift.io" in the namespace "user"
+[student@workstation ~]$
+[student@workstation ~]$
+[student@workstation ~]$ oc --as admin expose service hellophp
+route.route.openshift.io/hellophp exposed
+[student@workstation ~]$ oc get route
+Error from server (Forbidden): routes.route.openshift.io is forbidden: User "system:serviceaccount:user:user" cannot list resource "routes" in API group "route.openshift.io" in the namespace "user"
+[student@workstation ~]$ oc --as admin get route
+NAME       HOST                             ADMITTED   SERVICE    TLS
+hellophp   hellophp-user.apps.example.com   True       hellophp
+[student@workstation ~]$
+[student@workstation ~]$ sudo vi /etc/hosts
+[sudo] password for student:
+[student@workstation ~]$ curl <a href="http://hellophp-user.apps.example.com" class="bare">http://hellophp-user.apps.example.com</a>
+&lt;html&gt;
+&lt;body&gt;
+Hello, world!
+&lt;/body&gt;
+&lt;/html&gt;</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>+</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>$ oc expose deployment/hellophp --port 8080 --type LoadBalancer
+service/hellophp exposed
+$ oc get service
+NAME       TYPE           CLUSTER-IP      EXTERNAL-IP       PORT(S)          AGE
+hellophp   LoadBalancer   10.43.189.145   172.25.250.11     8080:31736/TCP   28s
+$ curl <a href="http://serverb:8080" class="bare">http://serverb:8080</a>
+&lt;html&gt;
+&lt;body&gt;
+Hello, world!
+&lt;/body&gt;
+&lt;/html&gt;</p>
+</div>
+<div class="openblock">
+<div class="content">
 <div class="paragraph">
 <p>You now have [ SOMETHING ] or did [ SOMETHING ]</p>
 </div>
