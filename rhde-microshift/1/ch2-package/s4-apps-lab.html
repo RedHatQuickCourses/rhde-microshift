@@ -323,7 +323,7 @@ Bye</code></pre>
 </div>
 </li>
 <li>
-<p>Return to the first terminal, running the <code>oc port-forward</code> command, and terminate the networkl tunnel with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
+<p>Return to the first terminal, running the <code>oc port-forward</code> command, and terminate the network tunnel with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
 </li>
 </ol>
 </div>
@@ -431,7 +431,7 @@ hello      hello-user.apps.example.com      True       hello</code></pre>
 </div>
 </li>
 <li>
-<p>Edit the <code>/etc/hosts</code> file to map the host name of the route to the IP address of your <em>test machine</em> by appending the following line:</p>
+<p>Edit your <code>/etc/hosts</code> file to map the host name of the route to the IP address of your <em>test machine</em> by appending the following line:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">172.25.250.11 hello-user.apps.example.com</code></pre>
@@ -485,11 +485,11 @@ service "hello" deleted</code></pre>
 <p>Create a service of type load balancer and get its external IP address. That address should match the IP address of your <em>test machine</em>. You could choose any TCP port that is free on your <em>test machine</em>, but for simplicity we pick the same TCP port the hellp world applications uses inside its container.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc expose deployment/hellophp --port 8080 --type LoadBalancer</strong>
-service/hellophp exposed
-$ oc get service
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc expose deployment/hello --port 8080 --type LoadBalancer</strong>
+service/hello exposed
+$ <strong>oc get service</strong>
 NAME       TYPE           CLUSTER-IP      EXTERNAL-IP       PORT(S)          AGE
-hellophp   LoadBalancer   10.43.189.145   172.25.250.11     8080:31736/TCP   28s</code></pre>
+hello      LoadBalancer   10.43.189.145   172.25.250.11     8080:31736/TCP   28s</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -522,13 +522,13 @@ Hello, world!
 <p>If you would prefer to get rid of the node port, you can perform the following commands to patch the service resource.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc patch service hellophp --type json --patch '[{"op": "replace", "path": "/spec/allocateLoadBalancerNodePorts", "value": false }]'</strong>
-service/hellophp patched
-$ <strong>oc patch service hellophp --type json --patch '[{"op": "remove", "path": "/spec/ports/0/nodePort"}]'
-service/hellophp patched</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc patch service hello --type json --patch '[{"op": "replace", "path": "/spec/allocateLoadBalancerNodePorts", "value": false }]'</strong>
+service/hello patched
+$ <strong>oc patch service hello --type json --patch '[{"op": "remove", "path": "/spec/ports/0/nodePort"}]'
+service/hello patched</strong>
 $ <strong>oc get service</strong>
 NAME       TYPE           CLUSTER-IP    EXTERNAL-IP       PORT(S)    AGE
-hellophp   LoadBalancer   10.43.25.48   192.168.122.192   8080/TCP   13m</code></pre>
+hello      LoadBalancer   10.43.25.48   172.25.250.11     8080/TCP   13m</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -548,11 +548,14 @@ $ <strong>oc delete pvc dbdata</strong>
 persistentvolumeclaim "dbdata" deleted
 $ <strong>oc --as admin get pv</strong>
 No resources found
-$ <strong>oc delete deployment hello</strong>
-deployment.apps "hello" deleted
 $ <strong>oc delete service hello</strong>
-service "hello" deleted.</code></pre>
+service "hello" deleted.
+$ <strong>oc delete deployment hello</strong>
+deployment.apps "hello" deleted</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>You can also undo the edits to your <code>/etc/hosts</code> file.</p>
 </div>
 </li>
 </ol>
