@@ -359,7 +359,10 @@ MicroShift brings the power and scalability of Kubernetes to the edge, as a natu
 <p>Managing MicroShift, on the other hand, requires using traditional RHEL tools, such as the DNF package manager, Systemd, and SSH. Red Hat OpenShift is a complete application platform by itself, which provides a cloud-like experience, while MicroShift is closer to "just" a Kubernetes which you run on RHEL to manage containerized applications.</p>
 </div>
 <div class="paragraph">
-<p>Finally, MicroShift clusters are always single node. If you need HA, you have to either consider RHEL HA services, such as Pacemaker, or consider Red Hat OpenShift editions.</p>
+<p>Finally, MicroShift clusters are always single node. If you need HA, you have to either consider RHEL HA services, such as Pacemaker, or consider Red Hat OpenShift editions. If you need horizontal scalability among multiple nodes, or vertical scalability to larger servers, you should also consider Red Hat OpenShift editions. On the other hand, MicroShift integrates well with other features of RHEL for Edge, for example the Greenboot capability of rolling back system upgrades to a previously known good image.</p>
+</div>
+<div class="paragraph">
+<p>You can run MicroShift in cloud instances, if you wish, but MicroShift lacks the integration components to use cloud auto-scaling, cloud storage, and cloud load balancers. It is really designed for small physical edge devices, and provides all componentes required by those devices as an integrated product, while upstream Kubernetes would require that you add, configure, and integrate a number of third-party componentes such as network providers, storage providers, ingress controllers, and service discovery, at mininum.</p>
 </div>
 </div>
 </div>
