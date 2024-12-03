@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lab: Access MicroShift as a Developer or Platform Engineer :: Deploying MicroShift on Red Hat Device Edge</title>
+    <link rel="prev" href="s2-install-lab.html">
+    <link rel="next" href="s4-apps-lab.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Deploying MicroShift on Red Hat Device Edge</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/rhde-microshift/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header><div class="body">
+<div class="nav-container" data-component="rhde-microshift" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../ch1-microshift/index.html">Introduction to Red Hat Build of MicroShift</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch1-microshift/s1-microshift-vs-ocp.html">Introduction to MicroShift and Red Hat Device Edge</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch1-microshift/s3-prepare-lab.html">Lab: Prepare a Test Environment</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Deploy MicroShift on RHEL Servers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s1-install-config.html">Install and Configure MicroShift on Package-Based RHEL</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s2-install-lab.html">Lab: Install MicroShift from RPM Packages</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="s3-access-lab.html">Lab: Access MicroShift as a Developer or Platform Engineer</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s4-apps-lab.html">Lab: Deploy Kubernetes Applications in MicroShift</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../ch3-image/index.html">Deploy MicroShift on Edge Devices</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Deploying MicroShift on Red Hat Device Edge</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Deploying MicroShift on Red Hat Device Edge</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <a class="title" href="../../../samples/1/index.html">samples</a>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../samples/1/index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></li>
+    <li><a href="index.html">Deploy MicroShift on RHEL Servers</a></li>
+    <li><a href="s3-access-lab.html">Lab: Access MicroShift as a Developer or Platform Engineer</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Lab: Access MicroShift as a Developer or Platform Engineer</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Estimated reading time: <strong>10 minutes</strong>.</em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Objective</dt>
+<dd>
+<p>Configure remote access to MicroShift as privileged and unprivileged users.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Work In Progress
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_before_you_begin"><a class="anchor" href="#_before_you_begin"></a>Before you Begin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need a <em>test machine</em> where you installed, configured, and verified MicroShift, by following the instructions from the <a href="s2-install-lab.html" class="xref page">previous lab</a>.</p>
+</div>
+<div class="paragraph">
+<p>You also need a <em>development machine</em> from which you will access the MicroShift instance on your <em>test machine</em>.</p>
+</div>
+<div class="paragraph">
+<p>Finally, you also need a <em>mirror registry</em> machine, already configured with a mirror registry for Red Hat OpenShift and pre-populared with container images required by MicroShift and course activities. Make sure that your <em>mirror registry machine</em> machine was configured and verified by following the instructions from the <a href="../ch1-microshift/s3-prepare-lab.html" class="xref page">first lab</a> of this course.</p>
+</div>
+<div class="paragraph">
+<p>These instructions were tested on RHEL 9.4 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the course classroom, you will log in on the <code>workstation</code> VM, which is your <em>development machine</em>, as the user <code>student</code> with password <code>student</code>, and you start SSH sessions from <code>workstation</code> VM to the <code>serverb</code> VM, which is your <em>test machine</em>, using the same user. If not, please adapt the instructions to your test environment.</p>
+</div>
+<div class="paragraph">
+<p>You will perform initial steps of this lab on your <em>test machine</em> and final steps on your <em>development machine</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log in on your <em>test machine</em> and verify that MicroShift is up and running.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Check that the MicroShift service is active.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl is-active microshift</strong>
+active</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that all pods are running and all their containers are ready and all their containers are running</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/local-admin get pod -A</strong>
+NAMESPACE              	NAME                                   	READY   STATUS	RESTARTS    	AGE
+kube-system            	csi-snapshot-controller-69ddff88c8-hr9dt   1/1 	Running   0           	6m37s
+kube-system            	csi-snapshot-webhook-74dc497864-hfdw7  	1/1 	Running   0           	6m41s
+openshift-dns          	dns-default-9z4ph                      	2/2 	Running   0           	5m55s
+openshift-dns          	node-resolver-prvjx                    	1/1 	Running   0           	6m39s
+openshift-ingress      	router-default-575b4fc7-tg5lz          	1/1 	Running   0           	6m37s
+openshift-ovn-kubernetes   ovnkube-master-wj4gv                   	4/4 	Running   1 (5m57s ago)   6m39s
+openshift-ovn-kubernetes   ovnkube-node-fdpm8                     	1/1 	Running   1 (5m58s ago)   6m39s
+openshift-service-ca   	service-ca-9db855698-zd7vg             	1/1 	Running   0           	6m36s
+openshift-storage      	lvms-operator-7f544467bc-cqf2n         	1/1 	Running   0           	6m40s
+openshift-storage      	vg-manager-tjrs2                       	1/1 	Running   0           	5m25s</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Remember that you copied the autogenerated kubeconfig file to <code>~/local-admin</code> in the <a href="s2-install-lab.html" class="xref page">previous lab</a>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>First, configure access to a developer kind of user. Create a namespace and a service account with limited read-write access to that namespace.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a namespace named <code>user</code> and a service account also named <code>user</code> in that namespace, them grant to the service account rights to create application resources on the namespace.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>export KUBECONFIG=~/local-admin</strong>
+$ <strong>oc whoami</strong>
+system:admin
+$ <strong>oc create namespace user</strong>
+namespace/user created
+$ <strong>oc create sa user -n user</strong>
+serviceaccount/user created
+$ <strong>oc create rolebinding user --clusterrole edit --serviceaccount user:user -n user</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Use Kubernetes impersonation to verify that the service account has the intended rights and nothing more. First, check that the service account has access to the namespace but not to other namespaces, nor to non-namespaced resources.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --as system:serviceaccount:user:user get sa -n user</strong>
+NAME      SECRETS   AGE
+default   0         8m48s
+user      0         6m58s
+$ <strong>oc --as system:serviceaccount:user:user get sa -n default</strong>
+Error from server (Forbidden): serviceaccounts is forbidden: User "system:serviceaccount:user:user" cannot list resource "serviceaccounts" in API group "" in the namespace "default"
+$ <strong>oc --as system:serviceaccount:user:user get node</strong>
+Error from server (Forbidden): nodes is forbidden: User "system:serviceaccount:user:user" cannot list resource "nodes" in API group "" at the cluster scope</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Then check that the service account can manage common application resources but not policy resources.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --as system:serviceaccount:user:user create configmap test1 --from-literal one=1 -n user</strong>
+NAME      SECRETS   AGE
+default   0         8m48s
+user      0         6m58s
+$ <strong>oc --as system:serviceaccount:user:user get configmap -n user</strong>
+NAME                       DATA   AGE
+kube-root-ca.crt           1      15m
+openshift-service-ca.crt   1      15m
+test1                      1      11s
+$ <strong>oc --as system:serviceaccount:user:user create quota test --hard pods=2 -n user</strong>
+error: failed to create quota: resourcequotas is forbidden: User "system:serviceaccount:user:user" cannot create resource "resourcequotas" in API group "" in the namespace "user"</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you wish to grant rights to manage resources such as quotas and network policies, for a namespace administrator, platform engineer, or site reliability engineer role, you must grant the <code>admin</code> cluster role instead of the <code>edit</code> cluster role.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Create another namespace and grant limited read-only access to the service account. Remember that managing namespaces requires cluster administration rights in Kubernetes and MicroShift does NOT include self-service capabilities from OpenShift.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a second namespace and grant only the <code>view</code> role to the service account.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc create namespace project</strong>
+namespace/project created
+$ <strong>oc create rolebinding user --clusterrole view --serviceaccount user:user -n project</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the service account can view but not manage application resources from the second namespace.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc create configmap test2 --from-literal two=2 -n project</strong>
+configmap/test2 created
+$ <strong>oc --as system:serviceaccount:user:user get configmap -n project</strong>
+NAME                       DATA   AGE
+kube-root-ca.crt           1      89s
+openshift-service-ca.crt   1      89s
+test2                      1      35s
+$ <strong>oc --as system:serviceaccount:user:user create configmap test3 --from-literal three=3 -n project</strong>
+error: failed to create configmap: configmaps is forbidden: User "system:serviceaccount:user:user" cannot create resource "configmaps" in API group "" in the namespace "project"</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Create a kubeconfig file with a token from the service account.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a secret for the service account.</p>
+<div class="paragraph">
+<p>Recent Kubernetes and OpenShift releases do NOT automatically create secret tokens for service accounts anymore, and the <code>oc create</code> command does not support creating that kind of token. You must create the secret from a YAML file.</p>
+</div>
+<div class="paragraph">
+<p>You can download a <a href="https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/user-token.yaml">template</a> for such secret from the course samples repository in GitHub.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cat &lt;&lt;EOF &gt;user-token.yaml</strong>
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-token
+  annotations:
+    kubernetes.io/service-account.name: "user"
+type: kubernetes.io/service-account-token
+EOF
+$ <strong>oc apply -f user-token.yaml -n user</strong>
+secret/user-token created</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Extract the token from the secret to a temporary file.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>mkdir temp-token</strong>
+$ <strong>--keys token --to . -n user</strong>
+token</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Copy the autogenerated kubeconfig file for remote access to MicroShift. You will use it as a basis for the kubeconfig for your unprivileged service account.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>unset KUBECONFIG</strong>
+$ <strong>sudo cp /var/lib/microshift/resources/kubeadmin/serverb/kubeconfig ~/remote-admin</strong>
+$ <strong>sudo chown student:student ~/remote-admin</strong>
+$ <strong>chmod a-w ~/remote-admin</strong>
+$ <strong>oc --kubeconfig ~/remote-admin whoami</strong>
+system:admin
+$ <strong>oc --kubeconfig ~/remote-admin get node</strong>
+NAME      STATUS   ROLES                         AGE   VERSION
+serverb   Ready    control-plane,master,worker   23h   v1.30.5</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a copy of the kubeconfig file for remote access and change its user credentials and namespace.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cp remote-admin remote-user</strong>
+$ <strong>oc --kubeconfig ~/remote-user config delete-user user</strong>
+deleted user user from /home/student/remote-user
+$ <strong>oc --kubeconfig ~/remote-user config set-credentials user --token $(cat token)</strong>
+User "user" set.
+$ <strong>oc --kubeconfig ~/remote-user config set-context microshift --namespace user --user user --cluster microshift</strong>
+Context "microshift" modified.</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that the new kubeconfig authenticates as the service account and has access to the first namespace created during this lab.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/remote-user whoami</strong>
+system:serviceaccount:user:user
+$ <strong>oc --kubeconfig ~/remote-user get configmap</strong>
+NAME                       DATA   AGE
+kube-root-ca.crt           1      107m
+openshift-service-ca.crt   1      107m
+test1                      1      92m</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Now suppose you need to configure access to a cluster administrator user. Instead of sharing the autogenerated kubeconfig, create a kubeconfig like you could for a developer user and grant the unprivileged user rights to impersonate a user with cluster administration rights.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a cluster role binding that grants the <code>cluster-admin</code> role to a non-existent user.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/local-admin create clusterrolebinding cluster-admin-user --clusterrole cluster-admin --user admin</strong>
+clusterrolebinding.rbac.authorization.k8s.io/cluster-admin-user created</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a cluster role that grants the <code>impersonate</code> verb for the non-existent user.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/local-admin create clusterrole sudo-admin --resource users --resource-name admin --verb impersonate</strong>
+clusterrole.rbac.authorization.k8s.io/sudo-admin created</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a cluster role binding that grants the service account access to the new cluster role.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/local-admin create clusterrolebinding sudo-user --clusterrole sudo-admin --serviceaccount user:user</strong>
+clusterrolebinding.rbac.authorization.k8s.io/sudo-user created</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that the service account can impersonate the non-existent user to manage resources that would require cluster administration rights.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/remote-user whoami</strong>
+system:serviceaccount:user:user
+$ <strong>oc --kubeconfig ~/remote-user get nodes</strong>
+Error from server (Forbidden): nodes is forbidden: User "system:serviceaccount:user:user" cannot list resource "nodes" in API group "" at the cluster scope
+$ <strong>oc --kubeconfig ~/remote-user --as admin whoami</strong>
+admin
+$ <strong>oc --kubeconfig ~/remote-user --as admin get nodes</strong>
+NAME      STATUS   ROLES                         AGE   VERSION
+serverb   Ready    control-plane,master,worker   25h   v1.30.5</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Now that you have your kubeconfig files ready and tested, prepare your <em>test machine</em> to accept remote requests to the Kubernetes API server of MicroShift.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>First, notice that the kubeconfigs are configured with different API URLs.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/remote-admin whoami --show-server</strong>
+https://serverb.lab.redhat.com:6443
+$ <strong>oc --kubeconfig ~/local-admin whoami --show-server</strong>
+https://localhost:6443</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Allow remote access to MicroShift on the system firewall.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo firewall-cmd --permanent --zone=public --add-port=6443/tcp</strong>
+success
+$ <strong>sudo firewall-cmd --reload</strong>
+success</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Switch to your <em>development machine</em> to test remote access to the MicroShift instance.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Copy the kubeconfig files for cluster administrator and service account.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>scp serverb:~/remote-admin .</strong>
+$ <strong>chmod a-w ~/remote-admin</strong>
+$ <strong>scp serverb:~/remote-user .</strong></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It is recommended that you save the kubeconfig file for <code>system:admin</code> in protected storage and use it only as a breaking class alternative, for emergencies. For day-to-day work, use a kubeconfig for a service account.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Check that you can access MicroShoft remotely using the kubeconfig for a cluster administrator.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/remote-admin get node</strong>
+NAME      STATUS   ROLES                         AGE   VERSION
+serverb   Ready    control-plane,master,worker   24h   v1.30.5</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that you can access MicroShoft remotely using the kubeconfig for a service account.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/remote-user get configmap</strong>
+NAME                       DATA   AGE
+kube-root-ca.crt           1      115m
+openshift-service-ca.crt   1      115m
+test                       1      100m
+$ <strong>oc --kubeconfig ~/remote-user get configmap -n project</strong>
+NAME                       DATA   AGE
+kube-root-ca.crt           1      99m
+openshift-service-ca.crt   1      99m
+test2                      1      98m</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Finally, check that Kubernetes impersonation also works for remote access.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/remote-user --as admin get node</strong>
+NAME      STATUS   ROLES                         AGE   VERSION
+serverb   Ready    control-plane,master,worker   25h   v1.30.5</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>You now have a kubeconfig file for an unprivileged service account which you can use to deploy applications to pre-provisioned namespaces on MicroShift, and have also granted impersonation rights to the service account so it can perform Kubernetes cluster administration tasks on a MicroShift instance.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_next_steps"><a class="anchor" href="#_next_steps"></a>Next Steps</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The next activity uses the kubeconfig file created here to deploy a simple application on MicroShift.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="s2-install-lab.html">Lab: Install MicroShift from RPM Packages</a></span>
+  <span class="next"><a href="s4-apps-lab.html">Lab: Deploy Kubernetes Applications in MicroShift</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
