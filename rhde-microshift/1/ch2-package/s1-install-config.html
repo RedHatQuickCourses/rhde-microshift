@@ -77,6 +77,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="s4-apps-lab.html">Lab: Deploy Kubernetes Applications in MicroShift</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s5-summary.html">Summary</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -323,7 +326,7 @@ Work In Progress
 </div>
 </div>
 <div class="sect1">
-<h2 id="_acess_microshift_with_administrator_rights"><a class="anchor" href="#_acess_microshift_with_administrator_rights"></a>Acess MicroShift With Administrator Rights</h2>
+<h2 id="_acess_microshift_with_administrator_rights"><a class="anchor" href="#_acess_microshift_with_administrator_rights"></a>Acess MicroShift with Administrator Rights</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>When you start MicroShift, it generates kubeconfig files in the <code>/var/lib/microshift/resources/kubeadmin/</code> directory. These kubeconfig files already embed the public key of the internal certificate authority (CA) of the cluster, so you can access your MicroShift instance with TLS certificate validation. One file matches the <code>localhost</code> host name and IP address. Other files match the hostname configured on the machine and additional alternate names set in the MicroShift configuration files.</p>
