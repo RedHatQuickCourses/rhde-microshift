@@ -173,7 +173,7 @@ Work In Progress
 <p>You also need a <em>package server machine</em> already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, Fast Data Path, and Red Hat OpenShift Container Platform. Make sure that your <em>package server machine</em> machine was configured and verified by following the instructions from the <a href="../ch1-microshift/s3-prepare-lab.html" class="xref page">first lab</a> of this course.</p>
 </div>
 <div class="paragraph">
-<p>Finally, you need a <em>mirror registry</em> machine, already configured with a mirror registry for Red Hat OpenShift and pre-populared with container images required by MicroShift and course activities. Make sure that your <em>mirror registry machine</em> machine was configured and verified by following the instructions from the <a href="../ch1-microshift/s3-prepare-lab.html" class="xref page">first lab</a> of this course.</p>
+<p>Finally, you need a <em>mirror registry</em> machine, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your <em>mirror registry machine</em> machine was configured and verified by following the instructions from the <a href="../ch1-microshift/s3-prepare-lab.html" class="xref page">first lab</a> of this course.</p>
 </div>
 <div class="paragraph">
 <p>These instructions were tested on RHEL 9.4 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
@@ -198,7 +198,7 @@ Work In Progress
 <li>
 <p>Check that the required package repositories from RHEL and OpenShift are available.</p>
 <div class="paragraph">
-<p>If you were connected to the Internet [ or using Red Hat Satellite? ] and had registered your <em>test machine</em> with a valid Red Hat subscription, you would see something similar to:</p>
+<p>If you were connected to the Internet, or to a Red Hat Satellite instance, and had registered your <em>test machine</em> with a valid Red Hat subscription, you would see something similar to:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -232,7 +232,7 @@ Please, do <em>not</em> register any VM on your virtual labs. Please conserve th
 fdp.repo  ocp4.repo  redhat.repo  rhel_94.repo
 $ <strong>cat /etc/yum.repos.d/ocp4.repo</strong>
 [rhocp-4.17-for-rhel-9-x86_64-rpms]
-baseurl = http://servera.lab.example.com/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms
+baseurl = http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms
 enabled = true
 ...</code></pre>
 </div>
@@ -257,7 +257,7 @@ ovn24.09-central.x86_64 : Open Virtual Network support</code></pre>
 </div>
 </li>
 <li>
-<p>Verify that your <em>test machine</em> can access a mirror container image registry that is pre-populared with the container images required by MicroShift.</p>
+<p>Verify that your <em>test machine</em> can access a mirror container image registry that is pre-populated with the container images required by MicroShift.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -294,7 +294,7 @@ Complete!</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Please, do <em>not</em> use your pull secret with VMs on your virtual labs. Please stick to the scenario of an air-gapped deployment of MicroShift, assuming that an IT Operations team already configured all local network infrastructure required for deploying Red Hat Device Edge.
+Please, do <em>not</em> use your pull secret with VMs on your virtual labs. Please stick to the scenario of an air-gaped deployment of MicroShift, assuming that an IT Operations team already configured all local network infrastructure required for deploying Red Hat Device Edge.
 </td>
 </tr>
 </table>
@@ -322,7 +322,7 @@ Please, do <em>not</em> use your pull secret with VMs on your virtual labs. Plea
 </div>
 </li>
 <li>
-<p>Add the CA key of the mirror registry to the set of trusted CAs. The public CA key is availabe from the <em>web server machine</em>, which in the classroom environment is <code>servera</code>, in the <code><a href="http://servera.lab.example.com/quay-rootCA.pem" class="bare">http://servera.lab.example.com/quay-rootCA.pem</a></code> URL.</p>
+<p>Add the CA key of the mirror registry to the set of trusted CAs. The public CA key is available from the <em>web server machine</em>, which in the classroom environment is <code>servera</code>, in the <code><a href="http://servera.lab.example.com/quay-rootCA.pem" class="bare">http://servera.lab.example.com/quay-rootCA.pem</a></code> URL.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo cp quay-rootCA.pem /etc/pki/ca-trust/source/anchors</strong>
@@ -331,7 +331,7 @@ $ <strong>sudo update-ca-trust</strong></code></pre>
 </div>
 </li>
 <li>
-<p>As a validation, use the pull secret to inspect container images on the mirror registry. It should work with TLS validation enabled, which is the default for all container tools.</p>
+<p>Check that you can use the pull secret to inspect container images on the mirror registry. It should work with TLS validation enabled, which is the default for all container tools.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>skopeo inspect --authfile mirror-pull-secret -f '{{.RepoTags}}' docker://registry.lab.example.com:8443/ubi9/ubi</strong>
@@ -345,7 +345,7 @@ $ <strong>sudo update-ca-trust</strong></code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The command above would work with your actual Red Hat pull secret if you change the registry part of the contaimer image name to <code>redhat.registry.io</code>, but displaying a long list of tags.
+The command above would work with your actual Red Hat pull secret if you change the registry part of the container image name to <code>redhat.registry.io</code>, but displaying a long list of tags.
 </td>
 </tr>
 </table>
@@ -402,7 +402,7 @@ Swap:             0B          0B          0B</code></pre>
 </div>
 </li>
 <li>
-<p>Check that you have some GB of free disk space on whatever filesystem holds <code>/var/lib/containers</code> so you can store container images and ephemeral storage layers from CRI-O containers.</p>
+<p>Check that you have some GB of free disk space on whatever file system holds <code>/var/lib/containers</code> so you can store container images and ephemeral storage layers from CRI-O containers.</p>
 <div class="paragraph">
 <p>In the classroom environment, it is on the root partition of the <code>serverb</code> VM.</p>
 </div>
@@ -445,7 +445,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 <li>
 <p>Install the MicroShift packages.</p>
 <div class="paragraph">
-<p>You need only one package, called <code>microshift</code>, but pay attention to its dependency list. You will see packages from OpenShift, such as <code>crio</code>; packages from RHEL for Edge, like <code>greenboot</code>; and also packages from Fast Data Path for RHEL 9, which provide Open Virtual Networking (OVN).</p>
+<p>You need only one package, called <code>microshift</code>, but pay attention to its dependency list. You will see packages from OpenShift, such as <code>cri-o</code>; packages from RHEL for Edge, like <code>greenboot</code>; and also packages from Fast Data Path for RHEL 9, which provide Open Virtual Networking (OVN).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -516,7 +516,7 @@ $ <strong>sudo chmod 600 /etc/crio/openshift-pull-secret</strong></code></pre>
 </div>
 </li>
 <li>
-<p>Download a CRI-O registry configuration, from <a href="https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/999-microshift-mirror.conf">GitHub</a>, that redirects contaimer images from Red Hat Registries and Quay.io to the
+<p>Download a CRI-O registry configuration, from <a href="https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/999-microshift-mirror.conf">GitHub</a>, that redirects container images from Red Hat Registries and Quay.io to the
 mirror registry.</p>
 <div class="listingblock">
 <div class="content">
@@ -539,7 +539,7 @@ mirror registry.</p>
 </div>
 </li>
 <li>
-<p>Download a CRI-O image policy, from <a href="https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/containers-policy.json.nosigs">GitHub</a>, that allows running any container image, from anywhere, without checking image sigantures.</p>
+<p>Download a CRI-O image policy, from <a href="https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/containers-policy.json.nosigs">GitHub</a>, that allows running any container image, from anywhere, without checking image signatures.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cat containers-policy.json.nosigs</strong>
@@ -743,7 +743,7 @@ pod "shell" deleted</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The way we configured MicroShift, it does <em>not</em> contain a pull secret to download container images from Red Hat, even if it has access to the Internet. It can only pull containers from a mirror registry, which is usually what organizations with stricty security policies demand.
+The way we configured MicroShift, it does <em>not</em> contain a pull secret to download container images from Red Hat, even if it has access to the Internet. It can only pull containers from a mirror registry, which is usually what organizations with strict security policies would demand.
 </td>
 </tr>
 </table>
