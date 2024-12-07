@@ -135,6 +135,8 @@ Besides the lack of a graphical web console, a number of OpenShift CLI commands 
 * `oc login`
 * `oc new-project`
 
+// flozano-rht: the "oc project" command should work fine because it just changes the current kubeconfig file
+
 You should also avoid `oc` commands which require other OpenShift extension APIs missing in MicroShift, such as Image Streams and Build Configs.
 
 Despite the missing extension APIs, the OpenShift CLI still provides a number of niceties for MicroShift users compared to the Kubernetes client and Red Hat recommend using the `oc` command with MicroShift. If you prefer not using these niceties, the standard `kubectl` command is also supported, for MicroShift as well as for all editions of Red Hat OpenShift.
