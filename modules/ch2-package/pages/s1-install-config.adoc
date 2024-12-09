@@ -6,7 +6,7 @@ _Estimated reading time: *{time_estimate} minutes*._
 
 Objective::
 
-Install MicroShift in RHEL and Configure it with basic storage, networking, and security.
+Install MicroShift in RHEL and configure it with basic storage, networking, and security.
 
 WARNING: Work In Progress
 
