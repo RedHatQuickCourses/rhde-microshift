@@ -9,6 +9,6 @@ WARNING: Work In Progress
 
 This chapter explores the installation requirements and essential configuration settings of MicroShift, as supported by the Red Hat build of the MicroShift product, with a focus on deployment in air-gapped environments.
 
-The hands-on activities cover installing and configuring MicroShift in a RHEL VM, ensuring it's healthy, and configuring it for unprivileged developer access.
+The hands-on activities cover installing and configuring MicroShift in a RHEL virtual machine (VM), ensuring it's healthy, and configuring it for unprivileged developer access.
 
 IMPORTANT: If you plan to deploy MicroShift as part of a RHEL for Edge system, do *NOT* skip this chapter. You must understand the requirements and configurations introduced here to be able to automate them using Image Builder blueprints. You also need the skills you learn here to perform troubleshooting of your RHEL for Edge images which include MicroShift.
