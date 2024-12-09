@@ -57,7 +57,7 @@ h| Command-Line Access
 
 Once you have a MicroShift cluster ready for work, deploying and managing Kubernetes applications is similar to doing so with Red Hat OpenShift and other Kubernetes: You create and change application resources such as deployments, secrets, and services. Container images and Kubernetes manifests from applications which work on Red Hat OpenShift are expected to work unchanged on MicroShift, as long as they do not require custom resources from add-on operators that are not available on their MicroShift instances.
 
-== Why Using MicroShift with Package-Based RHEL
+== Why Use MicroShift with Package-Based RHEL?
 
 Red Hat recommends that production deployments of MicroShift use RHEL for Edge images, which include MicroShift and applications already preinstalled and preconfigured on system images. So why are we teaching here how to deploy MicroShift using traditional RHEL, as a package-based operating system? There are two reasons:
 
