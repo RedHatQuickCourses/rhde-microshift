@@ -59,7 +59,7 @@ Once you have a MicroShift cluster ready for work, deploying and managing Kubern
 
 == Why Use MicroShift with Package-Based RHEL?
 
-Red Hat recommends that production deployments of MicroShift use RHEL for Edge images, which include MicroShift and applications already preinstalled and preconfigured on system images. So why are we teaching here how to deploy MicroShift using traditional RHEL, as a package-based operating system? There are two reasons:
+Red Hat recommends that production deployments of MicroShift use RHEL for Edge images, which include MicroShift and applications already preinstalled and preconfigured on system images. So why is this course covering how to deploy MicroShift using traditional RHEL, as a package-based operating system? There are two reasons:
 
 1. It's easier to learn the configuration of MicroShift in a package-based system, where you can quickly perform and test individual configurations, instead of having it all done at once as part of an Image Builder blueprint and having the overhead of running new Image Builder composes every time your configuration changes.
 
