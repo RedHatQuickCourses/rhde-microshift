@@ -7,7 +7,7 @@ WARNING: Work In Progress
 
 == Introduction
 
-This chapter explores the installation requirements and essential configuration settings of MicroShift, as supported by the Red Hat Build of MicroShift product, with a focus on deployment on air-gaped environments.
+This chapter explores the installation requirements and essential configuration settings of MicroShift, as supported by the Red Hat Build of MicroShift product, with a focus on deployment on air-gapped environments.
 
 The hands-on activities install and configure MicroShift in a RHEL VM, ensure its healthy, and configure it for unprivileged developer access.
 
