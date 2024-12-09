@@ -50,7 +50,7 @@ h| Graphical or Web UI
 | None
 | OpenShift Web Console
 
-h| Command-Line access
+h| Command-Line Access
 | OpenShift CLI (`oc`) or Kubernetes client (`kubectl`)
 | OpenShift CLI (`oc`) or Kubernetes client (`kubectl`)
 |===
