@@ -14,7 +14,7 @@ WARNING: Work In Progress
 
 The previous chapter focused on the Red Hat build of MicroShift as a product: how it relates to Red Hat OpenShift and to upstream Kubernetes by means of which components and features are included. This chapter switches focus to using MicroShift and how it differs from using Red Hat OpenShift.
 
-The following table contrasts tools and tasks between MicroShift and Red Hat OpenShift.
+The following table highlights the differences between tools and tasks used with MicroShift and those used with Red Hat OpenShift.
 
 [options="header",cols="1,1,1"]  
 |===
