@@ -26,11 +26,11 @@ Perform all steps in this lab on your _test machine_.
 
 == Instructions
 
-1. Log in on your _test machine_ and verify that it has access to the required DNF package repositories.
+1. Log in to your _test machine_ and verify that it has access to the required DNF package repositories.
 
 .. Check that the required package repositories from RHEL and OpenShift are available.
 +
-If you were connected to the internet, or to a Red Hat Satellite instance, and had registered your _test machine_ with a valid Red Hat subscription, you would see something similar to:
+If you were connected to the internet, or to a Red Hat Satellite instance, and had registered your _test machine_ with a valid Red Hat subscription, you would notice something similar to:
 +
 [source,subs="verbatim,quotes"]
 --
