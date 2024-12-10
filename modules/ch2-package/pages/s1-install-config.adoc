@@ -126,7 +126,7 @@ Kubeconfig files can store user credentials and CA certificates for multiple dif
 
 == Access MicroShift with Developer Rights
 
-Developers used to Red Hat OpenShift will perceive significant differences in their regular workflows because MicroShift lacks components such has as the OpenShift OAuth server and extension APIs such as Templates and Projects.
+Developers used to Red Hat OpenShift will likely perceive significant differences in their regular workflows when working with MicroShift because it lacks certain components of OpenShift, such as the OpenShift OAuth server, and extension APIs, such as Templates and Projects.
 
 === Use the OpenShift CLI with MicroShift
 
