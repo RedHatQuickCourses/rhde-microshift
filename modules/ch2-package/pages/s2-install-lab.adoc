@@ -12,11 +12,11 @@ WARNING: Work In Progress
 
 == Before You Begin
 
-You need a _test machine_ with RHEL and unrestricted `sudo`, where you will install MicroShift.
+You need a _test machine_ with RHEL and unrestricted `sudo`, on which you will install MicroShift.
 
-You also need a _package server machine_ already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, Fast Data Path, and Red Hat OpenShift Container Platform. Make sure that your _package server machine_ machine was configured and verified by following the instructions from the xref:ch1-microshift:s3-prepare-lab.adoc[first lab] of this course.
+You also need a _package server machine_ already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, Fast Data Path, and Red Hat OpenShift Container Platform. Make sure that your _package server machine_ is properly configured and verified by following the instructions from the xref:ch1-microshift:s3-prepare-lab.adoc[first lab] of this course.
 
-Finally, you need a _mirror registry_ machine, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your _mirror registry machine_ machine was configured and verified by following the instructions from the xref:ch1-microshift:s3-prepare-lab.adoc[first lab] of this course.
+Finally, you need a _mirror registry machine_, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your _mirror registry machine_ is properly configured and verified by following the instructions from the xref:ch1-microshift:s3-prepare-lab.adoc[first lab] of this course.
 
 These instructions were tested on RHEL 9.4 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.
 
@@ -30,7 +30,7 @@ You will perform all steps in this lab on your _test machine_.
 
 .. Check that the required package repositories from RHEL and OpenShift are available.
 +
-If you were connected to the Internet, or to a Red Hat Satellite instance, and had registered your _test machine_ with a valid Red Hat subscription, you would see something similar to:
+If you were connected to the internet, or to a Red Hat Satellite instance, and had registered your _test machine_ with a valid Red Hat subscription, you would see something similar to:
 +
 [source,subs="verbatim,quotes"]
 --
@@ -43,7 +43,7 @@ rhel-9-for-x86_64-baseos-rpms                                   Red Hat Enterpri
 rhocp-4.17-for-rhel-9-x86_64-rpms                               Red Hat OpenShift Container Platform 4.17 for RHEL 9 x86_64 (RPMs)
 --
 +
-IMPORTANT: Please, do _not_ register any VM on your virtual labs. Please conserve the limited Internet bandwidth which is shared by all learners using ROLE.
+IMPORTANT: Please, do _not_ register any VM on your virtual labs. Please conserve the limited internet bandwidth which is shared by all learners using ROLE.
 +
 On the classroom environment, you will find configuration files which point to the _package server machine_ and the names of its DNF repositories match the names of Red Hat DNF repositories.
 +
