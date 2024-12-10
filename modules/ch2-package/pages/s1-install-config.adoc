@@ -101,7 +101,7 @@ You shouldn't need to make edits to any of the MicroShift configuration files: t
 
 === Air-Gapped Installation 
 
-If you perform an air-gaped installation of MicroShift, you need a mirror of the Red Hat OpenShift and RHEL 9 Fast Data Path package repositories, in addition to the standard RHEL BaseOS and AppStream repositories, which you need to satisfy package dependencies.
+If you perform an air-gapped installation of MicroShift, you need a mirror of the Red Hat OpenShift and RHEL 9 Fast Data Path package repositories, in addition to the standard RHEL BaseOS and AppStream repositories, which you need to satisfy package dependencies.
 
 You also need a mirror container registry pre-populated with the container images required by MicroShift and add-on operators that you install, besides a pull secret configured for that mirror registry. The pull secret is just a container tools authentication file, which you can create using the `podman login` command.
 
