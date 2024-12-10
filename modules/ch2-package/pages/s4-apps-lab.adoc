@@ -26,7 +26,7 @@ You will perform most steps in this lab on your _development machine_.
 
 == Instructions
 
-1. Log in on your _development machine_ and verify that MicroShift is up and running.
+1. Log in to your _development machine_ and verify that MicroShift is up and running.
 
 .. Check that you have a kubeconfig file for an unprivileged service account and a pre-provisioned namespace.
 +
@@ -238,7 +238,7 @@ service "hello" deleted
 
 5. Create a load balancer service to expose the hello world application without using an HTTP proxy.
 
-.. Create a service of type load balancer and get its external IP address. That address should match the IP address of your _test machine_. You could choose any TCP port that is free on your _test machine_, but for simplicity we pick the same TCP port the hello world applications uses inside its container.
+.. Create a service of type load balancer and get its external IP address. That address should match the IP address of your _test machine_. You could choose any TCP port that is free on your _test machine_, but for simplicity, this lab uses the same TCP port the hello world applications uses inside its container.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -249,9 +249,9 @@ NAME       TYPE           CLUSTER-IP      EXTERNAL-IP       PORT(S)          AGE
 hello      LoadBalancer   10.43.189.145   172.25.250.11     8080:31736/TCP   28s
 --
 +
-NOTE: The `oc expose` command configures load balancer services with a node port, which is unnecessary, and the result is that the same service accept connections on _two_ different ports of the machine running MicroShift. Switching to the `oc create service loadbalancer` command makes no difference, it also configures an unnecessary node port.
+NOTE: The `oc expose` command configures load balancer services with a node port, which is unnecessary, and the result is that the same service accepts connections on _two_ different ports of the machine running MicroShift. Switching to the `oc create service loadbalancer` command makes no difference; it also configures an unnecessary node port.
 
-.. Check that you can access the hello word application using the load balancer IP address and port, that is, using the public host name of your _test machine_.
+.. Check that you can access the hello world application by using the load balancer IP address and port, that is, using the public host name of your _test machine_.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -263,7 +263,7 @@ Hello, world!
 </html>
 --
 
-.. If you would prefer to get rid of the node port, you can perform the following commands to patch the service resource.
+.. To get rid of the node port, you can perform the following commands to patch the service resource.
 +
 [source,subs="verbatim,quotes"]
 --
