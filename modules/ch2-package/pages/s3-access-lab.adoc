@@ -18,11 +18,11 @@ You also need a _development machine_ from which you will access the MicroShift 
 
 Finally, you also need a _mirror registry_ machine, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your _mirror registry machine_ machine was configured and verified by following the instructions from the xref:ch1-microshift:s3-prepare-lab.adoc[first lab] of this course.
 
-These instructions were tested on RHEL 9.4 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.
+These instructions were tested on RHEL 9.4, [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.
 
-If you are using the course classroom, you will log in on the `workstation` VM, which is your _development machine_, as the user `student` with password `student`, and you start SSH sessions from `workstation` VM to the `serverb` VM, which is your _test machine_, using the same user. If not, please adapt the instructions to your test environment.
+If you are using the course classroom, log in on the `workstation` VM, which is your _development machine_, as the user `student` with password `student`, and start SSH sessions from `workstation` VM to the `serverb` VM, which is your _test machine_, using the same user. If not, please adapt the instructions to your test environment.
 
-You will perform initial steps of this lab on your _test machine_ and final steps on your _development machine_.
+You will perform the initial steps of this lab on your _test machine_ and the final steps on your _development machine_.
 
 == Instructions
 
