@@ -91,7 +91,7 @@ Red Hat OpenShift Container Platform 4.17
 `fast-datapath-for-rhel-9-x86_64-rpms`::
 RHEL 9 Fast Data Path
 
-Change the names of the repositories above to align with the RHEL release you are using and the CPU architecture of your target system.  The first respository provides the MicroShift RPM packages, which are built together with each release of Red Hat OpenShift. The second repository provides Open Virtual Network (OVN) packages, which are required by MicroShift's virtual pod and service network.
+Change the names of the two previously mentioned repositories to align with the RHEL release you are using and the CPU architecture of your target system.  The first respository provides the MicroShift RPM packages, which are built together with each release of Red Hat OpenShift. The second repository provides Open Virtual Network (OVN) packages, which are required by MicroShift's virtual pod and service network.
 
 The `microshift` RPM package pulls, as dependencies, all required components of MicroShift. A few optional components can be installed as additional RPM packages.
 
