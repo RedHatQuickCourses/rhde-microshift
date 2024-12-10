@@ -107,13 +107,13 @@ You also need a mirror container registry pre-populated with the container image
 
 You could use, as installation source for an air-gapped installation, any software capable of serving DNF repositories, such as Red Hat Satellite, in addition to any Open Container Initiative (OCI)-compliant container registry server, such as Red Hat Quay.
 
-If you deploy MicroShift air-gaped, you also need to provide CRI-O an image policy configuration file which redirects access to MicroShift images from the Red Hat registries and Quay.io to your mirror registry.
+If you deploy MicroShift air-gapped, you also need to provide CRI-O an image policy configuration file, which redirects access to MicroShift images from the Red Hat registries and Quay.io to your mirror registry.
 
 == Access MicroShift with Administrator Rights
 
 When you start MicroShift, it generates kubeconfig files in the `/var/lib/microshift/resources/kubeadmin/` directory. These kubeconfig files already embed the public key of the internal certificate authority (CA) of the cluster, so you can access your MicroShift instance with TLS certificate validation. One file matches the `localhost` host name and IP address. Other files match the hostname configured on the machine and additional alternate names set in the MicroShift configuration files.
 
-You could copy the kubeconfig file for the public hostname of your MicroShift instance to any computer and open the Kubernetes API port on the system firewall, then access MicroShift remotely with full cluster administrator rights. Red Hat recommends that you store that kubeconfig file in a secure location, for emergency usage, as in a "break-the-glass" scenario, and refrain from using it for day-to-day access to MicroShift.
+You could copy the kubeconfig file for the public hostname of your MicroShift instance to any computer and open the Kubernetes API port on the system firewall, and then access MicroShift remotely with full cluster administrator rights. Red Hat recommends that you store that kubeconfig file in a secure location, for emergency usage, and refrain from using it for day-to-day access to MicroShift.
 
 For the team responsible for managing MicroShift instances, Red Hat recommends that you:
 
