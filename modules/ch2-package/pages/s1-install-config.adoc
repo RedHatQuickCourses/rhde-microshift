@@ -79,7 +79,7 @@ The majority of MicroShift instances require logical volume management (LVM) to 
 
 Unlike Red Hat OpenShift, MicroShift does _not_ place special network requirements on its host. Because it is a single-node cluster, there are no requirements for virtual IP addresses for load balancers to access the Kubernetes API and router pods. MicroShift listens on Transmission Control Protocol (TCP) and User Datagram Protocol (UDP) ports on all network interfaces available to its host, and the set of interfaces or IP addresses can be constrained by editing the MicroShift configuration files.
 
-If your main work machine runs RHEL, you could install and configure MicroShift on it but, because your work machine probably runs a variety of other system services, it's recommended that you install MicroShift in a dedicated virtual machine or remote system. Local, unprivileged session VMs from Libvirt or any other desktop hypervisor should work well.
+If your main work machine runs RHEL, you could install and configure MicroShift on it; however, because your work machine likely runs a variety of other system services, Red Hat recommends that you install MicroShift in a dedicated VM or remote system. Local, unprivileged session VMs from Libvirt or any other desktop hypervisor should work well.
 
 === Install and Configure MicroShift
 
