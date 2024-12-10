@@ -73,7 +73,7 @@ Installing and configuring MicroShift uses tools familiar to RHEL system adminis
 
 === Before You Install MicroShift
 
-MicroShift was designed to be an easy addition to standard RHEL, so keep SELinux, Firewalld, and Network Manager enabled. The more you diverge from RHEL defaults, the harder it might be to get MicroShift up and running. MicroShift is designed to integrate with other RHEL system services.
+Keep SELinux, Firewalld, and Network Manager enabled. The more you diverge from RHEL defaults, the harder it might be to get MicroShift up and running. MicroShift is designed to integrate with other RHEL system services.
 
 The majority of MicroShift instances require logical volume management (LVM) to back persistent storage for Kubernetes persistent volumes. You need a volume group (VG) named `rhel` with sufficient empty space for MicroShift to create logical volumes (LVs) for each of your application's persistent volumes.
 
