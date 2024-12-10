@@ -284,7 +284,7 @@ $ *scp serverb:~/remote-user .*
 --
 NOTE: Red Hat recommends that you save the kubeconfig file for `system:admin` in protected storage and use it only for emergencies. For day-to-day work, use a kubeconfig for a service account and impersonation.
 
-.. Check that you can access MicroShift remotely using the kubeconfig for a cluster administrator.
+.. Check that you can access MicroShift remotely by using the kubeconfig for a cluster administrator.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -293,7 +293,7 @@ NAME      STATUS   ROLES                         AGE   VERSION
 serverb   Ready    control-plane,master,worker   24h   v1.30.5
 --
 
-.. Check that you can access MicroShift remotely using the kubeconfig for n unprivileged user.
+.. Check that you can access MicroShift remotely by using the kubeconfig for an unprivileged user.
 +
 [source,subs="verbatim,quotes"]
 --
