@@ -65,7 +65,7 @@ Red Hat recommends that production deployments of MicroShift use RHEL for Edge i
 
 2. Developer testing, and sometimes integration testing (from a CI/CD pipeline), could be quicker and easier with a preconfigured package-based system than from building a new system image (running a new Image Builder compose) and booting a new system or VM from it.
 
-This course uses package-based RHEL to practice skills required to configure and troubleshoot MicroShift instances, so later you can be confident when managing MicroShift as part of RHEL for Edge system images.
+This course uses package-based RHEL so you can practice the skills required to configure and troubleshoot MicroShift instances, so later you can be confident when managing MicroShift as part of RHEL for Edge system images.
 
 == MicroShift Installation
 
