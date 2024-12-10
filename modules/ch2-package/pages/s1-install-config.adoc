@@ -77,7 +77,7 @@ MicroShift was designed to be an easy addition to standard RHEL, so keep SELinux
 
 The majority of MicroShift instances require logical volume management (LVM) to back persistent storage for Kubernetes persistent volumes. You need a volume group (VG) named `rhel` with sufficient empty space for MicroShift to create logical volumes (LVs) for each of your application's persistent volumes.
 
-Unlike Red Hat OpenShift, MicroShift does _not_ place special network requirements on its host. Because it is a single node cluster, there are no requirements for virtual IP addresses for load balancers to access the Kubernetes API and router pods. MicroShift just listen on TCP and UDP ports on all network interfaces available to its host, and the set of interfaces or IP addresses can be constrained by editing the MicroShift configuration files.
+Unlike Red Hat OpenShift, MicroShift does _not_ place special network requirements on its host. Because it is a single-node cluster, there are no requirements for virtual IP addresses for load balancers to access the Kubernetes API and router pods. MicroShift just listen on TCP and UDP ports on all network interfaces available to its host, and the set of interfaces or IP addresses can be constrained by editing the MicroShift configuration files.
 
 If your main work machine runs RHEL, you could install and configure MicroShift on it but, because your work machine probably runs a variety of other system services, it's recommended that you install MicroShift in a dedicated virtual machine or remote system. Local, unprivileged session VMs from Libvirt or any other desktop hypervisor should work well.
 
