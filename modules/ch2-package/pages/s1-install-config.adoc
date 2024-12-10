@@ -95,7 +95,7 @@ Change the names of the repositories above to align with the RHEL release you ar
 
 The `microshift` RPM package pulls, as dependencies, all required components of MicroShift. A few optional components can be installed as additional RPM packages.
 
-You also need a pull secret which gives access to container images from Red Hat container registries and Quay.io. It can be an OpenShift installation pull secret from Red Hat customer portal account or from a Red Hat Developer account. The Red Hat Developers Program provides free access to RHEL installation media, RHEL package repositories, and also selected Red Hat software such as Red Hat OpenShift.
+You also need a pull secret, which provides access to container images from Red Hat container registries and Quay.io. It can be an OpenShift installation pull secret from a Red Hat Customer Portal account or from a Red Hat Developer account. The Red Hat Developer Program provides free access to RHEL installation media, RHEL package repositories, and selected Red Hat software, such as Red Hat OpenShift.
 
 You shouldn't need to make edits to any of the MicroShift configuration files: they have reasonable defaults for starting a MicroShift instance connected to the internet. 
 
