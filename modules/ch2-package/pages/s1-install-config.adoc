@@ -109,7 +109,7 @@ You could use, as installation source for an air-gapped installation, any softwa
 
 If you deploy MicroShift air-gaped, you also need to provide CRI-O an image policy configuration file which redirects access to MicroShift images from the Red Hat registries and Quay.io to your mirror registry.
 
-== Acess MicroShift with Administrator Rights
+== Access MicroShift with Administrator Rights
 
 When you start MicroShift, it generates kubeconfig files in the `/var/lib/microshift/resources/kubeadmin/` directory. These kubeconfig files already embed the public key of the internal certificate authority (CA) of the cluster, so you can access your MicroShift instance with TLS certificate validation. One file matches the `localhost` host name and IP address. Other files match the hostname configured on the machine and additional alternate names set in the MicroShift configuration files.
 
