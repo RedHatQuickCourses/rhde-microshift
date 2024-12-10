@@ -105,7 +105,7 @@ If you perform an air-gapped installation of MicroShift, you need a mirror of th
 
 You also need a mirror container registry pre-populated with the container images required by MicroShift and add-on operators that you install, besides a pull secret configured for that mirror registry. The pull secret is just a container tools authentication file, which you can create using the `podman login` command.
 
-You could use, as installation source for an air-gapped installation, any software capable of serving DNF repositories, such as Red Hat Satellite, in addition to any OCI-compliant container registry server, such as Red Hat Quay.
+You could use, as installation source for an air-gapped installation, any software capable of serving DNF repositories, such as Red Hat Satellite, in addition to any Open Container Initiative (OCI)-compliant container registry server, such as Red Hat Quay.
 
 If you deploy MicroShift air-gaped, you also need to provide CRI-O an image policy configuration file which redirects access to MicroShift images from the Red Hat registries and Quay.io to your mirror registry.
 
