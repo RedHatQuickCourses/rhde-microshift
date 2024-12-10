@@ -122,7 +122,7 @@ For the team responsible for managing MicroShift instances, Red Hat recommends t
 
 By taking this approach, you can audit which user performed which action. This is similar to requiring RHEL system administrators to use their own user accounts and `sudo` for performing system administration tasks. Following this recommendation means treating MicroShift cluster administrators as regular users, similar to developers, who also get rights to escalate their privileges.
 
-Kubeconfig files can store user credentials and CA certificates for multiple different clusters in a single file, but we find it easier to keep multiple Kubeconfig files, one for each MicroShift instance or Red Hat OpenShift cluster, and alternate between files using the `--kubeconfig` option or the `KUBECONFIG` environment variable.
+Kubeconfig files can store user credentials and CA certificates for multiple different clusters in a single file; however, you may find it easier to keep multiple Kubeconfig files, one for each MicroShift instance or Red Hat OpenShift cluster, and alternate between files using the `--kubeconfig` option or the `KUBECONFIG` environment variable.
 
 == Access MicroShift with Developer Rights
 
