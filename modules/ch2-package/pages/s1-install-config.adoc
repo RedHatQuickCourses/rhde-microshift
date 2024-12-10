@@ -117,8 +117,8 @@ You could copy the kubeconfig file for the public hostname of your MicroShift in
 
 For the team responsible for managing MicroShift instances, Red Hat recommends that you:
 
-* Create individual kubeconfig files for each team member, each file with a unique unprivileged identity.
-* Grant each of these identities with Kubernetes impersonation rights to perform cluster administration tasks.
+* Create an individual kubeconfig file for each team member, so each file has a unique unprivileged identity.
+* Grant each of these identities Kubernetes impersonation rights to perform cluster administration tasks.
 
 That way, you can audit which user performed which action. This is similar to requiring RHEL system administrators to use their own user accounts and `sudo` for performing system administration tasks. The recommendation is treating MicroShift cluster administrators as regular users, similar to developers, that also get rights to escalate their privileges.
 
