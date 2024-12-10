@@ -26,7 +26,7 @@ You perform the initial steps of this lab on your _test machine_ and the final s
 
 == Instructions
 
-1. Log in on your _test machine_ and verify that MicroShift is up and running.
+1. Log in to your _test machine_ and verify that MicroShift is up and running.
 
 .. Check that the MicroShift service is active.
 +
@@ -106,7 +106,7 @@ error: failed to create quota: resourcequotas is forbidden: User "system:service
 NOTE: To grant rights to manage resources, such as quotas and network policies, to a namespace administrator, platform engineer, or site reliability engineer role, you must grant the `admin` cluster role instead of the `edit` cluster role.
 
 
-3. Create another namespace and grant limited read-only access to the service account. Remember that managing namespaces requires cluster administration rights in Kubernetes, and MicroShift does NOT include self-service capabilities from OpenShift.
+3. Create another namespace and grant limited read-only access to the service account. Remember that managing namespaces requires cluster administration rights in Kubernetes, and MicroShift does _not_ include self-service capabilities from OpenShift.
 
 .. Create a second namespace and grant only the `view` role to the service account.
 +
