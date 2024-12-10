@@ -130,7 +130,7 @@ Developers used to Red Hat OpenShift will likely perceive significant difference
 
 === Use the OpenShift CLI with MicroShift
 
-Besides the lack of a graphical web console, a number of OpenShift CLI commands do not work with MicroShift instances, for example:
+MicroShift lacks a graphical web console, which means you need to use the OpenShift CLI. In addition, a number of OpenShift CLI commands do not work with MicroShift instances, for example:
 
 * `oc login`
 * `oc new-project`
