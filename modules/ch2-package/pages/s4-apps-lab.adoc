@@ -16,11 +16,11 @@ You need a _test machine_ where you installed, configured, and verified MicroShi
 
 You also need a _development machine_ from which you will access the MicroShift instance on your _test machine_, and that was configured with a kubeconfig file from the xref:s2-install-lab.adoc[previous lab], for access to a pre-provisioned namespaces MicroShift
 
-Finally, you also need a _mirror registry_ machine, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your _mirror registry machine_ machine was configured and verified by following the instructions from the xref:ch1-microshift:s3-prepare-lab.adoc[first lab] of this course.
+Finally, you also need a _mirror registry machine_, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your _mirror registry machine_ was configured and verified by following the instructions from the xref:ch1-microshift:s3-prepare-lab.adoc[first lab] of this course.
 
-These instructions were tested on RHEL 9.4 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.
+These instructions were tested on RHEL 9.4, [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.
 
-If you are using the course classroom, you will log in on the `workstation` VM, which is your _development machine_, as the user `student` with password `student`. If not, please adapt the instructions to your test environment.
+If you are using the course classroom, log in on the `workstation` VM, which is your _development machine_, as the user `student` with password `student`. If not, please adapt the instructions to your test environment.
 
 You will perform most steps in this lab on your _development machine_.
 
@@ -52,7 +52,7 @@ serverb   Ready    control-plane,master,worker   3d21h   v1.30.5
 
 2. Deploy a MySQL database with persistent storage, to verify that your MicroShift instance can provide dynamic storage for applications.
 
-.. Create a deployment and configure it with environment variables required my the MySQL image from Red Hat.
+.. Create a deployment and configure it with environment variables required by the MySQL image from Red Hat.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -62,7 +62,7 @@ $ *oc set env deployment/db MYSQL_DATABASE=test MYSQL_USER=user MYSQL_PASSWORD=r
 deployment.apps/db updated
 --
 +
-NOTE: If you replace the registry name and port with `registry.redhat.io` it would work with an instance of MicroShift connected to the Internet.
+NOTE: If you replace the registry name and port with `registry.redhat.io`, it would work with an instance of MicroShift connected to the internet.
 
 .. Configure the deployment with a PVC and scale the deployment to create a database server pod.
 +
