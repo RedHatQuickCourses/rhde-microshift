@@ -6,11 +6,11 @@ _Estimated reading time: *{time_estimate} minutes*._
 
 Objective::
 
-Install MicroShift in a RHEL VM that is _not_ connected to the Internet.
+Install MicroShift in a RHEL VM that is _not_ connected to the internet.
 
 WARNING: Work In Progress
 
-== Before you Begin
+== Before You Begin
 
 You need a _test machine_ with RHEL and unrestricted `sudo`, where you will install MicroShift.
 
