@@ -410,4 +410,4 @@ IMPORTANT: The way you configured MicroShift, it does _not_ contain a pull secre
 
 == Next Steps
 
-You probably don't want to perform development from the machine running MicroShift, so the next activity will configure MicroShift for remote access and also an unprivileged user, without full Kubernetes administration rights.
+You probably wouldn't want to perform development from the machine running MicroShift, so in the next activity, you will configure MicroShift for remote access and also an unprivileged user, without full Kubernetes administration rights.
