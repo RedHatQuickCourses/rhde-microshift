@@ -99,7 +99,7 @@ You also need a pull secret, which provides access to container images from Red 
 
 You shouldn't need to make edits to any of the MicroShift configuration files: they have reasonable defaults for starting a MicroShift instance connected to the internet. 
 
-=== Air-Gaped Installation 
+=== Air-Gapped Installation 
 
 If you perform an air-gaped installation of MicroShift, you need a mirror of the Red Hat OpenShift and RHEL 9 Fast Data Path package repositories, in addition to the standard RHEL BaseOS and AppStream repositories, which you need to satisfy package dependencies.
 
