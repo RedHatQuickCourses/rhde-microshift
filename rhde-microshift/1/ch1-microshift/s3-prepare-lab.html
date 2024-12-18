@@ -223,9 +223,9 @@ It should be possible to perform all activities in this course using a Red Hat D
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Configure your <em>development machine</em> with the RHEL for Edge and libvirt tools. It should be ready if you already performed the activities from the previous course on the same classroom environment.</p>
+<p>Configure your <em>development machine</em> with the RHEL for Edge tools. It should be ready if you already performed the activities from the previous course on the same classroom environment.</p>
 <div class="paragraph">
-<p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html">previous course</a> which focus on Image Builder and RPM-OSTree.</p>
+<p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the  <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html">previous course</a> which focus on deploying Image Builder and RPM-OSTree.</p>
 </div>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
@@ -316,7 +316,75 @@ gce
 </div>
 </li>
 <li>
+<p>Configure your <em>development machine</em> with the libvirt tools. It should be ready if you already performed the activities from the previous course on the same classroom environment.</p>
+<div class="paragraph">
+<p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from tue <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch3-test/s2-boot-lab.html">previous course</a> which focus deploying Libvirt and using KVM virtualization.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Install the Libvirt tools.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install qemu-kvm libvirt virt-install virt-viewer</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optionally, install the virtual machines module for Cockpit</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install cockpit-machines</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Grant your unprivileged user with permission to create and manage virtual machines (VMs).</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo groupmod libvirt -a -U student</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Log off and log in again to update the user membership of your unprivileged user and check that it can use Libvirt&#8217;s session interface.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>virsh uri</strong>
+qemu:///session
+$ <strong>virsh nodeinfo</strong>
+CPU model:           x86_64
+...</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Libvirt installation already sets up socket activation for Libvirt&#8217;s session interface.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>TODO: Configure unprivileged user access to Libvirt&#8217;s default network</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
 <p>Configure your <em>web server machine</em> to host OSTree repositories. It should be ready if you already performed the activities from the previous course on the same classroom environment.</p>
+<div class="paragraph">
+<p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch2-publish/s2-ostree-lab.html">previous course</a> which focus configuring an Apache Web Server for OSTree repository management.</p>
+</div>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
