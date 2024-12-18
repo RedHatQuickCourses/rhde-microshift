@@ -1,16 +1,134 @@
 :time_estimate: 5
 
-= Lab: Prepare a Test Environment
+= Lab: Prepare a Test Environment for MicroShift
 
 _Estimated reading time: *{time_estimate} minutes*._
 
 Objective::
 
-Prepare a test environment for deploying MicroShift in package-based RHEL and in RHEL for Edge systems.
+Prepare a test environment for air-gapped deploment of MicroShift in both package-based RHEL and RHEL for Edge.
 
 WARNING: Work In Progress
 
 == Before you Begin
+
+You need a few different machines to perform the hands-on activities in this course. 
+
+* A _development machine_ with RHEL and unrestricted `sudo`, where you will install Image Builder and RPM-OSTree tools, create test VMs using libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.
+
+* A _test machine_ with RHEL and unrestricted `sudo`, where you will install MicroShift on package-based RHEL.
+
+* A _package server machine_ already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, RHEL Fast Data Path, and Red Hat OpenShift Container Platform.
+
+* A _web server machine_ with RHEL and unrestricted `sudo`, to host OSTree repositories
+
+* A _mirror registry machine_ with RHEL and unrestricted `sudo`, to host a https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift[mirror registry for Red Hat OpenShift].
+
+These instructions were tested on RHEL 9.5 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.
+
+If you are using the course environment, you will log in on the `workstation` VM as the user `student` with password `student`. The `workstation` VM is your _development machine_. You will start SSH sessions from `workstation` VM to the `serverb` VM, which is your _test machine_, using the same user. In the same way, your will start SSH sessions to the `servera` VM, which is your _web server machine_ and also your _mirror registry machine_. 
+
+In the course environment, the `classroom` VM, with the `materials` alias, is your _package server machine_ but you are _not_ expected to start SSH sessions nor perform any activity on it.
+
+If you are using the same course enviroment where you performed the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/index.html[Building Red Hat Device Edge Images] quick course, you'll have some requirements already set up. They are listed here anyway, for learners that are starting this course in a new course environment.
+
+NOTE: It should be possible to perform all activities in this course using a Red Hat Developers free subscrition [ADD LINK], which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gapped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
+
+== Instructions
+
+1. Configure your _development machine_ with the RHEL for Edge and libvirt tools. It should be ready if you already performed the activities from the previous course on the same classroom environment.
++
+If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html[previous course] which focus on Image Builder and RPM-OSTree.
+
+.. Install the RPM packages for the Image Builder service and its CLI. Notice that RPM-OSTree pacakges are also installed, as dependencies.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo dnf install osbuild-composer composer-cli*
+...
+Complete!
+--
+
+.. Optionally, install the RPM packages for the Cockpit service and its Composer module.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo dnf install cockpit cockpit-composer*
+...
+Complete!
+--
+
+.. Enable and activate the Image Builder socket.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo systemctl enable osbuild-composer.socket --now*
+Created symlink /etc/systemd/system/sockets.target.wants/osbuild-composer.socket → /usr/lib/systemd/system/osbuild-composer.socket.
+--
+
+.. Optionally, enable and activate the Cockpit socket and enable remote access to Cockpit.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo systemctl enable cockpit.socket --now*
+Created symlink /etc/systemd/system/sockets.target.wants/cockpit.socket → /usr/lib/systemd/system/cockpit.socket.
+$ *sudo firewall-cmd --add-service=cockpit --permanent*
+success
+$ *sudo firewall-cmd --reload*
+success
+--
+
+.. Grant your unpriviged user (the `student` user) with access to the Image Builder service.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo usermod -a -G weldr student*
+--
+
+.. Configure your unpriviged user with bash command autocompletion for the Image Builder CLI.
++
+[source,subs="verbatim,quotes"]
+--
+$ *echo 'source /etc/bash_completion.d/composer-cli' >> $HOME/.bashrc*
+--
+
+.. Log out and log in again, then verify that autocompletion works for the Image Builder CLI
++
+[source,subs="verbatim,quotes,macros"]
+--
+$ *composer-cli kbd:[Tab]kbd:[Tab]*
+blueprints  compose     distros     help        modules     projects    sources     upload
+--
+
+.. To check that you have access to the Image Builder service, list its supported image types.
++
+[source,subs="verbatim,quotes"]
+--
+$ *composer-cli compose types*
+ami
+edge-commit
+edge-container
+edge-installer
+edge-raw-image
+edge-simplified-installer
+gce
+...
+--
+
+
+2. Configure your _web server machine_ to host OSTree repositories. It should be ready if you already performed the activities from the previous course on the same classroom environment.
+
+.. Lorem Ipsum
+
+3. Configure your _web server machine_ with a mirror registry for Red Hat OpenShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
+
+.. Lorem Ipsum
+
+4. Check that your _package server machine_ is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
+
+.. Lorem Ipsum
+
+99. Lorem Ipsum
 
 Lorem Ipsum
 
