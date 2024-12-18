@@ -36,9 +36,9 @@ NOTE: It should be possible to perform all activities in this course using a Red
 
 == Instructions
 
-1. Configure your _development machine_ with the RHEL for Edge and libvirt tools. It should be ready if you already performed the activities from the previous course on the same classroom environment.
+1. Configure your _development machine_ with the RHEL for Edge tools. It should be ready if you already performed the activities from the previous course on the same classroom environment.
 +
-If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html[previous course] which focus on Image Builder and RPM-OSTree.
+If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the  https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html[previous course] which focus on deploying Image Builder and RPM-OSTree.
 
 .. Install the RPM packages for the Image Builder service and its CLI. Notice that RPM-OSTree pacakges are also installed, as dependencies.
 +
@@ -116,15 +116,61 @@ gce
 --
 
 
-2. Configure your _web server machine_ to host OSTree repositories. It should be ready if you already performed the activities from the previous course on the same classroom environment.
+2. Configure your _development machine_ with the libvirt tools. It should be ready if you already performed the activities from the previous course on the same classroom environment.
++
+If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from tue https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch3-test/s2-boot-lab.html[previous course] which focus deploying Libvirt and using KVM virtualization.
+
+.. Install the Libvirt tools.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo dnf install qemu-kvm libvirt virt-install virt-viewer*
+...
+Complete!
+--
+
+.. Optionally, install the virtual machines module for Cockpit
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo dnf install cockpit-machines*
+...
+Complete!
+--
+
+.. Grant your unprivileged user with permission to create and manage virtual machines (VMs).
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo groupmod libvirt -a -U student*
+--
+
+.. Log off and log in again to update the user membership of your unprivileged user and check that it can use Libvirt's session interface.
++
+[source,subs="verbatim,quotes"]
+--
+$ *virsh uri*
+qemu:///session
+$ *virsh nodeinfo*
+CPU model:           x86_64
+...
+--
++
+NOTE: Libvirt installation already sets up socket activation for Libvirt's session interface.
+
+.. TODO: Configure unprivileged user access to Libvirt's default network
+
+3. Configure your _web server machine_ to host OSTree repositories. It should be ready if you already performed the activities from the previous course on the same classroom environment.
++
+If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch2-publish/s2-ostree-lab.html[previous course] which focus configuring an Apache Web Server for OSTree repository management.
 
 .. Lorem Ipsum
 
-3. Configure your _web server machine_ with a mirror registry for Red Hat OpenShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
+4. Configure your _web server machine_ with a mirror registry for Red Hat OpenShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
 
 .. Lorem Ipsum
 
-4. Check that your _package server machine_ is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
+5. Check that your _package server machine_ is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
 
 .. Lorem Ipsum
 
