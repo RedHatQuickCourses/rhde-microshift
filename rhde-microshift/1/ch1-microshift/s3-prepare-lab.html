@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Lab: Prepare a Test Environment :: Deploying MicroShift on Red Hat Device Edge</title>
+    <title>Lab: Prepare a Test Environment for MicroShift :: Deploying MicroShift on Red Hat Device Edge</title>
     <link rel="prev" href="s1-microshift-vs-ocp.html">
     <link rel="next" href="../ch2-package/index.html">
     <meta name="generator" content="Antora 3.1.3">
@@ -53,7 +53,7 @@
     <a class="nav-link" href="s1-microshift-vs-ocp.html">Introduction to MicroShift and Red Hat Device Edge</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="s3-prepare-lab.html">Lab: Prepare a Test Environment</a>
+    <a class="nav-link" href="s3-prepare-lab.html">Lab: Prepare a Test Environment for MicroShift</a>
   </li>
 </ul>
   </li>
@@ -129,7 +129,7 @@
   <ul>
     <li><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></li>
     <li><a href="index.html">Introduction to Red Hat Build of MicroShift</a></li>
-    <li><a href="s3-prepare-lab.html">Lab: Prepare a Test Environment</a></li>
+    <li><a href="s3-prepare-lab.html">Lab: Prepare a Test Environment for MicroShift</a></li>
   </ul>
 </nav>
 </div>
@@ -138,7 +138,7 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Lab: Prepare a Test Environment</h1>
+<h1 class="page">Lab: Prepare a Test Environment for MicroShift</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
@@ -148,7 +148,7 @@
 <dl>
 <dt class="hdlist1">Objective</dt>
 <dd>
-<p>Prepare a test environment for deploying MicroShift in package-based RHEL and in RHEL for Edge systems.</p>
+<p>Prepare a test environment for air-gapped deploment of MicroShift in both package-based RHEL and RHEL for Edge.</p>
 </dd>
 </dl>
 </div>
@@ -169,6 +169,187 @@ Work In Progress
 <div class="sect1">
 <h2 id="_before_you_begin"><a class="anchor" href="#_before_you_begin"></a>Before you Begin</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>You need a few different machines to perform the hands-on activities in this course.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <em>development machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install Image Builder and RPM-OSTree tools, create test VMs using libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.</p>
+</li>
+<li>
+<p>A <em>test machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install MicroShift on package-based RHEL.</p>
+</li>
+<li>
+<p>A <em>package server machine</em> already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, RHEL Fast Data Path, and Red Hat OpenShift Container Platform.</p>
+</li>
+<li>
+<p>A <em>web server machine</em> with RHEL and unrestricted <code>sudo</code>, to host OSTree repositories</p>
+</li>
+<li>
+<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, to host a <a href="https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift">mirror registry for Red Hat OpenShift</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These instructions were tested on RHEL 9.5 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the course environment, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from <code>workstation</code> VM to the <code>serverb</code> VM, which is your <em>test machine</em>, using the same user. In the same way, your will start SSH sessions to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>.</p>
+</div>
+<div class="paragraph">
+<p>In the course environment, the <code>classroom</code> VM, with the <code>materials</code> alias, is your <em>package server machine</em> but you are <em>not</em> expected to start SSH sessions nor perform any activity on it.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the same course enviroment where you performed the activities from the <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/index.html">Building Red Hat Device Edge Images</a> quick course, you&#8217;ll have some requirements already set up. They are listed here anyway, for learners that are starting this course in a new course environment.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It should be possible to perform all activities in this course using a Red Hat Developers free subscrition [ADD LINK], which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gapped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure your <em>development machine</em> with the RHEL for Edge and libvirt tools. It should be ready if you already performed the activities from the previous course on the same classroom environment.</p>
+<div class="paragraph">
+<p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html">previous course</a> which focus on Image Builder and RPM-OSTree.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Install the RPM packages for the Image Builder service and its CLI. Notice that RPM-OSTree pacakges are also installed, as dependencies.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install osbuild-composer composer-cli</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optionally, install the RPM packages for the Cockpit service and its Composer module.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install cockpit cockpit-composer</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enable and activate the Image Builder socket.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl enable osbuild-composer.socket --now</strong>
+Created symlink /etc/systemd/system/sockets.target.wants/osbuild-composer.socket → /usr/lib/systemd/system/osbuild-composer.socket.</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optionally, enable and activate the Cockpit socket and enable remote access to Cockpit.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl enable cockpit.socket --now</strong>
+Created symlink /etc/systemd/system/sockets.target.wants/cockpit.socket → /usr/lib/systemd/system/cockpit.socket.
+$ <strong>sudo firewall-cmd --add-service=cockpit --permanent</strong>
+success
+$ <strong>sudo firewall-cmd --reload</strong>
+success</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Grant your unpriviged user (the <code>student</code> user) with access to the Image Builder service.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo usermod -a -G weldr student</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure your unpriviged user with bash command autocompletion for the Image Builder CLI.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>echo 'source /etc/bash_completion.d/composer-cli' &gt;&gt; $HOME/.bashrc</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Log out and log in again, then verify that autocompletion works for the Image Builder CLI</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli <kbd>Tab</kbd><kbd>Tab</kbd></strong>
+blueprints  compose     distros     help        modules     projects    sources     upload</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To check that you have access to the Image Builder service, list its supported image types.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli compose types</strong>
+ami
+edge-commit
+edge-container
+edge-installer
+edge-raw-image
+edge-simplified-installer
+gce
+...</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Configure your <em>web server machine</em> to host OSTree repositories. It should be ready if you already performed the activities from the previous course on the same classroom environment.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Lorem Ipsum</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Configure your <em>web server machine</em> with a mirror registry for Red Hat OpenShift. These steps are required for <em>both</em> kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Lorem Ipsum</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Check that your <em>package server machine</em> is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for <em>both</em> kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Lorem Ipsum</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Lorem Ipsum</p>
+</li>
+</ol>
+</div>
 <div class="paragraph">
 <p>Lorem Ipsum</p>
 </div>
