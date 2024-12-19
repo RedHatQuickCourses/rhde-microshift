@@ -207,7 +207,7 @@ Work In Progress
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performend, it is using the same machine as the previous step.
+Be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performend, it is using the same machine as the previous step.
 </td>
 </tr>
 </table>
@@ -272,7 +272,11 @@ success</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>mkdir mirror-registry</strong>
-$ <strong>tar xzvf mirror-registry-amd64.tar.gz -C mirror-registry</strong></code></pre>
+$ <strong>tar xzvf mirror-registry-amd64.tar.gz -C mirror-registry</strong>
+image-archive.tar
+execution-environment.tar
+mirror-registry
+sqlite3.tar</code></pre>
 </div>
 </div>
 </li>
@@ -281,7 +285,9 @@ $ <strong>tar xzvf mirror-registry-amd64.tar.gz -C mirror-registry</strong></cod
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo ./mirror-registry/mirror-registry install -v --quayHostname servera.lab.example.com  --quayRoot /var/quay --initUser microshift --initPassword redhat123</strong>
-...</code></pre>
+...
+INFO[2024-12-19 15:29:40] Quay installed successfully, config data is stored in /var/quay
+INFO[2024-12-19 15:29:40] Quay is available at https://servera.lab.example.com:8443 with credentials (microshift, redhat123)</code></pre>
 </div>
 </div>
 </li>
@@ -291,24 +297,64 @@ $ <strong>tar xzvf mirror-registry-amd64.tar.gz -C mirror-registry</strong></cod
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo ./mirror-registry/mirror-registry uninstall -v --quayRoot /var/quay --autoApprove</strong>
 ...
-PLAY RECAP <strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong></strong>*
-root@servera.lab.example.com : ok=48   changed=28   unreachable=0    failed=0    skipped=16   rescued=0    ignored=0
-
-INFO[2024-12-19 15:29:40] Quay installed successfully, config data is stored in /var/quay
-INFO[2024-12-19 15:29:40] Quay is available at https://servera.lab.example.com:8443 with credentials (microshift, redhat123)</code></pre>
+INFO[2024-12-19 15:25:41] Quay uninstalled successfully</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Lorem Ipsum</p>
+<p>Publish the CA certificate of the mirror registry on the Apache Web Server, so other machines can download it and connect to the mirror registry without disabling TLS validation.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo cp /var/quay/quay-rootCA/rootCA.pem /var/www/html/quay-rootCA.pem</strong></code></pre>
+</div>
+</div>
 </li>
 </ol>
 </div>
 </li>
 <li>
-<p>Populate the mirror registry with container images required by MicroShift and sample applications for course activities.</p>
+<p>From your <em>development machine</em>, populate the mirror registry with container images required by MicroShift and sample applications for course activities.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
+<li>
+<p>Add the CA certificate of the mirror registry to your system trusted certificates.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q http://servera.lab.example.com/quay-rootCA.pem</strong>
+...
+$ <strong>sudo cp quay-rootCA.pem /etc/pki/ca-trust/source/anchors</strong>
+$ <strong>sudo update-ca-trust</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Log in on the mirror registry.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>podman login -u microshift -p redhat123 https://servera.lab.example.com:8443</strong>
+Login Succeeded!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Download a file system copy of all images from the classroom server.</p>
+<div class="paragraph">
+<p>When outside of the classroom environment, follow the instructions from product docs to download MicroShift images to a staging directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget --mirror -np http://content.example.com/rhde/oci/</strong>
+...
+Downloaded: 409 files, 2.9G in 1m 43s (28.9 MB/s)</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>TODO use the script to publish MicroShift images on the mirror registry</p>
+</li>
+<li>
+<p>TODO use the other script to publish sample app images on the mirror registry</p>
+</li>
 <li>
 <p>Lorem Ipsum</p>
 </li>
