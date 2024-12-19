@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lab: Prepare a Test Environment for MicroShift :: Deploying MicroShift on Red Hat Device Edge</title>
+    <link rel="prev" href="s3-prepare-lab.html">
+    <link rel="next" href="../ch2-package/index.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Deploying MicroShift on Red Hat Device Edge</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/rhde-microshift/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header><div class="body">
+<div class="nav-container" data-component="rhde-microshift" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Introduction to Red Hat Build of MicroShift</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s1-microshift-vs-ocp.html">Introduction to MicroShift and Red Hat Device Edge</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s3-prepare-lab.html">Lab: Prepare a Test Environment for Red Hat Device Edge</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="s4-air-gapped-lab.html">Lab: Prepare a Test Environment for MicroShift</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../ch2-package/index.html">Deploy MicroShift on RHEL Servers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s1-install-config.html">Install and Configure MicroShift on Package-Based RHEL</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s2-install-lab.html">Lab: Install MicroShift from RPM Packages</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s3-access-lab.html">Lab: Access MicroShift as a Developer or Platform Engineer</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s4-apps-lab.html">Lab: Deploy Kubernetes Applications in MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s5-summary.html">Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../ch3-image/index.html">Deploy MicroShift on Edge Devices</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Deploying MicroShift on Red Hat Device Edge</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Deploying MicroShift on Red Hat Device Edge</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <a class="title" href="../../../samples/1/index.html">samples</a>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../samples/1/index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></li>
+    <li><a href="index.html">Introduction to Red Hat Build of MicroShift</a></li>
+    <li><a href="s4-air-gapped-lab.html">Lab: Prepare a Test Environment for MicroShift</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Lab: Prepare a Test Environment for MicroShift</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Estimated reading time: <strong>5 minutes</strong>.</em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Objective</dt>
+<dd>
+<p>Prepare a test environment for air-gapped deploment of MicroShift in both package-based RHEL and RHEL for Edge.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Work In Progress
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_before_you_begin"><a class="anchor" href="#_before_you_begin"></a>Before you Begin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need a few different machines to perform the hands-on activities in this course.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <em>development machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install Image Builder and RPM-OSTree tools, create test VMs using libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.</p>
+</li>
+<li>
+<p>A <em>test machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install MicroShift on package-based RHEL.</p>
+</li>
+<li>
+<p>A <em>package server machine</em> already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, RHEL Fast Data Path, and Red Hat OpenShift Container Platform.</p>
+</li>
+<li>
+<p>A <em>web server machine</em> with RHEL and unrestricted <code>sudo</code>, to host OSTree repositories</p>
+</li>
+<li>
+<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, to host a <a href="https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift">mirror registry for Red Hat OpenShift</a>. In the classroom environment, it is the same machine as the <em>web server machine</em>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These instructions were tested on RHEL 9.5 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the course environment, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from <code>workstation</code> VM to the <code>serverb</code> VM, which is your <em>test machine</em>, using the same user. In the same way, your will start SSH sessions to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performend, it is using the same machine as the previous step.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the course environment, the <code>classroom</code> VM, with the <code>materials</code> alias, is your <em>package server machine</em> but you are <em>not</em> expected to start SSH sessions nor perform any activity on it.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It should be possible to perform all activities in this course using a <a href="https://developers.redhat.com/products/rhel/download">free Red Hat Developers free subscrition</a>, which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gapped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure your <em>web server machine</em> with a mirror registry for Red Hat OpenShift. These steps are required for <em>both</em> kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images, if you are performing air-gaped deployments.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The mirror registry for OpenShift runs as a local container, so install Podman.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install container-tools</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Allow remote access to the Apache Web Server on the system&#8217;s firewall.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo firewall-cmd --add-port=8443/tcp --permanent</strong>
+success
+$ <strong>sudo firewall-cmd --reload</strong>
+success</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Download the mirror registry for Red Hat OpenShift installer. In a connected environment, you would get it from the <a href="https://console.redhat.com/openshift/downloads#tool-mirror-registry">downloads</a> page of the Red Hat Hybrid Cloud Console], but there is already a copy of the installer in the <a href="http://content.example.com/rhde/rhocp/">classroom environment</a>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q http://content.example.com/rhde/rhocp/mirror-registry-amd64.tar.gz</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Extract the mirror registry installer in a temporary directory. You may want to keep the directory for later, if you need to uninstall the mirror registry.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>mkdir mirror-registry</strong>
+$ <strong>tar xzvf mirror-registry-amd64.tar.gz -C mirror-registry</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the mirror registry installer.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo ./mirror-registry/mirror-registry install -v --quayHostname servera.lab.example.com  --quayRoot /var/quay --initUser microshift --initPassword redhat123</strong>
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>If something goes wrong and you must retry the mirror registry installation, first clean the failed installation using the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo ./mirror-registry/mirror-registry uninstall -v --quayRoot /var/quay --autoApprove</strong>
+...
+PLAY RECAP <strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong></strong>*
+root@servera.lab.example.com : ok=48   changed=28   unreachable=0    failed=0    skipped=16   rescued=0    ignored=0
+
+INFO[2024-12-19 15:29:40] Quay installed successfully, config data is stored in /var/quay
+INFO[2024-12-19 15:29:40] Quay is available at https://servera.lab.example.com:8443 with credentials (microshift, redhat123)</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Lorem Ipsum</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Populate the mirror registry with container images required by MicroShift and sample applications for course activities.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Lorem Ipsum</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Check that your <em>package server machine</em> is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for <em>both</em> kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Lorem Ipsum</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Lorem Ipsum</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Lorem Ipsum</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a>What&#8217;s Next</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Lorem Ipsum</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="s3-prepare-lab.html">Lab: Prepare a Test Environment for Red Hat Device Edge</a></span>
+  <span class="next"><a href="../ch2-package/index.html">Deploy MicroShift on RHEL Servers</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
