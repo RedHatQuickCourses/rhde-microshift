@@ -1,12 +1,12 @@
 :time_estimate: 5
 
-= Lab: Prepare a Test Environment for MicroShift
+= Lab: Prepare a Test Environment for Red Hat Device Edge
 
 _Estimated reading time: *{time_estimate} minutes*._
 
 Objective::
 
-Prepare a test environment for air-gapped deploment of MicroShift in both package-based RHEL and RHEL for Edge.
+Prepare a test environment for building RHEL for Edge images and managing OSTree repositories.
 
 WARNING: Work In Progress
 
@@ -22,17 +22,19 @@ You need a few different machines to perform the hands-on activities in this cou
 
 * A _web server machine_ with RHEL and unrestricted `sudo`, to host OSTree repositories
 
-* A _mirror registry machine_ with RHEL and unrestricted `sudo`, to host a https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift[mirror registry for Red Hat OpenShift].
+* A _mirror registry machine_ with RHEL and unrestricted `sudo`, to host a https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift[mirror registry for Red Hat OpenShift]. In the classroom environment, it is the same machine as the _web server machine_.
 
-These instructions were tested on RHEL 9.5 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.
+These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.
 
 If you are using the course environment, you will log in on the `workstation` VM as the user `student` with password `student`. The `workstation` VM is your _development machine_. You will start SSH sessions from `workstation` VM to the `serverb` VM, which is your _test machine_, using the same user. In the same way, your will start SSH sessions to the `servera` VM, which is your _web server machine_ and also your _mirror registry machine_. 
+
+IMPORTANT: be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performend, it is using the same machine as the previous step.
 
 In the course environment, the `classroom` VM, with the `materials` alias, is your _package server machine_ but you are _not_ expected to start SSH sessions nor perform any activity on it.
 
 If you are using the same course enviroment where you performed the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/index.html[Building Red Hat Device Edge Images] quick course, you'll have some requirements already set up. They are listed here anyway, for learners that are starting this course in a new course environment.
 
-NOTE: It should be possible to perform all activities in this course using a Red Hat Developers free subscrition [ADD LINK], which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gapped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
+NOTE: It should be possible to perform all activities in this course using a https://developers.redhat.com/products/rhel/download[free Red Hat Developers free subscrition], which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gapped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
 
 == Instructions
 
@@ -335,14 +337,6 @@ $ *sudo dnf install rpm-ostree ostree*
 ...
 Complete!
 --
-
-6. Configure your _web server machine_ with a mirror registry for Red Hat OpenShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
-
-.. Lorem Ipsum
-
-7. Check that your _package server machine_ is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
-
-.. Lorem Ipsum
 
 99. Lorem Ipsum
 
