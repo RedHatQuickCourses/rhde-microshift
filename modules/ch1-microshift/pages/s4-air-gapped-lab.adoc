@@ -28,7 +28,7 @@ These instructions were tested on RHEL 9.5 [tentative!] but should work with min
 
 If you are using the course environment, you will log in on the `workstation` VM as the user `student` with password `student`. The `workstation` VM is your _development machine_. You will start SSH sessions from `workstation` VM to the `serverb` VM, which is your _test machine_, using the same user. In the same way, your will start SSH sessions to the `servera` VM, which is your _web server machine_ and also your _mirror registry machine_. 
 
-IMPORTANT: be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performend, it is using the same machine as the previous step.
+IMPORTANT: Be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performend, it is using the same machine as the previous step.
 
 In the course environment, the `classroom` VM, with the `materials` alias, is your _package server machine_ but you are _not_ expected to start SSH sessions nor perform any activity on it.
 
@@ -70,6 +70,10 @@ $ *wget -q http://content.example.com/rhde/rhocp/mirror-registry-amd64.tar.gz*
 --
 $ *mkdir mirror-registry*
 $ *tar xzvf mirror-registry-amd64.tar.gz -C mirror-registry*
+image-archive.tar
+execution-environment.tar
+mirror-registry
+sqlite3.tar
 --
 
 .. Run the mirror registry installer.
@@ -78,6 +82,8 @@ $ *tar xzvf mirror-registry-amd64.tar.gz -C mirror-registry*
 --
 $ *sudo ./mirror-registry/mirror-registry install -v --quayHostname servera.lab.example.com  --quayRoot /var/quay --initUser microshift --initPassword redhat123*
 ...
+INFO[2024-12-19 15:29:40] Quay installed successfully, config data is stored in /var/quay 
+INFO[2024-12-19 15:29:40] Quay is available at https://servera.lab.example.com:8443 with credentials (microshift, redhat123)
 --
 
 .. If something goes wrong and you must retry the mirror registry installation, first clean the failed installation using the following command:
@@ -86,16 +92,50 @@ $ *sudo ./mirror-registry/mirror-registry install -v --quayHostname servera.lab.
 --
 $ *sudo ./mirror-registry/mirror-registry uninstall -v --quayRoot /var/quay --autoApprove*
 ...
-PLAY RECAP ***************************************************************************************************************************************************
-root@servera.lab.example.com : ok=48   changed=28   unreachable=0    failed=0    skipped=16   rescued=0    ignored=0   
-
-INFO[2024-12-19 15:29:40] Quay installed successfully, config data is stored in /var/quay 
-INFO[2024-12-19 15:29:40] Quay is available at https://servera.lab.example.com:8443 with credentials (microshift, redhat123)
+INFO[2024-12-19 15:25:41] Quay uninstalled successfully 
 --
 
-.. Lorem Ipsum
+.. Publish the CA certificate of the mirror registry on the Apache Web Server, so other machines can download it and connect to the mirror registry without disabling TLS validation.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo cp /var/quay/quay-rootCA/rootCA.pem /var/www/html/quay-rootCA.pem*
+--
 
-2. Populate the mirror registry with container images required by MicroShift and sample applications for course activities.
+2. From your _development machine_, populate the mirror registry with container images required by MicroShift and sample applications for course activities.
+
+.. Add the CA certificate of the mirror registry to your system trusted certificates.
++
+[source,subs="verbatim,quotes"]
+--
+$ *wget -q http://servera.lab.example.com/quay-rootCA.pem*
+...
+$ *sudo cp quay-rootCA.pem /etc/pki/ca-trust/source/anchors*
+$ *sudo update-ca-trust*
+--
+
+.. Log in on the mirror registry.
++
+[source,subs="verbatim,quotes"]
+--
+$ *podman login -u microshift -p redhat123 https://servera.lab.example.com:8443*
+Login Succeeded!
+--
+
+.. Download a file system copy of all images from the classroom server.
++
+When outside of the classroom environment, follow the instructions from product docs to download MicroShift images to a staging directory.
++
+[source,subs="verbatim,quotes"]
+--
+$ *wget --mirror -np http://content.example.com/rhde/oci/*
+...
+Downloaded: 409 files, 2.9G in 1m 43s (28.9 MB/s)
+--
+
+.. TODO use the script to publish MicroShift images on the mirror registry
+
+.. TODO use the other script to publish sample app images on the mirror registry
 
 .. Lorem Ipsum
 
