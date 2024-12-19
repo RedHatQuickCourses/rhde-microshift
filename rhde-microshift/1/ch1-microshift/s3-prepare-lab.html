@@ -489,7 +489,94 @@ Libvirt installation already sets up socket activation for Libvirt&#8217;s sessi
 </div>
 </li>
 <li>
-<p>TODO: Configure unprivileged user access to Libvirt&#8217;s default network</p>
+<p>Configure unprivileged user access to Libvirt&#8217;s default network. This enables inbound network connections to session VMs.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This was <em>not</em> configured in the first course about Red Hat Device Edge, and it will be necessary to test edge images with MicroShift.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Check that IP forwarding is enabled, which is the default for RHEL installations.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sysctl net.ipv4.ip_forward</strong>
+net.ipv4.ip_forward = 1</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install libvirt&#8217;s NSS module.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install libvirt-nss</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the <code>/etc/qemu/bridge.conf</code> configuration file and make it world-readable.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo mkdir /etc/qemu</strong>
+$ <strong>sudo bash -c 'echo "allow virbr0" &gt; /etc/qemu/bridge.conf'</strong>
+$ <strong>sudo chmod a+r /etc/qemu/bridge.conf</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enable and start the libvirt network daemon.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl enable virtnetworkd --now</strong>
+Created symlink /etc/systemd/system/multi-user.target.wants/virtnetworkd.service → /usr/lib/systemd/system/virtnetworkd.service.</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that libvirt initialized its default network and the <code>virb0</code> bridge device.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo virsh net-list</strong>
+ Name      State    Autostart   Persistent
+--------------------------------------------
+default   active   yes         yes
+$ <strong>ip -br addr show virbr0</strong>
+virbr0           DOWN           192.168.122.1/24</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Edit your the <code>/etc/nsswtich.conf</code> configuration file by adding the libvirt NSS modules right before the <code>myhostname</code> module. This enables resolving hostnames of session VMs to their IP addresses.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">hosts:      files dns <strong>libvirt libvirt_guest</strong> myhostname</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+in production systems, it is recommended that you use the <code>authselect</code> utility instead of making edits to the <code>/etc/nsswtich.conf</code> file.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
 </li>
 <li>
 <p>Configure your <em>web server machine</em> to host OSTree repositories. It should be ready if you already performed the activities from the first course on the same classroom environment.</p>
