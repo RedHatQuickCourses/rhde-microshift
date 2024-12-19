@@ -132,6 +132,8 @@ $ *wget --mirror -np http://content.example.com/rhde/oci/*
 ...
 Downloaded: 409 files, 2.9G in 1m 43s (28.9 MB/s)
 --
++
+NOTE: The previous command produces a bunch of `index.html*` files that you can safely ignore. We should have put a TAR backup in the classroom environment, instead of a file tree copy.
 
 .. TODO use the script to publish MicroShift images on the mirror registry
 
