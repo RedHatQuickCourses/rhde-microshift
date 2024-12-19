@@ -237,7 +237,64 @@ CPU model:           x86_64
 +
 NOTE: Libvirt installation already sets up socket activation for Libvirt's session interface.
 
-4. TODO: Configure unprivileged user access to Libvirt's default network
+4. Configure unprivileged user access to Libvirt's default network. This enables inbound network connections to session VMs.
++
+IMPORTANT: This was _not_ configured in the first course about Red Hat Device Edge, and it will be necessary to test edge images with MicroShift.
+
+.. Check that IP forwarding is enabled, which is the default for RHEL installations.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sysctl net.ipv4.ip_forward*
+net.ipv4.ip_forward = 1
+--
+
+.. Install libvirt's NSS module.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo dnf install libvirt-nss*
+...
+Complete!
+--
+
+.. Create the `/etc/qemu/bridge.conf` configuration file and make it world-readable.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo mkdir /etc/qemu*
+$ *sudo bash -c 'echo "allow virbr0" > /etc/qemu/bridge.conf'*
+$ *sudo chmod a+r /etc/qemu/bridge.conf*
+--
+
+.. Enable and start the libvirt network daemon.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo systemctl enable virtnetworkd --now*
+Created symlink /etc/systemd/system/multi-user.target.wants/virtnetworkd.service → /usr/lib/systemd/system/virtnetworkd.service.
+--
+
+.. Check that libvirt initialized its default network and the `virb0` bridge device.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo virsh net-list*
+ Name      State    Autostart   Persistent
+--------------------------------------------
+default   active   yes         yes
+$ *ip -br addr show virbr0*
+virbr0           DOWN           192.168.122.1/24
+--
+
+.. Edit your the `/etc/nsswtich.conf` configuration file by adding the libvirt NSS modules right before the `myhostname` module. This enables resolving hostnames of session VMs to their IP addresses.
++
+[source,subs="verbatim,quotes"]
+--
+hosts:      files dns *libvirt libvirt_guest* myhostname
+--
++
+NOTE: in production systems, it is recommended that you use the `authselect` utility instead of making edits to the `/etc/nsswtich.conf` file.
 
 5. Configure your _web server machine_ to host OSTree repositories. It should be ready if you already performed the activities from the first course on the same classroom environment.
 +
