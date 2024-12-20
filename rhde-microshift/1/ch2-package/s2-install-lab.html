@@ -176,13 +176,16 @@ Work In Progress
 <p>You need a <em>test machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install MicroShift.</p>
 </div>
 <div class="paragraph">
-<p>You also need a <em>package server machine</em> already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, Fast Data Path, and Red Hat OpenShift Container Platform. Make sure that your <em>package server machine</em> machine was configured and verified by following the instructions from the <a href="../ch1-microshift/s3-prepare-lab.html" class="xref page">first lab</a> of this course.</p>
+<p>You also need a <em>package server machine</em> already configured to serve DNF repositories for RHEL, Fast Datapath for RHEL, and Red Hat OpenShift Container Platform.</p>
 </div>
 <div class="paragraph">
-<p>Finally, you need a <em>mirror registry</em> machine, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your <em>mirror registry machine</em> machine was configured and verified by following the instructions from the <a href="../ch1-microshift/s3-prepare-lab.html" class="xref page">first lab</a> of this course.</p>
+<p>Finally, you need a <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, already populated with the container iamges required bu MicroShoft and sample applications.</p>
 </div>
 <div class="paragraph">
-<p>These instructions were tested on RHEL 9.4 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
+<p>Make sure that your <em>package server machine</em> and <em>mirror registry machine</em> were configured and verified by following the instructions from the <a href="../ch1-microshift/s4-air-gapped-lab.html" class="xref page">previous lab</a> of this course.</p>
+</div>
+<div class="paragraph">
+<p>These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
 </div>
 <div class="paragraph">
 <p>If you are using the course classroom, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>, and you start SSH sessions from <code>workstation</code> VM to the <code>serverb</code> VM, which is your <em>test machine</em>, using the same user. If not, please adapt the instructions to your test environment.</p>
@@ -203,8 +206,17 @@ Work In Progress
 <ol class="loweralpha" type="a">
 <li>
 <p>Check that the required package repositories from RHEL and OpenShift are available.</p>
-<div class="paragraph">
-<p>If you were connected to the Internet, or to a Red Hat Satellite instance, and had registered your <em>test machine</em> with a valid Red Hat subscription, you would see something similar to:</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you were connected to the Internet, or to a Red Hat Satellite instance, and had registered your <em>test machine</em> with a valid Red Hat subscription, you would see something similar to:
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -235,7 +247,8 @@ Please, do <em>not</em> register any VM on your virtual labs. Please conserve th
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ls /etc/yum.repos.d</strong>
-fdp.repo  ocp4.repo  redhat.repo  rhel_94.repo
+fast-datapath-for-rhel-9-x86_64-rpms.repo  rhel-9.5-for-x86_64-baseos-rpms.repo
+rhel-9.5-for-x86_64-appstream-rpms.repo    rhocp-4.17-for-rhel-9-x86_64-rpms.repo
 $ <strong>cat /etc/yum.repos.d/ocp4.repo</strong>
 [rhocp-4.17-for-rhel-9-x86_64-rpms]
 baseurl = http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms
@@ -245,7 +258,7 @@ enabled = true
 </div>
 </li>
 <li>
-<p>As an additional validation, search for packages from the OpenShift and RHEL Fast Data Path repositories.</p>
+<p>As an additional validation, search for packages from the OpenShift and Fast Datapath repositories.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>dnf search microshift</strong>
@@ -267,7 +280,7 @@ ovn24.09-central.x86_64 : Open Virtual Network support</code></pre>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Install the <code>container-tools</code> package, if it is not already installed on your <em>test machine</em>. This is <em>not</em> strictly required to run MicroShift, but it provides troubleshooting tools which can be valuable in a development environment.</p>
+<p>Install the <code>container-tools</code> package, if it is not already installed on your <em>test machine</em>.</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -275,7 +288,7 @@ ovn24.09-central.x86_64 : Open Virtual Network support</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If your <em>test machine</em> prompts about importing GPG keys, answer "y".
+This is <em>not</em> strictly required to run MicroShift, but it provides troubleshooting tools which can be valuable in a development environment.
 </td>
 </tr>
 </table>
@@ -289,9 +302,28 @@ Complete!</code></pre>
 </div>
 </li>
 <li>
-<p>Download a pull secret with enables access to the MicroShift container images.</p>
-<div class="paragraph">
-<p>In a system connected to the internet, you would get a pull secret from your Red Hat account from the Red Hat Hybrid Cloud Console.</p>
+<p>Add the CA key of the mirror registry to the set of trusted CAs. The public CA key is available from the <em>web server machine</em>, which in the classroom environment is also the <em>mirror registry machine</em>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q http://servera.lab.example.com/quay-rootCA.pem</strong>
+$ <strong>sudo cp quay-rootCA.pem /etc/pki/ca-trust/source/anchors</strong>
+$ <strong>sudo update-ca-trust</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a pull secret with enables access to the MicroShift container images.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In a deployment connected to the internet, you would get a pull secret from your Red Hat account from the Red Hat Hybrid Cloud Console.
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -306,33 +338,13 @@ Please, do <em>not</em> use your pull secret with VMs on your virtual labs. Plea
 </table>
 </div>
 <div class="paragraph">
-<p>For the classroom environment, the pull secret for the mirror registry is available from <a href="https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/mirror-pull-secret">GitHub</a></p>
-</div>
-<div class="paragraph">
-<p>Check that the pull registry contains credentials for <code>registry.lab.example.com</code>.</p>
+<p>For the classroom environment, the pull secret for the mirror registry is also available from <a href="https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/mirror-pull-secret">GitHub</a></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cat mirror-pull-secret</strong>
-{
-	"auths": {
-		"servera.lab.example.com:8443": {
-			"auth": "bWljcm9zaGlmdDpyZWRoYXQxMjM="
-		}
-	}
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Encoded in the <code>auth</code> field of that pull secret are the <code>microshift</code> username and the <code>redhat123</code> password.</p>
-</div>
-</li>
-<li>
-<p>Add the CA key of the mirror registry to the set of trusted CAs. The public CA key is available from the <em>web server machine</em>, which in the classroom environment is <code>servera</code>, in the <code><a href="http://servera.lab.example.com/quay-rootCA.pem" class="bare">http://servera.lab.example.com/quay-rootCA.pem</a></code> URL.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo cp quay-rootCA.pem /etc/pki/ca-trust/source/anchors</strong>
-$ <strong>sudo update-ca-trust</strong></code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>podman login -u microshift -p redhat123 https://servera.lab.example.com:8443</strong>
+Login Succeeded!
+$ <strong>cp $XDG_RUNTIME_DIR/containers/auth.json mirror-pull-secret</strong></code></pre>
 </div>
 </div>
 </li>
@@ -340,7 +352,7 @@ $ <strong>sudo update-ca-trust</strong></code></pre>
 <p>Check that you can use the pull secret to inspect container images on the mirror registry. It should work with TLS validation enabled, which is the default for all container tools.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>skopeo inspect --authfile mirror-pull-secret -f '{{.RepoTags}}' docker://registry.lab.example.com:8443/ubi9/ubi</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>skopeo inspect --authfile mirror-pull-secret -f '{{.RepoTags}}' docker://servera.lab.example.com:8443/ubi9/ubi</strong>
 [latest]</code></pre>
 </div>
 </div>
@@ -415,8 +427,8 @@ Swap:             0B          0B          0B</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>df -h /var/lib/containers</strong>
-Filesystem             Size  Used Avail Use% Mounted on
-/dev/mapper/rhel-root   10G  7.1G  2.9G  71% /</code></pre>
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/vda4       9.4G  2.6G  6.8G  28% /</code></pre>
 </div>
 </div>
 </li>
@@ -426,7 +438,7 @@ Filesystem             Size  Used Avail Use% Mounted on
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo vgs</strong>
   VG   #PV #LV #SN Attr   VSize   VFree
-  rhel   1   1   0 wz--n- &lt;19.02g &lt;9.02g</code></pre>
+  rhel   1   0   0 wz--n- &lt;10.00g &lt;10.00g</code></pre>
 </div>
 </div>
 </li>
@@ -434,13 +446,16 @@ Filesystem             Size  Used Avail Use% Mounted on
 <p>Check that your <em>test machine</em> is not using the network ranges used by the <a href="https://github.com/openshift/microshift/blob/main/docs/user/howto_firewall.md">Kubernetes virtual networks</a> nor the OpenShift ingress IP address, which are 10.42.0.0/16 to 10.44.0.0/16 and 169.254.169.1.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ip br addr show</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ip -br addr show</strong>
 lo               UNKNOWN        127.0.0.1/8 ::1/128
-enp1s0           UP             172.25.250.12/24 fe80::5054:ff:fe20:5959/64
+eth0             UP             172.25.250.11/24 fe80::5054:ff:fe00:fa0b/64
+eth1             UP             10.80.0.156/16 fe80::2d83:182f:c10a:438b/64
 $ <strong>route -n</strong>
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 0.0.0.0         172.25.250.254  0.0.0.0         UG    100    0        0 eth0
+10.80.0.0       0.0.0.0         255.255.0.0     U     101    0        0 eth1
+169.254.169.254 10.80.0.10      255.255.255.255 UGH   101    0        0 eth1
 172.25.250.0    0.0.0.0         255.255.255.0   U     100    0        0 eth0</code></pre>
 </div>
 </div>
@@ -451,7 +466,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 <li>
 <p>Install the MicroShift packages.</p>
 <div class="paragraph">
-<p>You need only one package, called <code>microshift</code>, but pay attention to its dependency list. You will see packages from OpenShift, such as <code>cri-o</code>; packages from RHEL for Edge, like <code>greenboot</code>; and also packages from Fast Data Path for RHEL 9, which provide Open Virtual Networking (OVN).</p>
+<p>You need only one package, called <code>microshift</code>, but pay attention to its dependency list. You will see packages from OpenShift, such as <code>cri-o</code>; packages from RHEL for Edge, like <code>greenboot</code>; and also packages from Fast Datapath for RHEL 9, which provide Open Virtual Networking (OVN).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -522,18 +537,30 @@ $ <strong>sudo chmod 600 /etc/crio/openshift-pull-secret</strong></code></pre>
 </div>
 </li>
 <li>
-<p>Download a CRI-O registry configuration, from <a href="https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/999-microshift-mirror.conf">GitHub</a>, that redirects container images from Red Hat Registries and Quay.io to the
-mirror registry.</p>
+<p>Download a CRI-O registry configuration, from the course <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/999-microshift-mirror.conf">samples repository</a>, that redirects container images from Red Hat Registries and Quay.io to the mirror registry.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>head -n 5 999-microshift-mirror.conf</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/999-microshift-mirror.conf</strong>
+$ <strong>head -n 5 999-microshift-mirror.conf</strong>
 [[registry]]
     prefix = ""
-    location = "registry.lab.example.com:8443" 
+    location = "servera.lab.example.com:8443" 
     mirror-by-digest-only = true
     insecure = false
 ...</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This registry configuration only affects MicroShift release iamges. You may want to change it to include images from add-on operators and your applications. In this course, we will refer to application images by the mirror registry.
+</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
@@ -545,10 +572,11 @@ mirror registry.</p>
 </div>
 </li>
 <li>
-<p>Download a CRI-O image policy, from <a href="https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/containers-policy.json.nosigs">GitHub</a>, that allows running any container image, from anywhere, without checking image signatures.</p>
+<p>Download a CRI-O image policy, from the course <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/containers-policy.json.nosigs">samples repository</a>, that allows running any container image, from anywhere, without checking image signatures.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cat containers-policy.json.nosigs</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/containers-policy.json.nosigs</strong>
+$ <strong>cat containers-policy.json.nosigs</strong>
 {
 	"default": [
     	{
@@ -618,13 +646,15 @@ $ <strong>sudo firewall-cmd --reload</strong></code></pre>
 </div>
 </li>
 <li>
-<p>Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Be warned that it will <em>not</em> be ready yet when the <code>systemctl start</code> command returns.</p>
+<p>Enable and start MicroShift.</p>
+<div class="paragraph">
+<p>Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Be warned that it will <em>not</em> be ready yet when the <code>systemctl</code> command returns.</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl enable microshift</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl enable microshift --now</strong>
 Created symlink /etc/systemd/system/multi-user.target.wants/microshift.service → /usr/lib/systemd/system/microshift.service.
-Created symlink /etc/systemd/system/multi-user.target.wants/microshift-cleanup-kubelet.service → /usr/lib/systemd/system/microshift-cleanup-kubelet.service.
-$ <strong>sudo systemctl start microshift</strong></code></pre>
+Created symlink /etc/systemd/system/multi-user.target.wants/microshift-cleanup-kubelet.service → /usr/lib/systemd/system/microshift-cleanup-kubelet.service.</code></pre>
 </div>
 </div>
 </li>
@@ -690,14 +720,16 @@ rhelvm   Ready	control-plane,master,worker   7m31s   v1.30.5</code></pre>
 <p>Check the presence of the virtual network bridges and interfaces used by Kubernetes virtual networks.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">lo               UNKNOWN        127.0.0.1/8 ::1/128
-enp1s0           UP             172.25.250.12/24 fe80::5054:ff:fe7a:4548/64
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ip -br addr show</strong>
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+eth0             UP             172.25.250.11/24 fe80::5054:ff:fe00:fa0b/64
+eth1             UP             10.80.0.156/16 fe80::2d83:182f:c10a:438b/64
 ovs-system       DOWN
 br-ex            UNKNOWN        10.44.0.0/32 169.254.169.2/29
-ovn-k8s-mp0      UNKNOWN        10.42.0.2/24 fe80::f82e:7aff:fe45:9ef/64
 br-int           UNKNOWN
-0bf5acf4f0b11ca@if2 UP             fe80::867:8ff:fe81:7bc9/64
-7faf584a140566a@if2 UP             fe80::483d:adff:fe6e:1504/64
+ovn-k8s-mp0      UNKNOWN        10.42.0.2/24 fe80::50:70ff:feaa:25e2/64
+0ef8475e7471f6c@if2 UP             fe80::f860:c6ff:fe76:39ce/64
+23e82273294fb87@if2 UP             fe80::24b6:c5ff:fe6b:3086/64
 ...</code></pre>
 </div>
 </div>
@@ -709,17 +741,19 @@ br-int           UNKNOWN
 <p>Check the presence of the routing rules which enable communication between your real networks and Kubernetes virtual networks.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">[student@rhelvm4 ~]$ sudo route -n
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo route -n</strong>
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-0.0.0.0         172.25.250.254  0.0.0.0         UG    100    0        0 enp1s0
+0.0.0.0         172.25.250.254  0.0.0.0         UG    100    0        0 eth0
 10.42.0.0       0.0.0.0         255.255.255.0   U     0      0        0 ovn-k8s-mp0
 10.42.0.0       10.42.0.1       255.255.0.0     UG    0      0        0 ovn-k8s-mp0
 10.43.0.0       169.254.169.4   255.255.0.0     UG    0      0        0 br-ex
+10.80.0.0       0.0.0.0         255.255.0.0     U     101    0        0 eth1
 169.254.169.0   0.0.0.0         255.255.255.248 U     0      0        0 br-ex
 169.254.169.1   0.0.0.0         255.255.255.255 UH    0      0        0 br-ex
 169.254.169.3   10.42.0.1       255.255.255.255 UGH   0      0        0 ovn-k8s-mp0
-172.25.250.0    0.0.0.0         255.255.255.0   U     100    0        0 enp1s0</code></pre>
+169.254.169.254 10.80.0.10      255.255.255.255 UGH   101    0        0 eth1
+172.25.250.0    0.0.0.0         255.255.255.0   U     100    0        0 eth0</code></pre>
 </div>
 </div>
 </li>
@@ -727,7 +761,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 <p>Finally, check that you can create new pods.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/local-admin run shell -it --restart Never --image registry.lab.example.com:8443/ubi9/ubi -- rpm -q redhat-release</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/local-admin run shell -it --restart Never --image servera.lab.example.com:8443/ubi9/ubi -- rpm -q redhat-release</strong>
 redhat-release-9.5-0.6.el9.x86_64
 $ <strong>oc --kubeconfig ~/local-admin delete pod shell</strong>
 pod "shell" deleted</code></pre>
