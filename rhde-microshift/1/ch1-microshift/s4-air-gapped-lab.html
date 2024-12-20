@@ -173,32 +173,32 @@ Work In Progress
 <h2 id="_before_you_begin"><a class="anchor" href="#_before_you_begin"></a>Before you Begin</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You need a few different machines to perform the hands-on activities in this course.</p>
+<p>You need a few machines to perform the hands-on activities in this course.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>A <em>development machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install Image Builder and RPM-OSTree tools, create test VMs using libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.</p>
+<p>A <em>development machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install Image Builder and RPM-OSTree tools, create test VMs using Libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.</p>
 </li>
 <li>
 <p>A <em>test machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install MicroShift on package-based RHEL.</p>
 </li>
 <li>
-<p>A <em>package server machine</em> already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, RHEL Fast Data Path, and Red Hat OpenShift Container Platform.</p>
+<p>A <em>package server machine</em> already configured to serve DNF repositories for RHEL, Fast Datapath for RHEL, and Red Hat OpenShift Container Platform.</p>
 </li>
 <li>
 <p>A <em>web server machine</em> with RHEL and unrestricted <code>sudo</code>, to host OSTree repositories</p>
 </li>
 <li>
-<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, to host a <a href="https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift">mirror registry for Red Hat OpenShift</a>. In the classroom environment, it is the same machine as the <em>web server machine</em>.</p>
+<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, to host a <a href="https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift">mirror registry for Red Hat OpenShift</a>.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>These instructions were tested on RHEL 9.5 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
+<p>These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
 </div>
 <div class="paragraph">
-<p>If you are using the course environment, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from <code>workstation</code> VM to the <code>serverb</code> VM, which is your <em>test machine</em>, using the same user. In the same way, your will start SSH sessions to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>.</p>
+<p>If you are using the course environment, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from the <code>workstation</code> VM to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>, using the same user.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -207,7 +207,7 @@ Work In Progress
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performend, it is using the same machine as the previous step.
+Be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performed, it is using the same machine as its previous step.
 </td>
 </tr>
 </table>
@@ -235,7 +235,10 @@ It should be possible to perform all activities in this course using a <a href="
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Configure your <em>web server machine</em> with a mirror registry for Red Hat OpenShift. These steps are required for <em>both</em> kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images, if you are performing air-gaped deployments.</p>
+<p>Configure your <em>web server machine</em> with a mirror registry for Red Hat OpenShift.</p>
+<div class="paragraph">
+<p>These steps are required for <em>both</em> kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images, if you are performing air-gaped deployments.</p>
+</div>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -249,7 +252,7 @@ Complete!</code></pre>
 </div>
 </li>
 <li>
-<p>Allow remote access to the mirror registry on the system&#8217;s firewall.</p>
+<p>Allow remote access to the mirror registry on the system firewall.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo firewall-cmd --add-port=8443/tcp --permanent</strong>
@@ -260,7 +263,19 @@ success</code></pre>
 </div>
 </li>
 <li>
-<p>Download the mirror registry for Red Hat OpenShift installer. In a connected environment, you would get it from the <a href="https://console.redhat.com/openshift/downloads#tool-mirror-registry">downloads</a> page of the Red Hat Hybrid Cloud Console], but there is already a copy of the installer in the <a href="http://content.example.com/rhde/rhocp/">classroom environment</a>.</p>
+<p>Download the mirror registry for Red Hat OpenShift installer.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In a connected environment, you would get it from the <a href="https://console.redhat.com/openshift/downloads#tool-mirror-registry">downloads</a> page of the Red Hat Hybrid Cloud Console, but there is already a copy of the installer in the <a href="http://content.example.com/rhde/rhocp/">course environment</a>.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q http://content.example.com/rhde/rhocp/mirror-registry-amd64.tar.gz</strong></code></pre>
@@ -302,6 +317,28 @@ INFO[2024-12-19 15:25:41] Quay uninstalled successfully</code></pre>
 </div>
 </li>
 <li>
+<p>If all is well, you should have three new containers, and two new system services.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo podman ps</strong>
+CONTAINER ID  IMAGE                                         COMMAND     CREATED      STATUS      PORTS                   NAMES
+c4fee96c05e0  registry.access.redhat.com/ubi8/pause:8.10-5  infinity    5 hours ago  Up 5 hours  0.0.0.0:8443-&gt;8443/tcp  3e6c474403ac-infra
+48a7e7a330dc  registry.redhat.io/quay/quay-rhel8:v3.12.2    registry    5 hours ago  Up 5 hours  0.0.0.0:8443-&gt;8443/tcp  quay-app
+82b8559fcc97  registry.redhat.io/rhel8/redis-6:1-190        run-redis   5 hours ago  Up 5 hours  0.0.0.0:8443-&gt;8443/tcp  quay-redis
+$ <strong>systemctl status quay-app</strong>
+● quay-app.service - Quay Container
+     Loaded: loaded (/etc/systemd/system/quay-app.service; enabled; preset: disabled)
+     Active: active (running) since Fri 2024-12-20 09:04:13 EST; 5h 19min ago
+...
+$ <strong>systemctl status quay-redis</strong>
+● quay-redis.service - Redis Podman Container for Quay
+     Loaded: loaded (/etc/systemd/system/quay-redis.service; enabled; preset: disabled)
+     Active: active (running) since Fri 2024-12-20 09:04:13 EST; 5h 19min ago
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
 <p>Publish the CA certificate of the mirror registry on the Apache Web Server, so other machines can download it and connect to the mirror registry without disabling TLS validation.</p>
 <div class="listingblock">
 <div class="content">
@@ -315,7 +352,7 @@ INFO[2024-12-19 15:25:41] Quay uninstalled successfully</code></pre>
 <li>
 <p>Configure your <em>development machine</em> to access your mirror registry.</p>
 <div class="paragraph">
-<p>We will install MicroShift with common assumptions of air-gapped environments, where MicroShift should only pull contrainer images that were previouslly vetted and only from private container registries, which in the classroom environment is the mirror registry..</p>
+<p>We will install MicroShift with common assumptions of air-gapped environments, where MicroShift should only pull contrainer images that were previouslly vetted and only from private container registries, which in the course environment is the mirror registry..</p>
 </div>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
@@ -339,7 +376,10 @@ Login Succeeded!</code></pre>
 </div>
 </li>
 <li>
-<p>Copy your registry authentication credentials to a pull secret file. It replaces the pull secret of your Red Hat account, that you would use to install OpenShift and MicroShift when connected to the internet.</p>
+<p>Copy your registry authentication credentials to a pull secret file.</p>
+<div class="paragraph">
+<p>This file replaces the pull secret of your Red Hat account, that you would use to install OpenShift and MicroShift when connected to the internet.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cp $XDG_RUNTIME_DIR/containers/auth.json mirror-pull-secret</strong></code></pre>
@@ -352,7 +392,7 @@ Login Succeeded!</code></pre>
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-You will later copy this file to your MicroShift instances, do it is important that it contains only credentials to the mirror registry, and nothing else. If you configured your mirror registry with exactly the same user name and password from the previous step, you can download a <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/mirror-pull-secret">sample pull secret file</a> from the course samples repository and just edit the host name of your mirror registry.
+You will later copy this file to your MicroShift instances, so it is important that it contains only credentials to the mirror registry, and nothing else. If you configured your mirror registry with exactly the same user name and password from the previous step, you can download a <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/mirror-pull-secret">sample pull secret file</a> from the course samples repository and just edit the host name of your mirror registry.
 </td>
 </tr>
 </table>
@@ -360,8 +400,17 @@ You will later copy this file to your MicroShift instances, do it is important t
 </li>
 <li>
 <p>Download a file system copy of all images from the classroom server.</p>
-<div class="paragraph">
-<p>When outside of the classroom environment, follow the instructions from product docs to download MicroShift images to a staging directory. In the classroom environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on bandwidth fees.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When outside of the course environment, follow the instructions from product docs to extract a list of MicroShoft release images from the <code>microshift</code> RPM package and download them to a staging directory. In the course environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on cloud bandwidth fees.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -377,7 +426,7 @@ Downloaded: 409 files, 2.9G in 1m 43s (28.9 MB/s)</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The previous command produces a bunch of <code>index.html*</code> files that you can safely ignore. We should have put a TAR backup in the classroom environment, instead of a directory tree.
+The previous command produces a bunch of <code>index.html*</code> files that you can safely ignore. We should have put a TAR backup in the course environment, instead of a directory tree.
 </td>
 </tr>
 </table>
@@ -387,7 +436,7 @@ The previous command produces a bunch of <code>index.html*</code> files that you
 </div>
 </li>
 <li>
-<p>Populate the mirror registry with container images required by MicroShift and sample applications for course activities.</p>
+<p>Populate the mirror registry with container images required by MicroShift.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -485,7 +534,6 @@ In production environments, it is not recommended that you mirror images based o
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ podman search servera.lab.example.com:8443/
 NAME                                                                 DESCRIPTION
-NAME                                                                 DESCRIPTION
 servera.lab.example.com:8443/lvms4/lvms-rhel9-operator
 servera.lab.example.com:8443/openshift-release-dev/ocp-v4.0-art-dev
 servera.lab.example.com:8443/rhel9/mysql-80
@@ -514,8 +562,17 @@ The mirror registry for Red Hat OpenShift only supports a subset of the features
 </li>
 <li>
 <p>Check that your <em>package server machine</em> is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for <em>both</em> kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.</p>
-<div class="paragraph">
-<p>In a production environment, it is recommended that you deploy Red Hat Satellite to mirror RPM package repositories from Red Hat products, but the classroom environment uses an Apache Web Server.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In production environments, it is recommended that you deploy Red Hat Satellite to mirror RPM package repositories from Red Hat products, but the course environment uses an Apache Web Server.
+</td>
+</tr>
+</table>
 </div>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
@@ -531,7 +588,7 @@ The mirror registry for Red Hat OpenShift only supports a subset of the features
 </ol>
 </div>
 <div class="paragraph">
-<p>Lorem Ipsum</p>
+<p>You now have your <em>mirror registry machine</em> and your <em>package server machine</em> ready to support air-gapped deployment of MicroShift in both package-based RHEL and in RHEL for Edge images.</p>
 </div>
 </div>
 </div>
@@ -539,7 +596,7 @@ The mirror registry for Red Hat OpenShift only supports a subset of the features
 <h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a>What&#8217;s Next</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Lorem Ipsum</p>
+<p>The next chapter features a series of hands-on activities that deploy MicroShift on a RHEL VM and configure unprivileged developer-level access to it.</p>
 </div>
 </div>
 </div>

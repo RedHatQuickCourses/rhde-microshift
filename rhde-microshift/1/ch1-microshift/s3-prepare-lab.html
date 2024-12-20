@@ -173,24 +173,24 @@ Work In Progress
 <h2 id="_before_you_begin"><a class="anchor" href="#_before_you_begin"></a>Before you Begin</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You need a few different machines to perform the hands-on activities in this course.</p>
+<p>You need a few machines to perform the hands-on activities in this course.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>A <em>development machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install Image Builder and RPM-OSTree tools, create test VMs using libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.</p>
+<p>A <em>development machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install Image Builder and RPM-OSTree tools, create test VMs using Libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.</p>
 </li>
 <li>
 <p>A <em>test machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install MicroShift on package-based RHEL.</p>
 </li>
 <li>
-<p>A <em>package server machine</em> already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, RHEL Fast Data Path, and Red Hat OpenShift Container Platform.</p>
+<p>A <em>package server machine</em> already configured to serve DNF repositories for RHEL, Fast Datapath for RHEL, and Red Hat OpenShift Container Platform.</p>
 </li>
 <li>
 <p>A <em>web server machine</em> with RHEL and unrestricted <code>sudo</code>, to host OSTree repositories</p>
 </li>
 <li>
-<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, to host a <a href="https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift">mirror registry for Red Hat OpenShift</a>. In the classroom environment, it is the same machine as the <em>web server machine</em>.</p>
+<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, to host a <a href="https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift">mirror registry for Red Hat OpenShift</a>.</p>
 </li>
 </ul>
 </div>
@@ -198,7 +198,7 @@ Work In Progress
 <p>These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
 </div>
 <div class="paragraph">
-<p>If you are using the course environment, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from <code>workstation</code> VM to the <code>serverb</code> VM, which is your <em>test machine</em>, using the same user. In the same way, your will start SSH sessions to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>.</p>
+<p>If you are using the course environment, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from the <code>workstation</code> VM to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>, using the same user.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -207,7 +207,7 @@ Work In Progress
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performend, it is using the same machine as the previous step.
+Be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performed, it is using the same machine as its previous step.
 </td>
 </tr>
 </table>
@@ -216,7 +216,7 @@ Be sure you execute each step on the correct machine. If a step is not explicit 
 <p>In the course environment, the <code>classroom</code> VM, with the <code>materials</code> alias, is your <em>package server machine</em> but you are <em>not</em> expected to start SSH sessions nor perform any activity on it.</p>
 </div>
 <div class="paragraph">
-<p>If you are using the same course enviroment where you performed the activities from the <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/index.html">Building Red Hat Device Edge Images</a> quick course, you&#8217;ll have some requirements already set up. They are listed here anyway, for learners that are starting this course in a new course environment.</p>
+<p>If you are using the same course enviroment where you performed the activities from the <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/index.html">Building Red Hat Device Edge Images</a> quick course, you should have some requirements already set up. They are listed here anyway, for learners that are starting this course in a new course environment.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -238,7 +238,7 @@ It should be possible to perform all activities in this course using a <a href="
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Configure your <em>development machine</em> with the RHEL for Edge tools. It should be ready if you already performed the activities from the first course on the same classroom environment.</p>
+<p>Configure your <em>development machine</em> with the RHEL for Edge tools. It should be ready if you already performed the activities from the first course on the same course environment.</p>
 <div class="paragraph">
 <p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the  <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html">first course</a> which focus on deploying Image Builder and RPM-OSTree.</p>
 </div>
@@ -295,7 +295,7 @@ success</code></pre>
 </div>
 </li>
 <li>
-<p>Configure your unpriviged user with bash command autocompletion for the Image Builder CLI.</p>
+<p>Configure your unpriviged user with Bash command autocompletion for the Image Builder CLI.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>echo 'source /etc/bash_completion.d/composer-cli' &gt;&gt; $HOME/.bashrc</strong></code></pre>
@@ -341,7 +341,10 @@ Complete!</code></pre>
 </div>
 </li>
 <li>
-<p>Configure package sources for Image Builder. Your <em>development machine</em> should be already configured with access to RHEL and MicroShift package repositories, but image builder does <em>not</em> use the configurations from DNF and YUM, and, if you do not configure image sources, image builder will try to download packages from Red Hat repositories over the Internet.</p>
+<p>Configure package sources for Image Builder.</p>
+<div class="paragraph">
+<p>Your <em>development machine</em> should be already configured with access to RHEL and MicroShift package repositories, but image builder does <em>not</em> use the configurations from DNF and YUM, and, if you do not configure image sources, image builder will try to download packages from Red Hat repositories over the Internet.</p>
+</div>
 <div class="paragraph">
 <p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the  <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html">first course</a> which focus on deploying Image Builder and RPM-OSTree.</p>
 </div>
@@ -366,7 +369,7 @@ Complete!</code></pre>
 <li>
 <p>Modify the configuration file to match your local DNF repository. Pay attention to attributes such as <code>baseurl</code>, <code>rhsm</code> and <code>check_gpg</code>.</p>
 <div class="paragraph">
-<p>In the classroom environment, you should make the following edits:</p>
+<p>In the course environment, you should make the following edits:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -377,14 +380,14 @@ Complete!</code></pre>
       "baseurl": "http://content.example.com/rhel9.5/x86_64/dvd/BaseOS",
 ...
       "rhsm": false,
-      "check_gpg": false
+      "check_gpg": true
 ...
     {
       "name": "appstream",
       "baseurl": "http://content.example.com/rhel9.5/x86_64/dvd/AppStream",
 ...
       "rhsm": false,
-      "check_gpg": false
+      "check_gpg": true
 ...</code></pre>
 </div>
 </div>
@@ -442,7 +445,7 @@ Later in this course you will configure additional package sources for packages 
 </div>
 </li>
 <li>
-<p>Configure your <em>development machine</em> with the libvirt tools. It should be ready if you already performed the activities from the first course on the same classroom environment.</p>
+<p>Configure your <em>development machine</em> with the Libvirt tools. It should be ready if you already performed the activities from the first course on the same course environment.</p>
 <div class="paragraph">
 <p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from tue <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch3-test/s2-boot-lab.html">first course</a> which focus deploying Libvirt and using KVM virtualization.</p>
 </div>
@@ -529,7 +532,7 @@ net.ipv4.ip_forward = 1</code></pre>
 </div>
 </li>
 <li>
-<p>Install libvirt&#8217;s NSS module.</p>
+<p>Install Libvirt&#8217;s NSS module.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install libvirt-nss</strong>
@@ -549,7 +552,7 @@ $ <strong>sudo chmod a+r /etc/qemu/bridge.conf</strong></code></pre>
 </div>
 </li>
 <li>
-<p>Enable and start the libvirt network daemon.</p>
+<p>Enable and start the Libvirt network daemon.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl enable virtnetworkd --now</strong>
@@ -558,7 +561,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/virtnetworkd.service
 </div>
 </li>
 <li>
-<p>Check that libvirt initialized its default network and the <code>virb0</code> bridge device.</p>
+<p>Check that Libvirt initialized its default network and the <code>virb0</code> bridge device.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo virsh net-list</strong>
@@ -571,7 +574,7 @@ virbr0           DOWN           192.168.122.1/24</code></pre>
 </div>
 </li>
 <li>
-<p>Edit your the <code>/etc/nsswtich.conf</code> configuration file by adding the libvirt NSS modules right before the <code>myhostname</code> module. This enables resolving hostnames of session VMs to their IP addresses.</p>
+<p>Edit your the <code>/etc/nsswtich.conf</code> configuration file by adding the Libvirt NSS modules right before the <code>myhostname</code> module. This enables resolving hostnames of session VMs to their IP addresses.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">hosts:      files dns <strong>libvirt libvirt_guest</strong> myhostname</code></pre>
@@ -594,7 +597,7 @@ in production systems, it is recommended that you use the <code>authselect</code
 </div>
 </li>
 <li>
-<p>Configure your <em>web server machine</em> to host OSTree repositories. It should be ready if you already performed the activities from the first course on the same classroom environment.</p>
+<p>Configure your <em>web server machine</em> to host OSTree repositories. It should be ready if you already performed the activities from the first course on the same course environment.</p>
 <div class="paragraph">
 <p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch2-publish/s2-ostree-lab.html">first course</a> which focus configuring an Apache Web Server for OSTree repository management.</p>
 </div>
@@ -643,13 +646,10 @@ Complete!</code></pre>
 </ol>
 </div>
 </li>
-<li>
-<p>Lorem Ipsum</p>
-</li>
 </ol>
 </div>
 <div class="paragraph">
-<p>Lorem Ipsum</p>
+<p>You now have your <em>development machine</em> ready to build and test RHEL for Edge system images, and your <em>web server machine</em> ready to store and distribute OSTree repositories for edge devices.</p>
 </div>
 </div>
 </div>
@@ -657,7 +657,7 @@ Complete!</code></pre>
 <h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a>What&#8217;s Next</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Lorem Ipsum</p>
+<p>The next lab configures the requirements for air-gapped deployments of MicroShift.</p>
 </div>
 </div>
 </div>
