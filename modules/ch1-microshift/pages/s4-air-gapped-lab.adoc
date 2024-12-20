@@ -12,23 +12,23 @@ WARNING: Work In Progress
 
 == Before you Begin
 
-You need a few different machines to perform the hands-on activities in this course. 
+You need a few machines to perform the hands-on activities in this course. 
 
-* A _development machine_ with RHEL and unrestricted `sudo`, where you will install Image Builder and RPM-OSTree tools, create test VMs using libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.
+* A _development machine_ with RHEL and unrestricted `sudo`, where you will install Image Builder and RPM-OSTree tools, create test VMs using Libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.
 
 * A _test machine_ with RHEL and unrestricted `sudo`, where you will install MicroShift on package-based RHEL.
 
-* A _package server machine_ already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, RHEL Fast Data Path, and Red Hat OpenShift Container Platform.
+* A _package server machine_ already configured to serve DNF repositories for RHEL, Fast Datapath for RHEL, and Red Hat OpenShift Container Platform.
 
 * A _web server machine_ with RHEL and unrestricted `sudo`, to host OSTree repositories
 
-* A _mirror registry machine_ with RHEL and unrestricted `sudo`, to host a https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift[mirror registry for Red Hat OpenShift]. In the classroom environment, it is the same machine as the _web server machine_.
+* A _mirror registry machine_ with RHEL and unrestricted `sudo`, to host a https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift[mirror registry for Red Hat OpenShift].
 
-These instructions were tested on RHEL 9.5 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.
+These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.
 
-If you are using the course environment, you will log in on the `workstation` VM as the user `student` with password `student`. The `workstation` VM is your _development machine_. You will start SSH sessions from `workstation` VM to the `serverb` VM, which is your _test machine_, using the same user. In the same way, your will start SSH sessions to the `servera` VM, which is your _web server machine_ and also your _mirror registry machine_. 
+If you are using the course environment, you will log in on the `workstation` VM as the user `student` with password `student`. The `workstation` VM is your _development machine_. You will start SSH sessions from the `workstation` VM to the `servera` VM, which is your _web server machine_ and also your _mirror registry machine_, using the same user.
 
-IMPORTANT: Be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performend, it is using the same machine as the previous step.
+IMPORTANT: Be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performed, it is using the same machine as its previous step.
 
 In the course environment, the `classroom` VM, with the `materials` alias, is your _package server machine_ but you are _not_ expected to start SSH sessions nor perform any activity on it.
 
@@ -36,7 +36,9 @@ NOTE: It should be possible to perform all activities in this course using a htt
 
 == Instructions
 
-1. Configure your _web server machine_ with a mirror registry for Red Hat OpenShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images, if you are performing air-gaped deployments.
+1. Configure your _web server machine_ with a mirror registry for Red Hat OpenShift.
++
+These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images, if you are performing air-gaped deployments.
 
 .. The mirror registry for OpenShift runs as a local container, so install Podman.
 +
@@ -47,7 +49,7 @@ $ *sudo dnf install container-tools*
 Complete!
 --
 
-.. Allow remote access to the mirror registry on the system's firewall.
+.. Allow remote access to the mirror registry on the system firewall.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -57,7 +59,9 @@ $ *sudo firewall-cmd --reload*
 success
 --
 
-.. Download the mirror registry for Red Hat OpenShift installer. In a connected environment, you would get it from the https://console.redhat.com/openshift/downloads#tool-mirror-registry[downloads] page of the Red Hat Hybrid Cloud Console], but there is already a copy of the installer in the http://content.example.com/rhde/rhocp/[classroom environment].
+.. Download the mirror registry for Red Hat OpenShift installer.
++
+NOTE: In a connected environment, you would get it from the https://console.redhat.com/openshift/downloads#tool-mirror-registry[downloads] page of the Red Hat Hybrid Cloud Console, but there is already a copy of the installer in the http://content.example.com/rhde/rhocp/[course environment].
 +
 [source,subs="verbatim,quotes"]
 --
@@ -95,6 +99,27 @@ $ *sudo ./mirror-registry/mirror-registry uninstall -v --quayRoot /var/quay --au
 INFO[2024-12-19 15:25:41] Quay uninstalled successfully 
 --
 
+.. If all is well, you should have three new containers, and two new system services.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo podman ps*
+CONTAINER ID  IMAGE                                         COMMAND     CREATED      STATUS      PORTS                   NAMES
+c4fee96c05e0  registry.access.redhat.com/ubi8/pause:8.10-5  infinity    5 hours ago  Up 5 hours  0.0.0.0:8443->8443/tcp  3e6c474403ac-infra
+48a7e7a330dc  registry.redhat.io/quay/quay-rhel8:v3.12.2    registry    5 hours ago  Up 5 hours  0.0.0.0:8443->8443/tcp  quay-app
+82b8559fcc97  registry.redhat.io/rhel8/redis-6:1-190        run-redis   5 hours ago  Up 5 hours  0.0.0.0:8443->8443/tcp  quay-redis
+$ *systemctl status quay-app*
+● quay-app.service - Quay Container
+     Loaded: loaded (/etc/systemd/system/quay-app.service; enabled; preset: disabled)
+     Active: active (running) since Fri 2024-12-20 09:04:13 EST; 5h 19min ago
+...
+$ *systemctl status quay-redis*
+● quay-redis.service - Redis Podman Container for Quay
+     Loaded: loaded (/etc/systemd/system/quay-redis.service; enabled; preset: disabled)
+     Active: active (running) since Fri 2024-12-20 09:04:13 EST; 5h 19min ago
+...
+--
+
 .. Publish the CA certificate of the mirror registry on the Apache Web Server, so other machines can download it and connect to the mirror registry without disabling TLS validation.
 +
 [source,subs="verbatim,quotes"]
@@ -104,7 +129,7 @@ $ *sudo cp /var/quay/quay-rootCA/rootCA.pem /var/www/html/quay-rootCA.pem*
 
 2. Configure your _development machine_ to access your mirror registry.
 +
-We will install MicroShift with common assumptions of air-gapped environments, where MicroShift should only pull contrainer images that were previouslly vetted and only from private container registries, which in the classroom environment is the mirror registry..
+We will install MicroShift with common assumptions of air-gapped environments, where MicroShift should only pull contrainer images that were previouslly vetted and only from private container registries, which in the course environment is the mirror registry..
 
 .. Add the CA certificate of the mirror registry to your system trusted certificates.
 +
@@ -123,18 +148,20 @@ $ *podman login -u microshift -p redhat123 https://servera.lab.example.com:8443*
 Login Succeeded!
 --
 
-.. Copy your registry authentication credentials to a pull secret file. It replaces the pull secret of your Red Hat account, that you would use to install OpenShift and MicroShift when connected to the internet.
+.. Copy your registry authentication credentials to a pull secret file.
++
+This file replaces the pull secret of your Red Hat account, that you would use to install OpenShift and MicroShift when connected to the internet.
 +
 [source,subs="verbatim,quotes"]
 --
 $ *cp $XDG_RUNTIME_DIR/containers/auth.json mirror-pull-secret*
 --
 +
-WARNING: You will later copy this file to your MicroShift instances, do it is important that it contains only credentials to the mirror registry, and nothing else. If you configured your mirror registry with exactly the same user name and password from the previous step, you can download a https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/mirror-pull-secret[sample pull secret file] from the course samples repository and just edit the host name of your mirror registry.
+WARNING: You will later copy this file to your MicroShift instances, so it is important that it contains only credentials to the mirror registry, and nothing else. If you configured your mirror registry with exactly the same user name and password from the previous step, you can download a https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/mirror-pull-secret[sample pull secret file] from the course samples repository and just edit the host name of your mirror registry.
 
 .. Download a file system copy of all images from the classroom server.
 +
-When outside of the classroom environment, follow the instructions from product docs to download MicroShift images to a staging directory. In the classroom environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on bandwidth fees.
+NOTE: When outside of the course environment, follow the instructions from product docs to extract a list of MicroShoft release images from the `microshift` RPM package and download them to a staging directory. In the course environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on cloud bandwidth fees.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -143,9 +170,9 @@ $ *wget --mirror -np http://content.example.com/rhde/oci/*
 Downloaded: 409 files, 2.9G in 1m 43s (28.9 MB/s)
 --
 +
-NOTE: The previous command produces a bunch of `index.html*` files that you can safely ignore. We should have put a TAR backup in the classroom environment, instead of a directory tree.
+NOTE: The previous command produces a bunch of `index.html*` files that you can safely ignore. We should have put a TAR backup in the course environment, instead of a directory tree.
 
-3. Populate the mirror registry with container images required by MicroShift and sample applications for course activities.
+3. Populate the mirror registry with container images required by MicroShift.
 
 .. Download the https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/sh/upload-microshift.sh[MicroShift images upload script]. It is based on the script provided by https://docs.redhat.com/en/documentation/red_hat_build_of_microshift/4.17/html/embedding_in_a_rhel_for_edge_image/index[product documentation], with minor edits.
 +
@@ -201,7 +228,6 @@ NOTE: In production environments, it is not recommended that you mirror images b
 --
 $ podman search servera.lab.example.com:8443/
 NAME                                                                 DESCRIPTION
-NAME                                                                 DESCRIPTION
 servera.lab.example.com:8443/lvms4/lvms-rhel9-operator               
 servera.lab.example.com:8443/openshift-release-dev/ocp-v4.0-art-dev  
 servera.lab.example.com:8443/rhel9/mysql-80                          
@@ -215,16 +241,15 @@ NOTE: The mirror registry for Red Hat OpenShift only supports a subset of the fe
 
 5. Check that your _package server machine_ is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
 +
-In a production environment, it is recommended that you deploy Red Hat Satellite to mirror RPM package repositories from Red Hat products, but the classroom environment uses an Apache Web Server.
+NOTE: In production environments, it is recommended that you deploy Red Hat Satellite to mirror RPM package repositories from Red Hat products, but the course environment uses an Apache Web Server.
 
 .. Open `http://content.example.com/rhel9.5/x86_64/dvd/` in a web browser. This directory is a copy of a RHEL offline installation DVD and contains the `baseos` and `appstreams` repositories.
 
 .. Open `http://content.example.com/rhde/rpms/` in a web browser. This directory contains a copy of the Red Hat OpenShift and Fast Data Path for RHEL repositories, created using the `reposync` command.
 
-Lorem Ipsum
-
+You now have your _mirror registry machine_ and your _package server machine_ ready to support air-gapped deployment of MicroShift in both package-based RHEL and in RHEL for Edge images.
 
 == What's Next
 
-Lorem Ipsum
+The next chapter features a series of hands-on activities that deploy MicroShift on a RHEL VM and configure unprivileged developer-level access to it.
 
