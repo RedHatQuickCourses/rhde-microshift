@@ -47,7 +47,7 @@ $ *sudo dnf install container-tools*
 Complete!
 --
 
-.. Allow remote access to the Apache Web Server on the system's firewall.
+.. Allow remote access to the mirror registry on the system's firewall.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -102,14 +102,15 @@ INFO[2024-12-19 15:25:41] Quay uninstalled successfully
 $ *sudo cp /var/quay/quay-rootCA/rootCA.pem /var/www/html/quay-rootCA.pem*
 --
 
-2. From your _development machine_, populate the mirror registry with container images required by MicroShift and sample applications for course activities.
+2. Configure your _development machine_ to access your mirror registry.
++
+We will install MicroShift with common assumptions of air-gapped environments, where MicroShift should only pull contrainer images that were previouslly vetted and only from private container registries, which in the classroom environment is the mirror registry..
 
 .. Add the CA certificate of the mirror registry to your system trusted certificates.
 +
 [source,subs="verbatim,quotes"]
 --
 $ *wget -q http://servera.lab.example.com/quay-rootCA.pem*
-...
 $ *sudo cp quay-rootCA.pem /etc/pki/ca-trust/source/anchors*
 $ *sudo update-ca-trust*
 --
@@ -122,9 +123,18 @@ $ *podman login -u microshift -p redhat123 https://servera.lab.example.com:8443*
 Login Succeeded!
 --
 
+.. Copy your registry authentication credentials to a pull secret file. It replaces the pull secret of your Red Hat account, that you would use to install OpenShift and MicroShift when connected to the internet.
++
+[source,subs="verbatim,quotes"]
+--
+$ *cp $XDG_RUNTIME_DIR/containers/auth.json mirror-pull-secret*
+--
++
+WARNING: You will later copy this file to your MicroShift instances, do it is important that it contains only credentials to the mirror registry, and nothing else. If you configured your mirror registry with exactly the same user name and password from the previous step, you can download a https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/mirror-pull-secret[sample pull secret file] from the course samples repository and just edit the host name of your mirror registry.
+
 .. Download a file system copy of all images from the classroom server.
 +
-When outside of the classroom environment, follow the instructions from product docs to download MicroShift images to a staging directory.
+When outside of the classroom environment, follow the instructions from product docs to download MicroShift images to a staging directory. In the classroom environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on bandwidth fees.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -133,19 +143,83 @@ $ *wget --mirror -np http://content.example.com/rhde/oci/*
 Downloaded: 409 files, 2.9G in 1m 43s (28.9 MB/s)
 --
 +
-NOTE: The previous command produces a bunch of `index.html*` files that you can safely ignore. We should have put a TAR backup in the classroom environment, instead of a file tree copy.
+NOTE: The previous command produces a bunch of `index.html*` files that you can safely ignore. We should have put a TAR backup in the classroom environment, instead of a directory tree.
 
-.. TODO use the script to publish MicroShift images on the mirror registry
+3. Populate the mirror registry with container images required by MicroShift and sample applications for course activities.
 
-.. TODO use the other script to publish sample app images on the mirror registry
+.. Download the https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/sh/upload-microshift.sh[MicroShift images upload script]. It is based on the script provided by https://docs.redhat.com/en/documentation/red_hat_build_of_microshift/4.17/html/embedding_in_a_rhel_for_edge_image/index[product documentation], with minor edits.
++
+Please use the copy of the script in the course samples repository as product documentation may change after this course was released.
++
+[source,subs="verbatim,quotes"]
+--
+$ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/sh/upload-microshift.sh*
+--
 
-.. Lorem Ipsum
+.. Run the MicroShift images upload script. Check carefully that its output does not indicate any errors.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sh upload-microshift.sh*
+--
++
+NOTE: OpenShift release images, which are reused by MicroShift, are not identified by a tag. You must reffer to them by hash, so they look like different builds of the same `openshift-release-dev/ocp-v4.0-art-dev` image but they are actually completely different images.
 
-3. Check that your _package server machine_ is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
+.. You can check that the upload process worked by listing all images in the mirror registry. 
++
+[source,subs="verbatim,quotes"]
+--
+$ podman search servera.lab.example.com:8443/
+NAME                                                                 DESCRIPTION
+servera.lab.example.com:8443/lvms4/lvms-rhel9-operator               
+servera.lab.example.com:8443/openshift-release-dev/ocp-v4.0-art-dev
+--
++
+WARNING: The OCI distribution API is very unreliable for searching and listing container images in a container registry. It works here because there are very few images, but may not work in a production private registry with a larger number of images, including a complete set of images for Red Hat OpenShift.
 
-.. Lorem Ipsum
+4. Populate the mirror registry with container images required by sample applications for course activities.
 
-99. Lorem Ipsum
+.. Download the https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/sh/upload-apps.sh[application images upload script]. It is very similar to the MicroShift images upload script.
++
+[source,subs="verbatim,quotes"]
+--
+$ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/sh/upload-apps.sh*
+--
+
+.. Run the application images upload script. Check carefully that its output does not indicate any errors.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sh upload-apps.sh*
+--
++
+NOTE: In production environments, it is not recommended that you mirror images based on floating tags, such as the implicit `latest` image tag, like we did here. It is recommended that you mirror using non-floating tags or image hashes.
+
+.. You can check that the upload process worked by listing all images in the mirror registry. 
++
+[source,subs="verbatim,quotes"]
+--
+$ podman search servera.lab.example.com:8443/
+NAME                                                                 DESCRIPTION
+NAME                                                                 DESCRIPTION
+servera.lab.example.com:8443/lvms4/lvms-rhel9-operator               
+servera.lab.example.com:8443/openshift-release-dev/ocp-v4.0-art-dev  
+servera.lab.example.com:8443/rhel9/mysql-80                          
+servera.lab.example.com:8443/flozanorht/php-ubi                      
+servera.lab.example.com:8443/ubi9/ubi  
+--
+
+.. Alternativelly, you can open the web GUI of Red Hat Quay at `https://servera.lab.example.com:8443/` and browse the images available in your mirror registry.
++
+NOTE: The mirror registry for Red Hat OpenShift only supports a subset of the features of Red Hat Quay and it is not configured for realiability and high availability.
+
+5. Check that your _package server machine_ is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
++
+In a production environment, it is recommended that you deploy Red Hat Satellite to mirror RPM package repositories from Red Hat products, but the classroom environment uses an Apache Web Server.
+
+.. Open `http://content.example.com/rhel9.5/x86_64/dvd/` in a web browser. This directory is a copy of a RHEL offline installation DVD and contains the `baseos` and `appstreams` repositories.
+
+.. Open `http://content.example.com/rhde/rpms/` in a web browser. This directory contains a copy of the Red Hat OpenShift and Fast Data Path for RHEL repositories, created using the `reposync` command.
 
 Lorem Ipsum
 
