@@ -249,7 +249,7 @@ Complete!</code></pre>
 </div>
 </li>
 <li>
-<p>Allow remote access to the Apache Web Server on the system&#8217;s firewall.</p>
+<p>Allow remote access to the mirror registry on the system&#8217;s firewall.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo firewall-cmd --add-port=8443/tcp --permanent</strong>
@@ -313,7 +313,10 @@ INFO[2024-12-19 15:25:41] Quay uninstalled successfully</code></pre>
 </div>
 </li>
 <li>
-<p>From your <em>development machine</em>, populate the mirror registry with container images required by MicroShift and sample applications for course activities.</p>
+<p>Configure your <em>development machine</em> to access your mirror registry.</p>
+<div class="paragraph">
+<p>We will install MicroShift with common assumptions of air-gapped environments, where MicroShift should only pull contrainer images that were previouslly vetted and only from private container registries, which in the classroom environment is the mirror registry..</p>
+</div>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -321,7 +324,6 @@ INFO[2024-12-19 15:25:41] Quay uninstalled successfully</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q http://servera.lab.example.com/quay-rootCA.pem</strong>
-...
 $ <strong>sudo cp quay-rootCA.pem /etc/pki/ca-trust/source/anchors</strong>
 $ <strong>sudo update-ca-trust</strong></code></pre>
 </div>
@@ -337,9 +339,29 @@ Login Succeeded!</code></pre>
 </div>
 </li>
 <li>
+<p>Copy your registry authentication credentials to a pull secret file. It replaces the pull secret of your Red Hat account, that you would use to install OpenShift and MicroShift when connected to the internet.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cp $XDG_RUNTIME_DIR/containers/auth.json mirror-pull-secret</strong></code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+You will later copy this file to your MicroShift instances, do it is important that it contains only credentials to the mirror registry, and nothing else. If you configured your mirror registry with exactly the same user name and password from the previous step, you can download a <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/mirror-pull-secret">sample pull secret file</a> from the course samples repository and just edit the host name of your mirror registry.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
 <p>Download a file system copy of all images from the classroom server.</p>
 <div class="paragraph">
-<p>When outside of the classroom environment, follow the instructions from product docs to download MicroShift images to a staging directory.</p>
+<p>When outside of the classroom environment, follow the instructions from product docs to download MicroShift images to a staging directory. In the classroom environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on bandwidth fees.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -355,36 +377,156 @@ Downloaded: 409 files, 2.9G in 1m 43s (28.9 MB/s)</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The previous command produces a bunch of <code>index.html*</code> files that you can safely ignore. We should have put a TAR backup in the classroom environment, instead of a file tree copy.
+The previous command produces a bunch of <code>index.html*</code> files that you can safely ignore. We should have put a TAR backup in the classroom environment, instead of a directory tree.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Populate the mirror registry with container images required by MicroShift and sample applications for course activities.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Download the <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/sh/upload-microshift.sh">MicroShift images upload script</a>. It is based on the script provided by <a href="https://docs.redhat.com/en/documentation/red_hat_build_of_microshift/4.17/html/embedding_in_a_rhel_for_edge_image/index">product documentation</a>, with minor edits.</p>
+<div class="paragraph">
+<p>Please use the copy of the script in the course samples repository as product documentation may change after this course was released.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/sh/upload-microshift.sh</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the MicroShift images upload script. Check carefully that its output does not indicate any errors.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sh upload-microshift.sh</strong></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+OpenShift release images, which are reused by MicroShift, are not identified by a tag. You must reffer to them by hash, so they look like different builds of the same <code>openshift-release-dev/ocp-v4.0-art-dev</code> image but they are actually completely different images.
 </td>
 </tr>
 </table>
 </div>
 </li>
 <li>
-<p>TODO use the script to publish MicroShift images on the mirror registry</p>
+<p>You can check that the upload process worked by listing all images in the mirror registry.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ podman search servera.lab.example.com:8443/
+NAME                                                                 DESCRIPTION
+servera.lab.example.com:8443/lvms4/lvms-rhel9-operator
+servera.lab.example.com:8443/openshift-release-dev/ocp-v4.0-art-dev</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The OCI distribution API is very unreliable for searching and listing container images in a container registry. It works here because there are very few images, but may not work in a production private registry with a larger number of images, including a complete set of images for Red Hat OpenShift.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
 </li>
 <li>
-<p>TODO use the other script to publish sample app images on the mirror registry</p>
+<p>Populate the mirror registry with container images required by sample applications for course activities.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Download the <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/sh/upload-apps.sh">application images upload script</a>. It is very similar to the MicroShift images upload script.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/sh/upload-apps.sh</strong></code></pre>
+</div>
+</div>
 </li>
 <li>
-<p>Lorem Ipsum</p>
+<p>Run the application images upload script. Check carefully that its output does not indicate any errors.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sh upload-apps.sh</strong></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In production environments, it is not recommended that you mirror images based on floating tags, such as the implicit <code>latest</code> image tag, like we did here. It is recommended that you mirror using non-floating tags or image hashes.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>You can check that the upload process worked by listing all images in the mirror registry.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ podman search servera.lab.example.com:8443/
+NAME                                                                 DESCRIPTION
+NAME                                                                 DESCRIPTION
+servera.lab.example.com:8443/lvms4/lvms-rhel9-operator
+servera.lab.example.com:8443/openshift-release-dev/ocp-v4.0-art-dev
+servera.lab.example.com:8443/rhel9/mysql-80
+servera.lab.example.com:8443/flozanorht/php-ubi
+servera.lab.example.com:8443/ubi9/ubi</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Alternativelly, you can open the web GUI of Red Hat Quay at <code><a href="https://servera.lab.example.com:8443/" class="bare">https://servera.lab.example.com:8443/</a></code> and browse the images available in your mirror registry.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The mirror registry for Red Hat OpenShift only supports a subset of the features of Red Hat Quay and it is not configured for realiability and high availability.
+</td>
+</tr>
+</table>
+</div>
 </li>
 </ol>
 </div>
 </li>
 <li>
 <p>Check that your <em>package server machine</em> is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for <em>both</em> kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.</p>
+<div class="paragraph">
+<p>In a production environment, it is recommended that you deploy Red Hat Satellite to mirror RPM package repositories from Red Hat products, but the classroom environment uses an Apache Web Server.</p>
+</div>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Lorem Ipsum</p>
+<p>Open <code><a href="http://content.example.com/rhel9.5/x86_64/dvd/" class="bare">http://content.example.com/rhel9.5/x86_64/dvd/</a></code> in a web browser. This directory is a copy of a RHEL offline installation DVD and contains the <code>baseos</code> and <code>appstreams</code> repositories.</p>
+</li>
+<li>
+<p>Open <code><a href="http://content.example.com/rhde/rpms/" class="bare">http://content.example.com/rhde/rpms/</a></code> in a web browser. This directory contains a copy of the Red Hat OpenShift and Fast Data Path for RHEL repositories, created using the <code>reposync</code> command.</p>
 </li>
 </ol>
 </div>
-</li>
-<li>
-<p>Lorem Ipsum</p>
 </li>
 </ol>
 </div>
