@@ -1,14 +1,14 @@
 = Deploy MicroShift on RHEL Servers
 
 Goal::
-Install and Configure MicroShift in package-based RHEL
+Install and configure MicroShift in package-based Red Hat Enterprise Linux (RHEL).
 
 WARNING: Work In Progress
 
 == Introduction
 
-This chapter explores the installation requirements and essential configuration settings of MicroShift, as supported by the Red Hat Build of MicroShift product, with a focus on deployment on air-gaped environments.
+This chapter explores the installation requirements and essential configuration settings of MicroShift, as supported by Red Hat build of MicroShift, with a focus on deployment in air-gapped environments.
 
-The hands-on activities install and configure MicroShift in a RHEL VM, ensure its healthy, and configure it for unprivileged developer access.
+The hands-on activities cover installing and configuring MicroShift in a RHEL virtual machine (VM), ensuring it's healthy, and configuring it for unprivileged developer access.
 
-IMPORTANT: If you plan to deploy MicroShift as part of a RHEL for Edge system, do *NOT* skip this chapter. You must understand the requirements and configurations introduced here to be able to automate them using Image Builder blueprints. You also need the skills you learn here to perform troubleshooting of your RHEL for Edge images which include MicroShift.
+IMPORTANT: If you plan to deploy MicroShift as part of a RHEL for Edge system, do *NOT* skip this chapter. You must understand the requirements and configurations introduced here to be able to automate them using Image Builder blueprints. You also need the skills you learn here to troubleshoot your RHEL for Edge images that include MicroShift.

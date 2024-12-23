@@ -6,33 +6,33 @@ _Estimated reading time: *{time_estimate} minutes*._
 
 Objective::
 
-Install MicroShift in a RHEL VM that is _not_ connected to the Internet.
+Install MicroShift in a RHEL VM that is _not_ connected to the internet.
 
 WARNING: Work In Progress
 
-== Before you Begin
+== Before You Begin
 
-You need a _test machine_ with RHEL and unrestricted `sudo`, where you will install MicroShift.
+You need a _test machine_ with RHEL and unrestricted `sudo`, on which you will install MicroShift.
 
 You also need a _package server machine_ already configured to serve DNF repositories for RHEL, Fast Datapath for RHEL, and Red Hat OpenShift Container Platform.
 
 Finally, you need a _mirror registry machine_ with RHEL and unrestricted `sudo`, already populated with the container iamges required bu MicroShoft and sample applications.
 
-Make sure that your _package server machine_ and _mirror registry machine_ were configured and verified by following the instructions from the xref:ch1-microshift:s4-air-gapped-lab.adoc[previous lab] of this course.
+Make sure that your _package server machine_ and _mirror registry machine_ are properly configured and verified by following the instructions from the xref:ch1-microshift:s4-air-gapped-lab.adoc[previous lab] of this course.
 
 These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.
 
-If you are using the course classroom, you will log in on the `workstation` VM as the user `student` with password `student`, and you start SSH sessions from `workstation` VM to the `serverb` VM, which is your _test machine_, using the same user. If not, please adapt the instructions to your test environment.
+If you are using the course classroom, log in on the `workstation` VM as the user `student` with password `student`, and start SSH sessions from `workstation` VM to the `serverb` VM, which is your _test machine_, using the same user. If not, please adapt the instructions to your test environment.
 
-You will perform all steps in this lab on your _test machine_.
+Perform all steps in this lab on your _test machine_.
 
 == Instructions
 
-1. Log in on your _test machine_ and verify that it has access to the required DNF package repositories.
+1. Log in to your _test machine_ and verify that it has access to the required DNF package repositories.
 
 .. Check that the required package repositories from RHEL and OpenShift are available.
 +
-NOTE: If you were connected to the Internet, or to a Red Hat Satellite instance, and had registered your _test machine_ with a valid Red Hat subscription, you would see something similar to:
+NOTE: If you were connected to the Internet, or to a Red Hat Satellite instance, and had registered your _test machine_ with a valid Red Hat subscription, you would notice something similar to:
 +
 [source,subs="verbatim,quotes"]
 --
@@ -45,7 +45,7 @@ rhel-9-for-x86_64-baseos-rpms                                   Red Hat Enterpri
 rhocp-4.17-for-rhel-9-x86_64-rpms                               Red Hat OpenShift Container Platform 4.17 for RHEL 9 x86_64 (RPMs)
 --
 +
-IMPORTANT: Please, do _not_ register any VM on your virtual labs. Please conserve the limited Internet bandwidth which is shared by all learners using ROLE.
+IMPORTANT: Please do _not_ register any VM on your virtual labs. Conserve the limited internet bandwidth that is shared by all learners using ROLE.
 +
 On the classroom environment, you will find configuration files which point to the _package server machine_ and the names of its DNF repositories match the names of Red Hat DNF repositories.
 +
@@ -77,7 +77,7 @@ ovn24.09-central.x86_64 : Open Virtual Network support
 
 .. Install the `container-tools` package, if it is not already installed on your _test machine_.
 +
-NOTE: This is _not_ strictly required to run MicroShift, but it provides troubleshooting tools which can be valuable in a development environment.
+NOTE: This is _not_ strictly required to run MicroShift; however, it provides troubleshooting tools, which can be valuable in a development environment.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -95,7 +95,7 @@ $ *sudo cp quay-rootCA.pem /etc/pki/ca-trust/source/anchors*
 $ *sudo update-ca-trust*
 --
 
-.. Create a pull secret with enables access to the MicroShift container images.
+.. Create a pull secret, which enables access to the MicroShift container images.
 +
 NOTE: In a deployment connected to the internet, you would get a pull secret from your Red Hat account from the Red Hat Hybrid Cloud Console.
 +
@@ -118,11 +118,11 @@ $ *skopeo inspect --authfile mirror-pull-secret -f '{{.RepoTags}}' docker://serv
 [latest]
 --
 +
-NOTE: The command above would work with your actual Red Hat pull secret if you change the registry part of the container image name to `redhat.registry.io`, but displaying a long list of tags.
+NOTE: The command would work with your actual Red Hat pull secret if you change the registry part of the container image name to `redhat.registry.io`; however, it would display a long list of tags.
 
 4. Verify that your _test machine_ is configured to support the installation of MicroShift.
 
-.. First of all, MicroShift expects that SELinux is enabled, in enforcing mode, and that Firewalld is enabled. Please to not disable any of them, you there's no need!
+.. MicroShift expects that SELinux is enabled, in enforcing mode, and that Firewalld is enabled. Please do not disable any of them; there's no need!
 +
 [source,subs="verbatim,quotes"]
 --
@@ -148,7 +148,7 @@ public (active)
   rich rules:
 --
 +
-Enable more services and trusted zones or interfaces as you need. Later in this course we'll show what to add to enable remote access to MicroShift and Kubernetes applications on it.
+Enable more services and trusted zones or interfaces as you need. Later in this course, you'll learn what to add to enable remote access to MicroShift and Kubernetes applications on it.
 
 .. Check that you have two CPU cores, or two virtual CPUs, and at least 2GB of memory. If you are using the classroom environment, you have more memory than required on the `serverb` VM.
 +
@@ -182,7 +182,7 @@ $ *sudo vgs*
   rhel   1   0   0 wz--n- <10.00g <10.00g
 --
 
-.. Check that your _test machine_ is not using the network ranges used by the https://github.com/openshift/microshift/blob/main/docs/user/howto_firewall.md[Kubernetes virtual networks] nor the OpenShift ingress IP address, which are 10.42.0.0/16 to 10.44.0.0/16 and 169.254.169.1.
+.. Check that your _test machine_ is not using the network ranges used by the https://github.com/openshift/microshift/blob/main/docs/user/howto_firewall.md[Kubernetes virtual networks] or the OpenShift ingress IP address, which are 10.42.0.0/16 to 10.44.0.0/16 and 169.254.169.1.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -201,7 +201,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 
 5. Install the MicroShift packages.
 +
-You need only one package, called `microshift`, but pay attention to its dependency list. You will see packages from OpenShift, such as `cri-o`; packages from RHEL for Edge, like `greenboot`; and also packages from Fast Datapath for RHEL 9, which provide Open Virtual Networking (OVN).
+You need only one package, called `microshift`, but pay attention to its dependency list. Notice that it includes packages from OpenShift, such as `cri-o`; packages from RHEL for Edge, like `greenboot`; and also packages from Fast Datapath for RHEL 9, which provide Open Virtual Networking (OVN).
 +
 [source,subs="verbatim,quotes"]
 --
@@ -294,7 +294,7 @@ WARNING: If you skip that step, some Red Hat add-on operator images will fail to
 
 7. Configure the system firewall and start MicroShift.
 
-.. Allow network traffic on the Kubernetes virtual network
+.. Allow network traffic on the Kubernetes virtual network.
 +
 NOTE: This is _not_ yet allowing network traffic from outside of your _test machine_ to MicroShift and its applications. It is only allowing network traffic between Kubernetes pods and between the _test machine_ and MicroShift.
 +
@@ -309,7 +309,7 @@ $ *sudo firewall-cmd --reload*
 
 .. Enable and start MicroShift.
 +
-Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Be warned that it will _not_ be ready yet when the `systemctl` command returns.
+Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Note that it will _not_ be ready yet when the `systemctl` command returns.>>>>>>> main
 +
 [source,subs="verbatim,quotes"]
 --
@@ -318,7 +318,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/microshift.service â
 Created symlink /etc/systemd/system/multi-user.target.wants/microshift-cleanup-kubelet.service â†’ /usr/lib/systemd/system/microshift-cleanup-kubelet.service.
 --
 
-.. Check that the microshift service, which includes the Kubernetes core daemons, has started, and shows no errors on its logs, but be warned that having a healthy MicroShift service does _not_ mean it's fully ready and available.
+.. Check that the microshift service, which includes the Kubernetes core daemons, has started, and shows no errors on its logs. Be aware that having a healthy MicroShift service does _not_ mean it's fully ready and available.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -331,7 +331,7 @@ $ *sudo systemctl status microshift*
 
 8. Verify that MicroShift is fully initialized.
 
-.. Copy the autogenerated kubeconfig file to your home directory and change its ownership so you can read it from your unprivileged user. Do not let that file stay read-write, ensure it remains unchanged as a "breaking class" resort.
+.. Copy the autogenerated kubeconfig file to your home directory and change its ownership so you can read it from your unprivileged user. Do _not_ let that file stay read-write; ensure it remains unchanged so you can use it in an emergency.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -358,7 +358,7 @@ openshift-storage      	lvms-operator-7f544467bc-cqf2n         	1/1 	Running   0
 openshift-storage      	vg-manager-tjrs2                       	1/1 	Running   0           	5m25s
 --
 
-.. As an additional validation, verify that your Kubernetes cluster contains one node which takes the roles of both control plane and worker node.
+.. As an additional validation, verify that your Kubernetes cluster contains one node that takes the roles of both control plane and worker node.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -386,7 +386,7 @@ ovn-k8s-mp0      UNKNOWN        10.42.0.2/24 fe80::50:70ff:feaa:25e2/64
 +
 The output will be longer as you create more pods, because each one gets a virtual network interface. Notice the two kernel bridges, named `br-ex` and `br-int`, and the OVN switch, named `ovn-k8s-mp0`.
 
-.. Check the presence of the routing rules which enable communication between your real networks and Kubernetes virtual networks.
+.. Check the presence of the routing rules, which enable communication between your real networks and Kubernetes virtual networks.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -417,8 +417,8 @@ pod "shell" deleted
 
 You now have a fully functional deployment of MicroShift in a RHEL machine. If you find that any of the MicroShift pods failed to start, the most likely cause is an error in your registry mirror and image policy configurations.
 
-IMPORTANT: The way we configured MicroShift, it does _not_ contain a pull secret to download container images from Red Hat, even if it has access to the Internet. It can only pull containers from a mirror registry, which is usually what organizations with strict security policies would demand.
+IMPORTANT: The way you configured MicroShift, it does _not_ contain a pull secret to download container images from Red Hat, even if it has access to the internet. It can only pull containers from a mirror registry, which is usually what organizations with strict security policies would demand.
 
 == Next Steps
 
-You probably don't want to perform development from the machine running MicroShift, so the next activity will configure MicroShift for remote access and also an unprivileged user, without full Kubernetes administration rights.
+You probably wouldn't want to perform development from the machine running MicroShift, so in the next activity, you will configure MicroShift for remote access and also an unprivileged user, without full Kubernetes administration rights.

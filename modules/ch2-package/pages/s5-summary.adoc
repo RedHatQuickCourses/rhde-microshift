@@ -2,10 +2,10 @@
 
 In this chapter, you learned:
 
-* You install and configure MicroShift as you would for any other system service in RHEL. The only prerequisite is having unallocated space in a volume group for use by Kubernetes persistent volumes.
+* You install and configure MicroShift as you would any other system service in RHEL. The only prerequisite is having unallocated space in a volume group for use by Kubernetes persistent volumes.
 
 * The lack of application platform components and APIs from OpenShift, such as the OAuth server and Projects API, affects the day-to-day tasks of developer users.
 
 * Red Hat recommends using unprivileged service account tokens and, if necessary, Kubernetes impersonation, to deploy applications and manage MicroShift clusters.
 
-* Once you got a kubeconfig file and access rights to a namespace, you use MicroShift as you would with any other Kubernetes and mostly the same as you would with Red Hat OpenShift.
+* Once you have a kubeconfig file and access rights to a namespace, you use MicroShift as you would any other Kubernetes. You use MicroShift in  mostly the same way as you would Red Hat OpenShift.
