@@ -1,4 +1,4 @@
-:time_estimate: 5
+:time_estimate: 9
 
 = Lab: Prepare a Test Environment for Red Hat Device Edge
 
@@ -34,7 +34,7 @@ In the course environment, the `classroom` VM, with the `materials` alias, is yo
 
 If you are using the same course enviroment where you performed the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/index.html[Building Red Hat Device Edge Images] quick course, you should have some requirements already set up. They are listed here anyway, for learners that are starting this course in a new course environment.
 
-NOTE: It should be possible to perform all activities in this course using a https://developers.redhat.com/products/rhel/download[free Red Hat Developers free subscrition], which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gapped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
+NOTE: It should be possible to perform all activities in this course using a https://developers.redhat.com/products/rhel/download[free Red Hat Developers free subscrition], which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gaped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
 
 == Instructions
 
@@ -42,7 +42,7 @@ NOTE: It should be possible to perform all activities in this course using a htt
 +
 If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the  https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html[first course] which focus on deploying Image Builder and RPM-OSTree.
 
-.. Install the RPM packages for the Image Builder service and its CLI. Notice that RPM-OSTree pacakges are also installed, as dependencies.
+.. Install the RPM packages for the Image Builder service and its CLI. Notice that RPM-OSTree packages are also installed, as dependencies.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -80,14 +80,14 @@ $ *sudo firewall-cmd --reload*
 success
 --
 
-.. Grant your unpriviged user (the `student` user) with access to the Image Builder service.
+.. Grant your unprivileged user (the `student` user) with access to the Image Builder service.
 +
 [source,subs="verbatim,quotes"]
 --
 $ *sudo usermod -a -G weldr student*
 --
 
-.. Configure your unpriviged user with Bash command autocompletion for the Image Builder CLI.
+.. Configure your unprivileged user with Bash command autocompletion for the Image Builder CLI.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -201,7 +201,7 @@ NOTE: Later in this course you will configure additional package sources for pac
 
 3. Configure your _development machine_ with the Libvirt tools. It should be ready if you already performed the activities from the first course on the same course environment.
 +
-If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from tue https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch3-test/s2-boot-lab.html[first course] which focus deploying Libvirt and using KVM virtualization.
+If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch3-test/s2-boot-lab.html[first course] which focus deploying Libvirt and using KVM virtualization.
 
 .. Install the Libvirt tools.
 +

@@ -1,4 +1,4 @@
-:time_estimate: 5
+:time_estimate: 9
 
 = Lab: Prepare a Test Environment for MicroShift
 
@@ -6,7 +6,7 @@ _Estimated reading time: *{time_estimate} minutes*._
 
 Objective::
 
-Prepare a test environment for air-gapped deploment of MicroShift in both package-based RHEL and RHEL for Edge.
+Prepare a test environment for air-gaped deployment of MicroShift in both package-based RHEL and RHEL for Edge.
 
 WARNING: Work In Progress
 
@@ -32,7 +32,7 @@ IMPORTANT: Be sure you execute each step on the correct machine. If a step is no
 
 In the course environment, the `classroom` VM, with the `materials` alias, is your _package server machine_ but you are _not_ expected to start SSH sessions nor perform any activity on it.
 
-NOTE: It should be possible to perform all activities in this course using a https://developers.redhat.com/products/rhel/download[free Red Hat Developers free subscrition], which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gapped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
+NOTE: It should be possible to perform all activities in this course using a https://developers.redhat.com/products/rhel/download[free Red Hat Developers free subscrition], which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gaped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
 
 == Instructions
 
@@ -129,7 +129,7 @@ $ *sudo cp /var/quay/quay-rootCA/rootCA.pem /var/www/html/quay-rootCA.pem*
 
 2. Configure your _development machine_ to access your mirror registry.
 +
-We will install MicroShift with common assumptions of air-gapped environments, where MicroShift should only pull contrainer images that were previouslly vetted and only from private container registries, which in the course environment is the mirror registry..
+We will install MicroShift with common assumptions of air-gaped environments, where MicroShift should only pull container images that were previously vetted and only from private container registries, which in the course environment is the mirror registry.
 
 .. Add the CA certificate of the mirror registry to your system trusted certificates.
 +
@@ -161,7 +161,7 @@ WARNING: You will later copy this file to your MicroShift instances, so it is im
 
 .. Download a file system copy of all images from the classroom server.
 +
-NOTE: When outside of the course environment, follow the instructions from product docs to extract a list of MicroShoft release images from the `microshift` RPM package and download them to a staging directory. In the course environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on cloud bandwidth fees.
+NOTE: When outside of the course environment, follow the instructions from product docs to extract a list of MicroShift release images from the `microshift` RPM package and download them to a staging directory. In the course environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on cloud bandwidth fees.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -190,7 +190,7 @@ $ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-sampl
 $ *sh upload-microshift.sh*
 --
 +
-NOTE: OpenShift release images, which are reused by MicroShift, are not identified by a tag. You must reffer to them by hash, so they look like different builds of the same `openshift-release-dev/ocp-v4.0-art-dev` image but they are actually completely different images.
+NOTE: OpenShift release images, which are reused by MicroShift, are not identified by a tag. You must refer to them by hash, so they look like different builds of the same `openshift-release-dev/ocp-v4.0-art-dev` image but they are actually completely different images.
 
 .. You can check that the upload process worked by listing all images in the mirror registry. 
 +
@@ -235,11 +235,11 @@ servera.lab.example.com:8443/flozanorht/php-ubi
 servera.lab.example.com:8443/ubi9/ubi  
 --
 
-.. Alternativelly, you can open the web GUI of Red Hat Quay at `https://servera.lab.example.com:8443/` and browse the images available in your mirror registry.
+.. Alternatively, you can open the web GUI of Red Hat Quay at `https://servera.lab.example.com:8443/` and browse the images available in your mirror registry.
 +
-NOTE: The mirror registry for Red Hat OpenShift only supports a subset of the features of Red Hat Quay and it is not configured for realiability and high availability.
+NOTE: The mirror registry for Red Hat OpenShift only supports a subset of the features of Red Hat Quay and it is not configured for reliability and high availability.
 
-5. Check that your _package server machine_ is already set up with all artifacts required for air-gapped installation of MicroShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
+5. Check that your _package server machine_ is already set up with all artifacts required for air-gaped installation of MicroShift. These steps are required for _both_ kinds of MicroShift deployment: on package-based RHEL and on RHEL for Edge system images.
 +
 NOTE: In production environments, it is recommended that you deploy Red Hat Satellite to mirror RPM package repositories from Red Hat products, but the course environment uses an Apache Web Server.
 
@@ -247,7 +247,7 @@ NOTE: In production environments, it is recommended that you deploy Red Hat Sate
 
 .. Open `http://content.example.com/rhde/rpms/` in a web browser. This directory contains a copy of the Red Hat OpenShift and Fast Datapath for RHEL repositories, created using the `reposync` command.
 
-You now have your _mirror registry machine_ and your _package server machine_ ready to support air-gapped deployment of MicroShift in both package-based RHEL and in RHEL for Edge images.
+You now have your _mirror registry machine_ and your _package server machine_ ready to support air-gaped deployment of MicroShift in both package-based RHEL and in RHEL for Edge images.
 
 == What's Next
 
