@@ -1,4 +1,5 @@
 * xref:index.adoc[]
 ** xref:s1-microshift-vs-ocp.adoc[]
-** xref:s3-prepare-lab.adoc[]
-** xref:s4-air-gapped-lab.adoc[]
+** xref:s2-prepare-lab.adoc[]
+** xref:s3-air-gapped-lab.adoc[]
+** xref:s4-summary.adoc[]
