@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Summary :: Deploying MicroShift on Red Hat Device Edge</title>
-    <link rel="prev" href="s4-apps-lab.html">
-    <link rel="next" href="../ch3-image/index.html">
+    <title>Lab: Create RHEL for Edge Images with MicroShift :: Deploying MicroShift on Red Hat Device Edge</title>
+    <link rel="prev" href="s1-microshift-edge.html">
+    <link rel="next" href="s3-deploy-lab.html">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -69,22 +69,22 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Deploy MicroShift on RHEL Servers</a>
+    <a class="nav-link" href="../ch2-package/index.html">Deploy MicroShift on RHEL Servers</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="s1-install-config.html">Install and Configure MicroShift on Package-Based RHEL</a>
+    <a class="nav-link" href="../ch2-package/s1-install-config.html">Install and Configure MicroShift on Package-Based RHEL</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="s2-install-lab.html">Lab: Install MicroShift from RPM Packages</a>
+    <a class="nav-link" href="../ch2-package/s2-install-lab.html">Lab: Install MicroShift from RPM Packages</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="s3-access-lab.html">Lab: Access MicroShift as a Developer or Platform Engineer</a>
+    <a class="nav-link" href="../ch2-package/s3-access-lab.html">Lab: Access MicroShift as a Developer or Platform Engineer</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="s4-apps-lab.html">Lab: Deploy Kubernetes Applications in MicroShift</a>
+    <a class="nav-link" href="../ch2-package/s4-apps-lab.html">Lab: Deploy Kubernetes Applications in MicroShift</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="s5-summary.html">Summary</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s5-summary.html">Summary</a>
   </li>
 </ul>
   </li>
@@ -94,16 +94,16 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../ch3-image/index.html">Deploy MicroShift on Edge Devices</a>
+    <a class="nav-link" href="index.html">Deploy MicroShift on Edge Devices</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../ch3-image/s1-microshift-edge.html">RHEL for Edge images With MicroShift</a>
+    <a class="nav-link" href="s1-microshift-edge.html">RHEL for Edge images With MicroShift</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="s2-image-lab.html">Lab: Create RHEL for Edge Images with MicroShift</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../ch3-image/s2-image-lab.html">Lab: Create RHEL for Edge Images with MicroShift</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../ch3-image/s3-deploy-lab.html">Lab: Deploy MicroShift on Edge Devices</a>
+    <a class="nav-link" href="s3-deploy-lab.html">Lab: Deploy MicroShift on Edge Devices</a>
   </li>
 </ul>
   </li>
@@ -146,8 +146,8 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></li>
-    <li><a href="index.html">Deploy MicroShift on RHEL Servers</a></li>
-    <li><a href="s5-summary.html">Summary</a></li>
+    <li><a href="index.html">Deploy MicroShift on Edge Devices</a></li>
+    <li><a href="s2-image-lab.html">Lab: Create RHEL for Edge Images with MicroShift</a></li>
   </ul>
 </nav>
 </div>
@@ -156,29 +156,104 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Summary</h1>
+<h1 class="page">Lab: Create RHEL for Edge Images with MicroShift</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>In this chapter, you learned:</p>
+<p><em>Estimated reading time: <strong>9 minutes</strong>.</em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Objective</dt>
+<dd>
+<p>Build RHEL for Edge Images with MicroShift, using Image Builder, and publish then on remote OSTree repositories.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Work In Progress
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_before_you_begin"><a class="anchor" href="#_before_you_begin"></a>Before you Begin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need a few machines to perform the hands-on activities in this course.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>You install and configure MicroShift as you would for any other system service in RHEL. The only prerequisite is having unallocated space in a volume group for use by Kubernetes persistent volumes.</p>
+<p>A <em>development machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install Image Builder and RPM-OSTree tools, create test VMs using Libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.</p>
 </li>
 <li>
-<p>The lack of application platform components and APIs from OpenShift, such as the OAuth server and Projects API, affects the day-to-day tasks of developer users.</p>
+<p>A <em>package server machine</em> already configured to serve DNF repositories for RHEL, Fast Datapath for RHEL, and Red Hat OpenShift Container Platform.</p>
 </li>
 <li>
-<p>Red Hat recommends using unprivileged service account tokens and, if necessary, Kubernetes impersonation, to deploy applications and manage MicroShift clusters.</p>
+<p>A <em>web server machine</em> with RHEL and unrestricted <code>sudo</code>, to host OSTree repositories</p>
 </li>
 <li>
-<p>Once you got a kubeconfig file and access rights to a namespace, you use MicroShift as you would with any other Kubernetes and mostly the same as you would with Red Hat OpenShift.</p>
+<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, to host a <a href="https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift">mirror registry for Red Hat OpenShift</a>.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the course environment, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from the <code>workstation</code> VM to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>, using the same user.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Lorem ipsum.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Lorem ipsum</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>command argument</strong>
+...
+Partial output</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Lorem ipsum</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a>What&#8217;s Next</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Lorem ipsum</p>
+</div>
+</div>
+</div>
 <nav class="pagination">
-  <span class="prev"><a href="s4-apps-lab.html">Lab: Deploy Kubernetes Applications in MicroShift</a></span>
-  <span class="next"><a href="../ch3-image/index.html">Deploy MicroShift on Edge Devices</a></span>
+  <span class="prev"><a href="s1-microshift-edge.html">RHEL for Edge images With MicroShift</a></span>
+  <span class="next"><a href="s3-deploy-lab.html">Lab: Deploy MicroShift on Edge Devices</a></span>
 </nav>
 </article>
   </div>
