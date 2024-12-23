@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Introduction to MicroShift and Red Hat Device Edge :: Deploying MicroShift on Red Hat Device Edge</title>
     <link rel="prev" href="index.html">
-    <link rel="next" href="s3-prepare-lab.html">
+    <link rel="next" href="s2-prepare-lab.html">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -53,10 +53,13 @@
     <a class="nav-link" href="s1-microshift-vs-ocp.html">Introduction to MicroShift and Red Hat Device Edge</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="s3-prepare-lab.html">Lab: Prepare a Test Environment for Red Hat Device Edge</a>
+    <a class="nav-link" href="s2-prepare-lab.html">Lab: Prepare a Test Environment for Red Hat Device Edge</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="s4-air-gapped-lab.html">Lab: Prepare a Test Environment for MicroShift</a>
+    <a class="nav-link" href="s3-air-gapped-lab.html">Lab: Prepare a Test Environment for MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s4-summary.html">Summary</a>
   </li>
 </ul>
   </li>
@@ -230,7 +233,7 @@ MicroShift brings the power and scalability of Kubernetes to the edge, as a natu
 <div class="title">Figure 2. MicroShift versus OpenShift</div>
 </div>
 <div class="paragraph">
-<p>It shows that, while both the Red Hat build of MicroShift and Red Hat OpenShift include Kubernetes as their container ochiestrator, plus security and a number of cluster services, Red Hat OpenShift includes a larger set of cluster services. The figure also shows that Red Hat OpenShift relies on RHEL CoreOS as its cluster  node operating system, while MicroShift relies on plain RHEL and on RHEL services, such as the system journal daemon, for tasks that Red Hat OpenShift would defer to its cluster services.</p>
+<p>It shows that, while both the Red Hat build of MicroShift and Red Hat OpenShift include Kubernetes as their container ochestrator, plus security and a number of cluster services, Red Hat OpenShift includes a larger set of cluster services. The figure also shows that Red Hat OpenShift relies on RHEL CoreOS as its cluster  node operating system, while MicroShift relies on plain RHEL and on RHEL services, such as the system journal daemon, for tasks that Red Hat OpenShift would defer to its cluster services.</p>
 </div>
 <div class="paragraph">
 <p>A number of components of Red Hat OpenShift are <em>absent</em> from MicroShift, among them:</p>
@@ -249,7 +252,7 @@ MicroShift brings the power and scalability of Kubernetes to the edge, as a natu
 </ul>
 </div>
 <div class="paragraph">
-<p>It is also expected that Red Hat OpenShift users deploy a number of optional compoents as add-on operators, through the Operator Lifecycle Manager, such as:</p>
+<p>It is also expected that Red Hat OpenShift users deploy a number of optional compoents as add-on operators, through the Operator Lifecycle Manager (OLM), such as:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -271,10 +274,10 @@ MicroShift brings the power and scalability of Kubernetes to the edge, as a natu
 </ul>
 </div>
 <div class="paragraph">
-<p>A number products certified for OpenShift, including storage and network providers, are also deployed as add-on operators. While you can install the OLM in MicroShift, as an optional component, most add-on operators are not currently tested or supported on MicroShift, and many of them would make no sense. For example, you would run OpenShift Pipelines or Red Hat Ansible Automation Platform in a regular OpenShift cluster to produce system images of Red Hat Device Edge for applications that target MicroShift. That OpenShift instance could even manage the final deployment of the application in actual edge devices, or in OpenShift Virtualization VMs for integration testing of such applications on actual RHEL for Edge system images.</p>
+<p>A number of products certified for OpenShift, including storage and network providers, are also deployed as add-on operators. While you can install the OLM in MicroShift, as an optional component, most add-on operators are not currently tested or supported on MicroShift, and many of them would make no sense. For example, you would run OpenShift Pipelines or Red Hat Ansible Automation Platform in a regular OpenShift cluster to produce system images of Red Hat Device Edge for applications that target MicroShift. That OpenShift instance could even manage the final deployment of the application in actual edge devices, or in OpenShift Virtualization VMs for integration testing of such applications on actual RHEL for Edge system images.</p>
 </div>
 <div class="paragraph">
-<p>Both Red Hat build of MicroShift and Red Hat OpenShift are <a href="https://www.cncf.io/training/certification/software-conformance/#logos">certified kubernetes</a> distributions, so they are expected to be compatible with the same applications. At least, this is the theory, but the fact is that Kubernetes certification only tests a small set of application APIs, and does <em>not</em> validate the infrastructure nor operational processes for managing Kubernetes clusters. It leaves room for lots of diferentiation between Kubernetes distributions and applications could depend on a number of extension APIs which may not be available or compatible with every distribution.</p>
+<p>Both Red Hat build of MicroShift and Red Hat OpenShift are <a href="https://www.cncf.io/training/certification/software-conformance/#logos">certified kubernetes</a> distributions, so they are expected to be compatible with the same applications. At least, this is the theory, but the fact is that Kubernetes certification only tests a comprehensive set of core API required to support application workloads, and does <em>not</em> validate the infrastructure nor operational processes for managing Kubernetes clusters. It leaves room for lots of diferentiation between Kubernetes distributions and applications could depend on a number of extension APIs which may not be available or compatible with every distribution of Kubernetes.</p>
 </div>
 <div class="paragraph">
 <p>MicroShift uses the same container engine (CRI-O) than Red Hat OpenShift and the same container images for components such as the Ingress controller, the OVN network provider, and the LVM Storage operator.</p>
@@ -285,13 +288,16 @@ MicroShift brings the power and scalability of Kubernetes to the edge, as a natu
 <h2 id="_microshift_versus_openshit"><a class="anchor" href="#_microshift_versus_openshit"></a>MicroShift Versus OpenShit</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Red Hat build of MicroShift is different than other components of Red Hat Device Edge in the sense that its more than just a different SKU to acquire and entitle the same software and capabilities. While RHEL for Edge is just RHEL, without any difference in binaries, packages, and other components of RHEL, and Ansible for Edge is just the same Red Hat Ansible Automation Platform, with a set of supported content collections that includes edge and non-edge content collections, MicroShift is actually a unique build of Red Hat OpenShift, starting from the same sources, but producing different binaries with only a subset of the capabilities of Red Hat OpenShift.</p>
+<p>The Red Hat build of MicroShift is different than other components of Red Hat Device Edge in the sense that its more than just a different SKU to acquire and entitle the same software and capabilities. While RHEL for Edge is just RHEL, without any difference in its kernel, binaries, packages, and other components of RHEL, and Ansible for Edge is just the same Red Hat Ansible Automation Platform, with a set of supported content collections that includes both edge and non-edge content collections, MicroShift is actually a unique build of Red Hat OpenShift, starting from the same sources, but producing different binaries with only a subset of the capabilities of Red Hat OpenShift.</p>
 </div>
 <div class="paragraph">
-<p>While Red Hat OpenShift runs core Kubernetes components, such as Etcd, the Kubernetes scheduler, and the Kubernetes API server, as independent processes or containers, which are managed by OpenShift cluster operators, MicroShift runs all these components in a single process, managed by Systemd. In a sense, MicroShift is an "all-on-one" build of selected pieces of Red Hat OpenShift.</p>
+<p>MicroShift is designed to require only a small number of cluster services (and their containers) that it runs well withing the CPU and memory constraints of edge devices, while Red Hat OpenShift, even on its single-node cluster topology, requires data center-class server machines.</p>
 </div>
 <div class="paragraph">
-<p>OpenShift includes, since its 3.0 release, a number of extension APIs, and an OpenShift API server and controllers component that handles them. Some of these extension APIs are still today essential to Red Hat OpenShift as an application platform, for example Security Context Constraints, while others, such as Image Streams, are losing developer&#8217;s preference in favor or alternatives such as GitOps. The Red Hat build of MicroShift includes, on its API server and resource controller only two of the extension APIs originatged from OpenShift 3.0:</p>
+<p>While Red Hat OpenShift runs core Kubernetes components, such as Etcd, the Kubernetes scheduler, and the Kubernetes API server, as independent processes on distinct pods, which are managed by OpenShift cluster operators, MicroShift runs all these components in a single process, managed by Systemd. In a sense, MicroShift is an "all-in-one" build of selected pieces of Red Hat OpenShift.</p>
+</div>
+<div class="paragraph">
+<p>OpenShift includes, since its 3.0 release, a number of extension APIs, and an OpenShift API server component that handles them. Some of these extension APIs are still today essential to the Red Hat OpenShift application platform, for example Security Context Constraints, while others, such as Image Streams, are losing developer&#8217;s preference in favor or alternatives such as GitOps. The Red Hat build of MicroShift includes, on its build of the OpenShift API server, only two of the extension APIs originated from OpenShift 3.0:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -304,10 +310,10 @@ MicroShift brings the power and scalability of Kubernetes to the edge, as a natu
 </ul>
 </div>
 <div class="paragraph">
-<p>And they are in the same process as its Kubernetes core components.</p>
+<p>And MicroShift runs its OpenShift API server in the same process and pod as its Kubernetes core components.</p>
 </div>
 <div class="paragraph">
-<p>MicroShift also includes selected componentes of OpenShift as they are, meaning it runs the same container images that provides those key services as Red Hat OpenShift:</p>
+<p>MicroShift also includes selected componentes of OpenShift unchanged, by running the same container images that provides those components as Red Hat OpenShift:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -344,14 +350,26 @@ MicroShift brings the power and scalability of Kubernetes to the edge, as a natu
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>Red Hat OpenShift is designed to be compatible with a large number of certified third-party components, from storage and network providers to security agents and DevOps tools. MicroShift is designed to work with a much more oppinionated set of components, but also to enable adding optional components, such as GPU enablement, from either RPM packages or add-on operators.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The OpenShift GitOps package for MicroShift is <em>not</em> a complete OpenShift GitOps operator. It cointains only an ArgoCD pull agent to fetch manifests from Git repositories and does not include features such as Argo Rollouts or multi-cluster capabilities. Some features might be included but not tested with MicroShift.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>The goal of MicroShift is providing sufficient compatibility with Red Hat OpenShift that applications developed and tested on OpenShift can move to edge deployments unchanged, using the same container images and Kubernetes manifests.</p>
+<p>Red Hat OpenShift is designed to be compatible with a large number of certified third-party components, from storage and network providers to security agents and DevOps tools. MicroShift is designed to work with a more restricted and oppinionated set of components, but also to enable adding optional components, such as GPU enablement, from either RPM packages or add-on operators.</p>
 </div>
 <div class="paragraph">
-<p>If you wish, you can package those applications as Helm charts or add-on operators, and still deploy them on MicroShift the same way you would on OpenShift. On the other hand, MicroShift should require a small enough number of cluster services (and their containers) that it runs well withing the CPU and memory constraints of edge devices, while Red Hat OpenShift, even on its single-node cluster topology, requires data center-class server machines.</p>
+<p>The goal of MicroShift to provide sufficient compatibility with Red Hat OpenShift that applications developed and tested on OpenShift can move to edge deployments unchanged, using the same container images and Kubernetes manifests.</p>
+</div>
+<div class="paragraph">
+<p>If you wish, you can package those applications as Helm charts or add-on operators, and still deploy them on MicroShift the same way you would on OpenShift.</p>
 </div>
 </div>
 </div>
@@ -359,16 +377,16 @@ MicroShift brings the power and scalability of Kubernetes to the edge, as a natu
 <h2 id="_microshift_cluster_management"><a class="anchor" href="#_microshift_cluster_management"></a>MicroShift Cluster Management</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You manage Red Hat OpenShift almost entirely from Kuberentes APIs, using either custom resources from OpenShift cluster operators or from add-on operators. Even the operating system on OpenShift cluster nodes is managed using Kubernetes APIs. OpenShift cluster administrators, especially when running OpenShift in IaaS clouds, may never see the need to run Linux command on their OpenShift cluster nodes. They are advised to <strong>NOT</strong> open SSH sessions to these nodes.</p>
+<p>You manage Red Hat OpenShift almost entirely from Kuberentes APIs, using either custom resources from OpenShift cluster operators or from add-on operators. Even the operating system on OpenShift cluster nodes is managed using Kubernetes APIs. OpenShift cluster administrators, especially when running OpenShift in IaaS clouds, may never see the need to run Linux command on their OpenShift cluster nodes. They are advised to <strong>NOT</strong> open SSH sessions to these nodes for day-to-day tasks.</p>
 </div>
 <div class="paragraph">
-<p>Managing MicroShift, on the other hand, requires using traditional RHEL tools, such as the DNF package manager, Systemd, and SSH. Red Hat OpenShift is a complete application platform by itself, which provides a cloud-like experience, while MicroShift is closer to "just" a Kubernetes which you run on RHEL to manage containerized applications.</p>
+<p>Managing MicroShift, on the other hand, requires using traditional RHEL tools, such as the DNF package manager, Systemd, and SSH. Red Hat OpenShift is a complete application platform by itself, which provides a cloud-like experience, while MicroShift is closer to "just" running Kubernetes on top of RHEL.</p>
 </div>
 <div class="paragraph">
-<p>Finally, MicroShift clusters are always single node. If you need HA, you have to either consider RHEL HA services, such as Pacemaker, or consider Red Hat OpenShift editions. If you need horizontal scalability among multiple nodes, or vertical scalability to larger servers, you should also consider Red Hat OpenShift editions. On the other hand, MicroShift integrates well with other features of RHEL for Edge, for example the Greenboot capability of rolling back system upgrades to a previously known good image.</p>
+<p>Finally, MicroShift clusters are always single node. If you need HA, you have to either consider RHEL HA services, such as Pacemaker, or switch to Red Hat OpenShift. If you need horizontal scalability among multiple nodes, or vertical scalability to larger servers, you should also consider Red Hat OpenShift. On the other hand, MicroShift integrates well with other features of RHEL for Edge, for example the Greenboot capability of rolling back system upgrades to a previously known good image.</p>
 </div>
 <div class="paragraph">
-<p>You can run MicroShift in cloud instances, if you wish, but MicroShift lacks the integration components to use cloud auto-scaling, cloud storage, and cloud load balancers. It is really designed for small physical edge devices, and provides all componentes required by those devices as an integrated product, while upstream Kubernetes would require that you add, configure, and integrate a number of third-party componentes such as network providers, storage providers, ingress controllers, and service discovery, at mininum.</p>
+<p>You can run MicroShift in cloud instances, if you wish, but MicroShift lacks the integration components to use cloud auto-scaling, cloud storage, and cloud load balancers. It is really designed for small physical edge devices, and provides all componentes required by those devices as an integrated product, while upstream Kubernetes would require that you add, configure, and integrate a number of third-party componentes such as network providers, storage providers, ingress controllers, service discovery, and more.</p>
 </div>
 </div>
 </div>
@@ -376,13 +394,13 @@ MicroShift brings the power and scalability of Kubernetes to the edge, as a natu
 <h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a>What&#8217;s Next</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>After a knowledge check that you understand the differences and similarities between Red Hat OpenShift and Red Hat build of MicroShift, there&#8217;s an activity that prepares the virtual labs environment for the remaining of this course. It should provide enough information for you to replicate the activities on your own environment, if you prefer. In fact, it&#8217;s easier to run MicroShift on your regular work machine than it is running Red Hat OpenShift.</p>
+<p>There first activities in this course prepare the virtual labs environment for air-gappend deployment of MicroShift using either package-based RHEL or RHEL for Edge. It should provide enough information for you to replicate the activities on your own environment, if you prefer, or trying a simpler deployment, not air-gapped.</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="index.html">Introduction to Red Hat Build of MicroShift</a></span>
-  <span class="next"><a href="s3-prepare-lab.html">Lab: Prepare a Test Environment for Red Hat Device Edge</a></span>
+  <span class="next"><a href="s2-prepare-lab.html">Lab: Prepare a Test Environment for Red Hat Device Edge</a></span>
 </nav>
 </article>
   </div>
