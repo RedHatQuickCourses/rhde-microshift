@@ -1,0 +1,22 @@
+:time_estimate: 5
+
+= RHEL for Edge images With MicroShift
+
+_Estimated reading time: *{time_estimate} minutes*._
+
+Objective::
+
+Deploy MicroShift with Image Builder and RPM-OSTree.
+
+WARNING: Work In Progress
+
+== RHEL for Edge Image Workflow
+
+Short review of the workflow and tools from rhde-buid
+
+Lorem ipsum
+
+== What's Next
+
+Lorem ipsum
+

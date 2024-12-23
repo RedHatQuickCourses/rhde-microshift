@@ -14,11 +14,13 @@ WARNING: Work In Progress
 
 You need a _test machine_ with RHEL and unrestricted `sudo`, on which you will install MicroShift.
 
-You also need a _package server machine_ already configured to serve DNF repositories for RHEL BaseOS, RHEL AppStream, Fast Data Path, and Red Hat OpenShift Container Platform. Make sure that your _package server machine_ is properly configured and verified by following the instructions from the xref:ch1-microshift:s3-prepare-lab.adoc[first lab] of this course.
+You also need a _package server machine_ already configured to serve DNF repositories for RHEL, Fast Datapath for RHEL, and Red Hat OpenShift Container Platform.
 
-Finally, you need a _mirror registry machine_, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your _mirror registry machine_ is properly configured and verified by following the instructions from the xref:ch1-microshift:s3-prepare-lab.adoc[first lab] of this course.
+Finally, you need a _mirror registry machine_ with RHEL and unrestricted `sudo`, already populated with the container iamges required bu MicroShoft and sample applications.
 
-These instructions were tested on RHEL 9.4, [tentative!] but should work with minimal or no changes on newer and older RHEL 9.x releases.
+Make sure that your _package server machine_ and _mirror registry machine_ are properly configured and verified by following the instructions from the xref:ch1-microshift:s4-air-gapped-lab.adoc[previous lab] of this course.
+
+These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.
 
 If you are using the course classroom, log in on the `workstation` VM as the user `student` with password `student`, and start SSH sessions from `workstation` VM to the `serverb` VM, which is your _test machine_, using the same user. If not, please adapt the instructions to your test environment.
 
@@ -30,7 +32,7 @@ Perform all steps in this lab on your _test machine_.
 
 .. Check that the required package repositories from RHEL and OpenShift are available.
 +
-If you were connected to the internet, or to a Red Hat Satellite instance, and had registered your _test machine_ with a valid Red Hat subscription, you would notice something similar to:
+NOTE: If you were connected to the Internet, or to a Red Hat Satellite instance, and had registered your _test machine_ with a valid Red Hat subscription, you would notice something similar to:
 +
 [source,subs="verbatim,quotes"]
 --
@@ -50,13 +52,14 @@ On the classroom environment, you will find configuration files which point to t
 [source,subs="verbatim,quotes"]
 --
 $ *ls /etc/yum.repos.d*
-fdp.repo  ocp4.repo  redhat.repo  rhel_94.repo
+fast-datapath-for-rhel-9-x86_64-rpms.repo  rhel-9.5-for-x86_64-baseos-rpms.repo
+rhel-9.5-for-x86_64-appstream-rpms.repo    rhocp-4.17-for-rhel-9-x86_64-rpms.repo
 $ *cat /etc/yum.repos.d/ocp4.repo*
 include::1@samples:yum:example$ocp4.repo[lines=1..3]
 ...
 --
 
-.. As an additional validation, search for packages from the OpenShift and RHEL Fast Data Path repositories.
+.. As an additional validation, search for packages from the OpenShift and Fast Datapath repositories.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -72,9 +75,9 @@ ovn24.09-central.x86_64 : Open Virtual Network support
 
 2. Verify that your _test machine_ can access a mirror container image registry that is pre-populated with the container images required by MicroShift.
 
-.. Install the `container-tools` package, if it is not already installed on your _test machine_. This is _not_ strictly required to run MicroShift; however, it provides troubleshooting tools, which can be valuable in a development environment.
+.. Install the `container-tools` package, if it is not already installed on your _test machine_.
 +
-NOTE: If you receive a prompt on your _test machine_ about importing GPG keys, answer "y".
+NOTE: This is _not_ strictly required to run MicroShift; however, it provides troubleshooting tools, which can be valuable in a development environment.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -83,37 +86,35 @@ $ *sudo dnf install container-tools*
 Complete!
 --
 
-.. Download a pull secret, which enables access to the MicroShift container images.
-+
-In a system connected to the internet, you would get a pull secret from your Red Hat account from the Red Hat Hybrid Cloud Console.
-+
-IMPORTANT: Please do _not_ use your pull secret with VMs on your virtual labs. Stick to the scenario of an air-gapped deployment of MicroShift and assume that an IT Operations team already configured all local network infrastructure required for deploying Red Hat Device Edge.
-+
-For the classroom environment, the pull secret for the mirror registry is available from https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/mirror-pull-secret[GitHub]
-+
-Check that the pull registry contains credentials for `registry.lab.example.com`.
+.. Add the CA key of the mirror registry to the set of trusted CAs. The public CA key is available from the _web server machine_, which in the classroom environment is also the _mirror registry machine_.
 +
 [source,subs="verbatim,quotes"]
 --
-$ *cat mirror-pull-secret*
-include::1@samples:microshift:example$mirror-pull-secret[]
---
-+
-Encoded in the `auth` field of that pull secret are the `microshift` username and the `redhat123` password.
-
-.. Add the CA key of the mirror registry to the set of trusted CAs. The public CA key is available from the _web server machine_, which in the classroom environment is `servera`, in the `http://servera.lab.example.com/quay-rootCA.pem` URL.
-+
-[source,subs="verbatim,quotes"]
---
+$ *wget -q http://servera.lab.example.com/quay-rootCA.pem*
 $ *sudo cp quay-rootCA.pem /etc/pki/ca-trust/source/anchors*
 $ *sudo update-ca-trust*
+--
+
+.. Create a pull secret, which enables access to the MicroShift container images.
++
+NOTE: In a deployment connected to the internet, you would get a pull secret from your Red Hat account from the Red Hat Hybrid Cloud Console.
++
+IMPORTANT: Please, do _not_ use your pull secret with VMs on your virtual labs. Please stick to the scenario of an air-gaped deployment of MicroShift, assuming that an IT Operations team already configured all local network infrastructure required for deploying Red Hat Device Edge.
++
+For the classroom environment, the pull secret for the mirror registry is also available from https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/mirror-pull-secret[GitHub]
++
+[source,subs="verbatim,quotes"]
+--
+$ *podman login -u microshift -p redhat123 https://servera.lab.example.com:8443*
+Login Succeeded!
+$ *cp $XDG_RUNTIME_DIR/containers/auth.json mirror-pull-secret*
 --
 
 .. Check that you can use the pull secret to inspect container images on the mirror registry. It should work with TLS validation enabled, which is the default for all container tools.
 +
 [source,subs="verbatim,quotes"]
 --
-$ *skopeo inspect --authfile mirror-pull-secret -f '{{.RepoTags}}' docker://registry.lab.example.com:8443/ubi9/ubi*
+$ *skopeo inspect --authfile mirror-pull-secret -f '{{.RepoTags}}' docker://servera.lab.example.com:8443/ubi9/ubi*
 [latest]
 --
 +
@@ -168,8 +169,8 @@ In the classroom environment, it is on the root partition of the `serverb` VM.
 [source,subs="verbatim,quotes"]
 --
 $ *df -h /var/lib/containers*
-Filesystem             Size  Used Avail Use% Mounted on
-/dev/mapper/rhel-root   10G  7.1G  2.9G  71% /
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/vda4       9.4G  2.6G  6.8G  28% /
 --
 
 .. Check that you have a volume group named `rhel` with a few GB of unallocated space, so you can create Persistent Volumes (PVs) for your Kubernetes applications.
@@ -177,27 +178,30 @@ Filesystem             Size  Used Avail Use% Mounted on
 [source,subs="verbatim,quotes"]
 --
 $ *sudo vgs*
-  VG   #PV #LV #SN Attr   VSize   VFree 
-  rhel   1   1   0 wz--n- <19.02g <9.02g
+  VG   #PV #LV #SN Attr   VSize   VFree  
+  rhel   1   0   0 wz--n- <10.00g <10.00g
 --
 
 .. Check that your _test machine_ is not using the network ranges used by the https://github.com/openshift/microshift/blob/main/docs/user/howto_firewall.md[Kubernetes virtual networks] or the OpenShift ingress IP address, which are 10.42.0.0/16 to 10.44.0.0/16 and 169.254.169.1.
 +
 [source,subs="verbatim,quotes"]
 --
-$ *ip br addr show*
+$ *ip -br addr show*
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
-enp1s0           UP             172.25.250.12/24 fe80::5054:ff:fe20:5959/64
+eth0             UP             172.25.250.11/24 fe80::5054:ff:fe00:fa0b/64 
+eth1             UP             10.80.0.156/16 fe80::2d83:182f:c10a:438b/64
 $ *route -n*
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 0.0.0.0         172.25.250.254  0.0.0.0         UG    100    0        0 eth0
+10.80.0.0       0.0.0.0         255.255.0.0     U     101    0        0 eth1
+169.254.169.254 10.80.0.10      255.255.255.255 UGH   101    0        0 eth1
 172.25.250.0    0.0.0.0         255.255.255.0   U     100    0        0 eth0
 --
 
 5. Install the MicroShift packages.
 +
-You need only one package, called `microshift`, but pay attention to its dependency list. Notice that it includes packages from OpenShift, such as `cri-o`; packages from RHEL for Edge, like `greenboot`; and also packages from Fast Data Path for RHEL 9, which provide Open Virtual Networking (OVN).
+You need only one package, called `microshift`, but pay attention to its dependency list. Notice that it includes packages from OpenShift, such as `cri-o`; packages from RHEL for Edge, like `greenboot`; and also packages from Fast Datapath for RHEL 9, which provide Open Virtual Networking (OVN).
 +
 [source,subs="verbatim,quotes"]
 --
@@ -253,15 +257,16 @@ $ *sudo cp mirror-pull-secret /etc/crio/openshift-pull-secret*
 $ *sudo chmod 600 /etc/crio/openshift-pull-secret*
 --
 
-.. Download a CRI-O registry configuration, from https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/999-microshift-mirror.conf[GitHub], that redirects container images from Red Hat Registries and Quay.io to the 
-mirror registry.
+.. Download a CRI-O registry configuration, from the course https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/999-microshift-mirror.conf[samples repository], that redirects container images from Red Hat Registries and Quay.io to the mirror registry.
 +
 [source,subs="verbatim,quotes"]
 --
+$ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/999-microshift-mirror.conf*
 $ *head -n 5 999-microshift-mirror.conf*
 include::1@samples:microshift:example$999-microshift-mirror.conf[lines=1..5]
 ...
 --
+NOTE: This registry configuration only affects MicroShift release iamges. You may want to change it to include images from add-on operators and your applications. In this course, we will refer to application images by the mirror registry.
 
 .. Copy the registry configuration to the container tools registries configuration directory.
 +
@@ -270,10 +275,11 @@ include::1@samples:microshift:example$999-microshift-mirror.conf[lines=1..5]
 $ *sudo cp 999-microshift-mirror.conf /etc/containers/registries.conf.d/999-microshift-mirror.conf*
 --
 
-.. Download a CRI-O image policy, from https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/containers-policy.json.nosigs[GitHub], that allows running any container image, from anywhere, without checking image signatures.
+.. Download a CRI-O image policy, from the course https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/containers-policy.json.nosigs[samples repository], that allows running any container image, from anywhere, without checking image signatures.
 +
 [source,subs="verbatim,quotes"]
 --
+$ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/containers-policy.json.nosigs*
 $ *cat containers-policy.json.nosigs*
 include::1@samples:microshift:example$containers-policy.json.nosigs[]
 --
@@ -301,14 +307,15 @@ success
 $ *sudo firewall-cmd --reload*
 --
 
-.. Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and start its daemons and pods. Note that it will _not_ be ready yet when the `systemctl start` command returns.
+.. Enable and start MicroShift.
++
+Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Note that it will _not_ be ready yet when the `systemctl` command returns.>>>>>>> main
 +
 [source,subs="verbatim,quotes"]
 --
-$ *sudo systemctl enable microshift*
+$ *sudo systemctl enable microshift --now*
 Created symlink /etc/systemd/system/multi-user.target.wants/microshift.service → /usr/lib/systemd/system/microshift.service.
 Created symlink /etc/systemd/system/multi-user.target.wants/microshift-cleanup-kubelet.service → /usr/lib/systemd/system/microshift-cleanup-kubelet.service.
-$ *sudo systemctl start microshift*
 --
 
 .. Check that the microshift service, which includes the Kubernetes core daemons, has started, and shows no errors on its logs. Be aware that having a healthy MicroShift service does _not_ mean it's fully ready and available.
@@ -364,14 +371,16 @@ rhelvm   Ready	control-plane,master,worker   7m31s   v1.30.5
 +
 [source,subs="verbatim,quotes"]
 --
+$ *ip -br addr show*
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
-enp1s0           UP             172.25.250.12/24 fe80::5054:ff:fe7a:4548/64 
+eth0             UP             172.25.250.11/24 fe80::5054:ff:fe00:fa0b/64 
+eth1             UP             10.80.0.156/16 fe80::2d83:182f:c10a:438b/64 
 ovs-system       DOWN           
 br-ex            UNKNOWN        10.44.0.0/32 169.254.169.2/29 
-ovn-k8s-mp0      UNKNOWN        10.42.0.2/24 fe80::f82e:7aff:fe45:9ef/64 
 br-int           UNKNOWN        
-0bf5acf4f0b11ca@if2 UP             fe80::867:8ff:fe81:7bc9/64 
-7faf584a140566a@if2 UP             fe80::483d:adff:fe6e:1504/64 
+ovn-k8s-mp0      UNKNOWN        10.42.0.2/24 fe80::50:70ff:feaa:25e2/64 
+0ef8475e7471f6c@if2 UP             fe80::f860:c6ff:fe76:39ce/64 
+23e82273294fb87@if2 UP             fe80::24b6:c5ff:fe6b:3086/64
 ...
 --
 +
@@ -381,24 +390,26 @@ The output will be longer as you create more pods, because each one gets a virtu
 +
 [source,subs="verbatim,quotes"]
 --
-[student@rhelvm4 ~]$ sudo route -n
+$ *sudo route -n*
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-0.0.0.0         172.25.250.254  0.0.0.0         UG    100    0        0 enp1s0
+0.0.0.0         172.25.250.254  0.0.0.0         UG    100    0        0 eth0
 10.42.0.0       0.0.0.0         255.255.255.0   U     0      0        0 ovn-k8s-mp0
 10.42.0.0       10.42.0.1       255.255.0.0     UG    0      0        0 ovn-k8s-mp0
 10.43.0.0       169.254.169.4   255.255.0.0     UG    0      0        0 br-ex
+10.80.0.0       0.0.0.0         255.255.0.0     U     101    0        0 eth1
 169.254.169.0   0.0.0.0         255.255.255.248 U     0      0        0 br-ex
 169.254.169.1   0.0.0.0         255.255.255.255 UH    0      0        0 br-ex
 169.254.169.3   10.42.0.1       255.255.255.255 UGH   0      0        0 ovn-k8s-mp0
-172.25.250.0    0.0.0.0         255.255.255.0   U     100    0        0 enp1s0
+169.254.169.254 10.80.0.10      255.255.255.255 UGH   101    0        0 eth1
+172.25.250.0    0.0.0.0         255.255.255.0   U     100    0        0 eth0
 --
 
 .. Finally, check that you can create new pods.
 +
 [source,subs="verbatim,quotes"]
 --
-$ *oc --kubeconfig ~/local-admin run shell -it --restart Never --image registry.lab.example.com:8443/ubi9/ubi -- rpm -q redhat-release*
+$ *oc --kubeconfig ~/local-admin run shell -it --restart Never --image servera.lab.example.com:8443/ubi9/ubi -- rpm -q redhat-release*
 redhat-release-9.5-0.6.el9.x86_64
 $ *oc --kubeconfig ~/local-admin delete pod shell*
 pod "shell" deleted

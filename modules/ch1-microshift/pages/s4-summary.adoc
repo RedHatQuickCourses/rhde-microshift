@@ -1,0 +1,15 @@
+= Summary
+
+In this chapter, you learned:
+
+* MicroShift rebuilds selected components of the OpenShift control plane as a single process, managed by Systemd.
+
+* MicroShift runs selected components of OpenShift, such as its Ingress controller and LVM Storage operator, using the same container images as Red Hat OpenShift.
+
+* You can install optional components of MicroShift from RPM packages, including the Operator Lifecycle Manager (OLM), which then enables you to install add-on operators that are tested and supported on MicroShift.
+
+* Unlike Red Hat OpenShift, where you perform almost all day-to-day management of clusters and applications using Kubernetes APIs, deploying and managing MicroShift instances requires using common RHEL tools and processes.
+
+* If your edge deployment requires High Availability (HA), horizontal scalability to multi-node Kubernetes, or vertical scalability to server-class machines, consider the many editions and deployment factors of Red Hat OpenShift.
+
+* MicroShift should run most applications developed and tested on Red Hat OpenShift unchanged, from the same container images, manifests, helm charts, and add-on operators.
