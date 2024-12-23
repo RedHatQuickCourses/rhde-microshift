@@ -14,11 +14,11 @@ WARNING: Work In Progress
 
 You need a _test machine_ where you installed, configured, and verified MicroShift, by following the instructions from the xref:s2-install-lab.adoc[first lab] of this chapter.
 
-You also need a _development machine_ from which you will access the MicroShift instance on your _test machine_, and that was configured with a kubeconfig file from the xref:s2-install-lab.adoc[previous lab], for access to a pre-provisioned namespaces MicroShift
+You also need a _development machine_ from which you will access the MicroShift instance on your _test machine_, and that was configured with a kubeconfig file from the xref:s2-install-lab.adoc[previous lab], for access to pre-provisioned namespaces MicroShift
 
-Finally, you also need a _mirror registry_ machine, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your _mirror registry machine_ machine was configured and verified by following the instructions from the xref:ch1-microshift:s3-prepare-lab.adoc[first lab] of this course.
+Finally, you also need a _mirror registry_ machine, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your _mirror registry machine_ machine was configured and verified by following the instructions from a xref:ch1-microshift:s3-prepare-lab.adoc[previous lab] of this course.
 
-These instructions were tested on RHEL 9.4 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.
+These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.
 
 If you are using the course classroom, you will log in on the `workstation` VM, which is your _development machine_, as the user `student` with password `student`. If not, please adapt the instructions to your test environment.
 
@@ -26,7 +26,7 @@ You will perform most steps in this lab on your _development machine_.
 
 == Instructions
 
-1. Log in on your _development machine_ and verify that MicroShift is up and running.
+1. Log in on your _development machine_ and verify that MicroShift is up and running on your _test machine_.
 
 .. Check that you have a kubeconfig file for an unprivileged service account and a pre-provisioned namespace.
 +
@@ -34,9 +34,9 @@ You will perform most steps in this lab on your _development machine_.
 --
 $ *export KUBECONFIG=~/remote-user*
 $ *oc whoami*
-system:serviceaccount:user:user
+system:serviceaccount:userns:user
 $ *oc project*
-Using project "user" from context named "microshift" on server "https://serverb.lab.example.com:6443".
+Using project "user" from context named "microshift" on server "https://serverb:6443".
 --
 +
 NOTE: Other `oc` commands related to projects do _not_ work with MicroShift.
@@ -50,13 +50,28 @@ NAME      STATUS   ROLES                         AGE     VERSION
 serverb   Ready    control-plane,master,worker   3d21h   v1.30.5
 --
 
+.. List the APIs available on your MicroShift instance.
++
+[source,subs="verbatim,quotes"]
+--
+$ *oc api-resources | wc -l*
+70
+$ *oc api-resources*
+NAME                                SHORTNAMES          APIVERSION                          NAMESPACED   KIND
+bindings                                                v1                                  true         Binding
+componentstatuses                   cs                  v1                                  false        ComponentStatus
+configmaps                          cm                  v1                                  true         ConfigMap
+...
+--
+NOTE: On Red Hat OpenShift 4.17, you would get hundreds of APIs available, as opposed to a few dozen on Red Hat build of MicroShift. 
+
 2. Deploy a MySQL database with persistent storage, to verify that your MicroShift instance can provide dynamic storage for applications.
 
 .. Create a deployment and configure it with environment variables required my the MySQL image from Red Hat.
 +
 [source,subs="verbatim,quotes"]
 --
-$ *oc create deployment db  --replicas 0 --image registry.lab.example.com:8443/rhel9/mysql-80*
+$ *oc create deployment db  --replicas 0 --image servera.lab.example.com:8443/rhel9/mysql-80*
 deployment.apps/db created
 $ *oc set env deployment/db MYSQL_DATABASE=test MYSQL_USER=user MYSQL_PASSWORD=redhat123*
 deployment.apps/db updated
@@ -113,7 +128,7 @@ $ *mysql -h127.0.0.1 -uuser -predhat123 test*
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 mysql>
-mysql> *create table test (id integer primary key, data varchar(200)) ;*
+mysql> *create table test (id integer primary key, data varchar(200));*
 Query OK, 0 rows affected (0.17 sec)
 
 mysql> *insert into test values (1, 'one');*
@@ -142,12 +157,12 @@ Bye
 [source,subs="verbatim,quotes"]
 --
 $ *export KUBECONFIG=~/local-admin*
-$ *PV=$( oc get pvc dbdata -n user -o jsonpath='{.spec.volumeName}' )*
+$ *PV=$( oc get pvc dbdata -n userns -o jsonpath='{.spec.volumeName}' )*
 $ *echo $PV*
 pvc-24f9b9f4-e95a-4307-9d2b-5af6230b90bc
 $ *oc get pv $PV*
-NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM         STORAGECLASS          VOLUMEATTRIBUTESCLASS   REASON   AGE
-pvc-24f9b9f4-e95a-4307-9d2b-5af6230b90bc   976564Ki   RWO            Delete           Bound    user/dbdata   topolvm-provisioner   <unset>                          19s
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM           STORAGECLASS          VOLUMEATTRIBUTESCLASS   REASON   AGE
+pvc-24f9b9f4-e95a-4307-9d2b-5af6230b90bc   976564Ki   RWO            Delete           Bound    userns/dbdata   topolvm-provisioner   <unset>                          19s
 $ *LV=$( oc --as admin get pv $PV -o jsonpath='{.spec.csi.volumeHandle}' )*
 $ *echo $LV*
 bea16431-baad-43fc-800e-f5d9f138e430
@@ -161,9 +176,9 @@ $ *sudo lvs rhel/$LV*
 [source,subs="verbatim,quotes"]
 --
 $ *sudo ss -tulnp*
-Netid      State       Recv-Q      Send-Q             Local Address:Port              Peer Address:Port      Process                                          
-udp        UNCONN      0           0                        0.0.0.0:49989                  0.0.0.0:*          users:(("avahi-daemon",pid=728,fd=14))          
-udp        UNCONN      0           0                        0.0.0.0:5353                   0.0.0.0:*          users:(("microshift",pid=1880,fd=89))
+Netid     State      Recv-Q     Send-Q         Local Address:Port          Peer Address:Port    Process                                                       
+udp       UNCONN     0          0                  127.0.0.1:323                0.0.0.0:*        users:(("chronyd",pid=856,fd=5))                             
+udp       UNCONN     0          0                    0.0.0.0:5353               0.0.0.0:*        users:(("microshift",pid=1528,fd=100)) 
 ...
 --
 +
@@ -175,13 +190,14 @@ NOTE: You do _not_ need to open the firewall for applications you deploy in Micr
 +
 [source,subs="verbatim,quotes"]
 --
-$ *oc create deployment hellop --image quay.io/flozanorht/php-ubi:9*
-deployment.apps/hellop created
+$ *oc create deployment hello --image quay.io/flozanorht/php-ubi:9*
+deployment.apps/hellp created
 $ *oc get deployment,pod*
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
 deployment.apps/hello   1/1     1            1           37s
 
 NAME                         READY   STATUS    RESTARTS   AGE
+pod/db-55c5557878-6scc8      1/1     Running   0          6m14s
 pod/hello-7fd66dd674-2bnjc   1/1     Running   0          37s
 --
 +
@@ -197,19 +213,19 @@ $ *oc get service*
 NAME       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
 hellophp   ClusterIP   10.43.136.146   <none>        8080/TCP   10s
 $ *oc expose service hello*
-Error from server (Forbidden): routes.route.openshift.io is forbidden: User "system:serviceaccount:user:user" cannot create resource "routes" in API group "route.openshift.io" in the namespace "user"
+Error from server (Forbidden): routes.route.openshift.io is forbidden: User "system:serviceaccount:userns:user" cannot create resource "routes" in API group "route.openshift.io" in the namespace "userns"
 $ *oc --as admin expose service hello*
 route.route.openshift.io/hello exposed
 $ *oc --as admin get route*
 NAME       HOST                             ADMITTED   SERVICE    TLS
-hello      hello-user.apps.example.com      True       hello   
+hello      hello-userns.apps.example.com    True       hello   
 --
 
 .. Edit your `/etc/hosts` file to map the host name of the route to the IP address of your _test machine_ by appending the following line:
 +
 [source,subs="verbatim,quotes"]
 --
-172.25.250.11 hello-user.apps.example.com
+172.25.250.11 hello-userns.apps.example.com
 --
 +
 NOTE: In a real-world scenario, you would configure a DNS server to resolve any hostname within the applications domain of your MicroShift instance to its IP address.
@@ -218,7 +234,7 @@ NOTE: In a real-world scenario, you would configure a DNS server to resolve any 
 +
 [source,subs="verbatim,quotes"]
 --
-$ *curl http://hello-user.apps.example.com*
+$ *curl http://hello-userns.apps.example.com*
 <html>
 <body>
 Hello, world!
@@ -255,7 +271,7 @@ NOTE: The `oc expose` command configures load balancer services with a node port
 +
 [source,subs="verbatim,quotes"]
 --
-$ *curl http://serverb.labs.example.com:8080*
+$ *curl http://serverb.lab.example.com:8080*
 <html>
 <body>
 Hello, world!
@@ -269,8 +285,8 @@ Hello, world!
 --
 $ *oc patch service hello --type json --patch '[{"op": "replace", "path": "/spec/allocateLoadBalancerNodePorts", "value": false }]'*
 service/hello patched
-$ *oc patch service hello --type json --patch '[{"op": "remove", "path": "/spec/ports/0/nodePort"}]'
-service/hello patched*
+$ *oc patch service hello --type json --patch '[{"op": "remove", "path": "/spec/ports/0/nodePort"}]'*
+service/hello patched
 $ *oc get service*
 NAME       TYPE           CLUSTER-IP    EXTERNAL-IP       PORT(S)    AGE
 hello      LoadBalancer   10.43.25.48   172.25.250.11     8080/TCP   13m
@@ -278,7 +294,9 @@ hello      LoadBalancer   10.43.25.48   172.25.250.11     8080/TCP   13m
 +
 Alternatively, you could use the `oc edit` command to make these changes, or create the load balancer service from YAML manifests instead of using imperative commands.
 
-6. Delete the database deployment and its PVC, and also the hello world deployment and its service. Notice that deleting a PVC also deletes its persistent volume.
+6. Delete all resources you created during this lab.
+
+.. Delete the database deployment and its PVC. Notice that deleting a PVC also deletes its persistent volume.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -288,13 +306,19 @@ $ *oc delete pvc dbdata*
 persistentvolumeclaim "dbdata" deleted
 $ *oc --as admin get pv*
 No resources found
+--
+
+.. Delete the hello world deployment and its service. 
++
+[source,subs="verbatim,quotes"]
+--
 $ *oc delete service hello*
 service "hello" deleted.
 $ *oc delete deployment hello*
 deployment.apps "hello" deleted
 --
-+
-You can also undo the edits to your `/etc/hosts` file.
+
+.. Finally, undo the edits to your `/etc/hosts` file.
 
 // MicroShift automatically adds firewall rules for ingress, load balancers, and node ports 
 // https://docs.redhat.com/en/documentation/red_hat_build_of_microshift/4.17/html/networking/microshift-using-a-firewall#microshift-firewall-update-for-service_microshift-firewall
