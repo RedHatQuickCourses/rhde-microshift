@@ -28,7 +28,7 @@ You perform the initial steps of this lab on your _test machine_ and the final s
 
 == Instructions
 
-1. Log in to your _test machine_ and verify that MicroShift is up and running.
+1. Log in on your _test machine_ and verify that MicroShift is up and running.
 
 .. Check that the MicroShift service is active.
 +
@@ -74,7 +74,7 @@ serviceaccount/user created
 $ *oc create rolebinding user --clusterrole edit --serviceaccount userns:user -n userns*
 --
 
-.. Use Kubernetes impersonation to verify that the service account has the intended rights and nothing more. First, check that the service account has access to the namespace but not to other namespaces, or to non-namespace resources.
+.. Use Kubernetes impersonation to verify that the service account has the intended rights and nothing more. First, check that the service account has access to the namespace but not to other namespaces, or to non-namespaced resources.
 +
 [source,subs="verbatim,quotes"]
 --
