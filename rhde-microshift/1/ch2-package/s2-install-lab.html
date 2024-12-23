@@ -166,7 +166,7 @@
 <dl>
 <dt class="hdlist1">Objective</dt>
 <dd>
-<p>Install MicroShift in a RHEL VM that is <em>not</em> connected to the Internet.</p>
+<p>Install MicroShift in a RHEL VM that is <em>not</em> connected to the internet.</p>
 </dd>
 </dl>
 </div>
@@ -185,10 +185,10 @@ Work In Progress
 </div>
 </div>
 <div class="sect1">
-<h2 id="_before_you_begin"><a class="anchor" href="#_before_you_begin"></a>Before you Begin</h2>
+<h2 id="_before_you_begin"><a class="anchor" href="#_before_you_begin"></a>Before You Begin</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You need a <em>test machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install MicroShift.</p>
+<p>You need a <em>test machine</em> with RHEL and unrestricted <code>sudo</code>, on which you will install MicroShift.</p>
 </div>
 <div class="paragraph">
 <p>You also need a <em>package server machine</em> already configured to serve DNF repositories for RHEL, Fast Datapath for RHEL, and Red Hat OpenShift Container Platform.</p>
@@ -197,16 +197,16 @@ Work In Progress
 <p>Finally, you need a <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, already populated with the container iamges required bu MicroShoft and sample applications.</p>
 </div>
 <div class="paragraph">
-<p>Make sure that your <em>package server machine</em> and <em>mirror registry machine</em> were configured and verified by following the instructions from the <a href="#ch1-microshift:s4-air-gapped-lab.adoc" class="xref unresolved">previous lab</a> of this course.</p>
+<p>Make sure that your <em>package server machine</em> and <em>mirror registry machine</em> are properly configured and verified by following the instructions from the <a href="#ch1-microshift:s4-air-gapped-lab.adoc" class="xref unresolved">previous lab</a> of this course.</p>
 </div>
 <div class="paragraph">
 <p>These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
 </div>
 <div class="paragraph">
-<p>If you are using the course classroom, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>, and you start SSH sessions from <code>workstation</code> VM to the <code>serverb</code> VM, which is your <em>test machine</em>, using the same user. If not, please adapt the instructions to your test environment.</p>
+<p>If you are using the course classroom, log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>, and start SSH sessions from <code>workstation</code> VM to the <code>serverb</code> VM, which is your <em>test machine</em>, using the same user. If not, please adapt the instructions to your test environment.</p>
 </div>
 <div class="paragraph">
-<p>You will perform all steps in this lab on your <em>test machine</em>.</p>
+<p>Perform all steps in this lab on your <em>test machine</em>.</p>
 </div>
 </div>
 </div>
@@ -216,7 +216,7 @@ Work In Progress
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Log in on your <em>test machine</em> and verify that it has access to the required DNF package repositories.</p>
+<p>Log in to your <em>test machine</em> and verify that it has access to the required DNF package repositories.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -228,7 +228,7 @@ Work In Progress
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If you were connected to the Internet, or to a Red Hat Satellite instance, and had registered your <em>test machine</em> with a valid Red Hat subscription, you would see something similar to:
+If you were connected to the Internet, or to a Red Hat Satellite instance, and had registered your <em>test machine</em> with a valid Red Hat subscription, you would notice something similar to:
 </td>
 </tr>
 </table>
@@ -251,7 +251,7 @@ rhocp-4.17-for-rhel-9-x86_64-rpms                               Red Hat OpenShif
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Please, do <em>not</em> register any VM on your virtual labs. Please conserve the limited Internet bandwidth which is shared by all learners using ROLE.
+Please do <em>not</em> register any VM on your virtual labs. Conserve the limited internet bandwidth that is shared by all learners using ROLE.
 </td>
 </tr>
 </table>
@@ -303,7 +303,7 @@ ovn24.09-central.x86_64 : Open Virtual Network support</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This is <em>not</em> strictly required to run MicroShift, but it provides troubleshooting tools which can be valuable in a development environment.
+This is <em>not</em> strictly required to run MicroShift; however, it provides troubleshooting tools, which can be valuable in a development environment.
 </td>
 </tr>
 </table>
@@ -327,7 +327,7 @@ $ <strong>sudo update-ca-trust</strong></code></pre>
 </div>
 </li>
 <li>
-<p>Create a pull secret with enables access to the MicroShift container images.</p>
+<p>Create a pull secret, which enables access to the MicroShift container images.</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -378,7 +378,7 @@ $ <strong>cp $XDG_RUNTIME_DIR/containers/auth.json mirror-pull-secret</strong></
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The command above would work with your actual Red Hat pull secret if you change the registry part of the container image name to <code>redhat.registry.io</code>, but displaying a long list of tags.
+The command would work with your actual Red Hat pull secret if you change the registry part of the container image name to <code>redhat.registry.io</code>; however, it would display a long list of tags.
 </td>
 </tr>
 </table>
@@ -392,7 +392,7 @@ The command above would work with your actual Red Hat pull secret if you change 
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>First of all, MicroShift expects that SELinux is enabled, in enforcing mode, and that Firewalld is enabled. Please to not disable any of them, you there&#8217;s no need!</p>
+<p>MicroShift expects that SELinux is enabled, in enforcing mode, and that Firewalld is enabled. Please do not disable any of them; there&#8217;s no need!</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>getenforce</strong>
@@ -418,7 +418,7 @@ public (active)
 </div>
 </div>
 <div class="paragraph">
-<p>Enable more services and trusted zones or interfaces as you need. Later in this course we&#8217;ll show what to add to enable remote access to MicroShift and Kubernetes applications on it.</p>
+<p>Enable more services and trusted zones or interfaces as you need. Later in this course, you&#8217;ll learn what to add to enable remote access to MicroShift and Kubernetes applications on it.</p>
 </div>
 </li>
 <li>
@@ -458,7 +458,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 </div>
 </li>
 <li>
-<p>Check that your <em>test machine</em> is not using the network ranges used by the <a href="https://github.com/openshift/microshift/blob/main/docs/user/howto_firewall.md">Kubernetes virtual networks</a> nor the OpenShift ingress IP address, which are 10.42.0.0/16 to 10.44.0.0/16 and 169.254.169.1.</p>
+<p>Check that your <em>test machine</em> is not using the network ranges used by the <a href="https://github.com/openshift/microshift/blob/main/docs/user/howto_firewall.md">Kubernetes virtual networks</a> or the OpenShift ingress IP address, which are 10.42.0.0/16 to 10.44.0.0/16 and 169.254.169.1.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ip -br addr show</strong>
@@ -481,7 +481,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 <li>
 <p>Install the MicroShift packages.</p>
 <div class="paragraph">
-<p>You need only one package, called <code>microshift</code>, but pay attention to its dependency list. You will see packages from OpenShift, such as <code>cri-o</code>; packages from RHEL for Edge, like <code>greenboot</code>; and also packages from Fast Datapath for RHEL 9, which provide Open Virtual Networking (OVN).</p>
+<p>You need only one package, called <code>microshift</code>, but pay attention to its dependency list. Notice that it includes packages from OpenShift, such as <code>cri-o</code>; packages from RHEL for Edge, like <code>greenboot</code>; and also packages from Fast Datapath for RHEL 9, which provide Open Virtual Networking (OVN).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -637,7 +637,7 @@ If you skip that step, some Red Hat add-on operator images will fail to pull fro
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Allow network traffic on the Kubernetes virtual network</p>
+<p>Allow network traffic on the Kubernetes virtual network.</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -663,7 +663,7 @@ $ <strong>sudo firewall-cmd --reload</strong></code></pre>
 <li>
 <p>Enable and start MicroShift.</p>
 <div class="paragraph">
-<p>Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Be warned that it will <em>not</em> be ready yet when the <code>systemctl</code> command returns.</p>
+<p>Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Note that it will <em>not</em> be ready yet when the <code>systemctl</code> command returns.&gt;&gt;&gt;&gt;&gt;&gt;&gt; main</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -674,7 +674,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/microshift-cleanup-k
 </div>
 </li>
 <li>
-<p>Check that the microshift service, which includes the Kubernetes core daemons, has started, and shows no errors on its logs, but be warned that having a healthy MicroShift service does <em>not</em> mean it&#8217;s fully ready and available.</p>
+<p>Check that the microshift service, which includes the Kubernetes core daemons, has started, and shows no errors on its logs. Be aware that having a healthy MicroShift service does <em>not</em> mean it&#8217;s fully ready and available.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl status microshift</strong>
@@ -693,7 +693,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/microshift-cleanup-k
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Copy the autogenerated kubeconfig file to your home directory and change its ownership so you can read it from your unprivileged user. Do not let that file stay read-write, ensure it remains unchanged as a "breaking class" resort.</p>
+<p>Copy the autogenerated kubeconfig file to your home directory and change its ownership so you can read it from your unprivileged user. Do <em>not</em> let that file stay read-write; ensure it remains unchanged so you can use it in an emergency.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo cp /var/lib/microshift/resources/kubeadmin/kubeconfig ~/local-admin</strong>
@@ -722,7 +722,7 @@ openshift-storage      	vg-manager-tjrs2                       	1/1 	Running   0
 </div>
 </li>
 <li>
-<p>As an additional validation, verify that your Kubernetes cluster contains one node which takes the roles of both control plane and worker node.</p>
+<p>As an additional validation, verify that your Kubernetes cluster contains one node that takes the roles of both control plane and worker node.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --kubeconfig ~/local-admin get node</strong>
@@ -753,7 +753,7 @@ ovn-k8s-mp0      UNKNOWN        10.42.0.2/24 fe80::50:70ff:feaa:25e2/64
 </div>
 </li>
 <li>
-<p>Check the presence of the routing rules which enable communication between your real networks and Kubernetes virtual networks.</p>
+<p>Check the presence of the routing rules, which enable communication between your real networks and Kubernetes virtual networks.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo route -n</strong>
@@ -798,7 +798,7 @@ pod "shell" deleted</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The way we configured MicroShift, it does <em>not</em> contain a pull secret to download container images from Red Hat, even if it has access to the Internet. It can only pull containers from a mirror registry, which is usually what organizations with strict security policies would demand.
+The way you configured MicroShift, it does <em>not</em> contain a pull secret to download container images from Red Hat, even if it has access to the internet. It can only pull containers from a mirror registry, which is usually what organizations with strict security policies would demand.
 </td>
 </tr>
 </table>
@@ -809,7 +809,7 @@ The way we configured MicroShift, it does <em>not</em> contain a pull secret to 
 <h2 id="_next_steps"><a class="anchor" href="#_next_steps"></a>Next Steps</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You probably don&#8217;t want to perform development from the machine running MicroShift, so the next activity will configure MicroShift for remote access and also an unprivileged user, without full Kubernetes administration rights.</p>
+<p>You probably wouldn&#8217;t want to perform development from the machine running MicroShift, so in the next activity, you will configure MicroShift for remote access and also an unprivileged user, without full Kubernetes administration rights.</p>
 </div>
 </div>
 </div>
