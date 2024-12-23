@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lab: Deploy Kubernetes Applications in MicroShift :: Deploying MicroShift on Red Hat Device Edge</title>
+    <link rel="prev" href="s3-access-lab.html">
+    <link rel="next" href="s5-summary.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Deploying MicroShift on Red Hat Device Edge</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/rhde-microshift/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header><div class="body">
+<div class="nav-container" data-component="rhde-microshift" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../ch1-microshift/index.html">Introduction to Red Hat Build of MicroShift</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch1-microshift/s1-microshift-vs-ocp.html">Introduction to MicroShift and Red Hat Device Edge</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch1-microshift/s2-prepare-lab.html">Lab: Prepare a Test Environment for Red Hat Device Edge</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch1-microshift/s3-air-gapped-lab.html">Lab: Prepare a Test Environment for MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch1-microshift/s4-summary.html">Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Deploy MicroShift on RHEL Servers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s1-install-config.html">Install and Configure MicroShift on Package-Based RHEL</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s2-install-lab.html">Lab: Install MicroShift from RPM Packages</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s3-access-lab.html">Lab: Access MicroShift as a Developer or Platform Engineer</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="s4-apps-lab.html">Lab: Deploy Kubernetes Applications in MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s5-summary.html">Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../ch3-image/index.html">Deploy MicroShift on Edge Devices</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch3-image/s1-microshift-edge.html">RHEL for Edge images With MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch3-image/s2-image-lab.html">Lab: Create RHEL for Edge Images with MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch3-image/s3-deploy-lab.html">Lab: Deploy MicroShift on Edge Devices</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Deploying MicroShift on Red Hat Device Edge</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Deploying MicroShift on Red Hat Device Edge</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <a class="title" href="../../../samples/1/index.html">samples</a>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../samples/1/index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></li>
+    <li><a href="index.html">Deploy MicroShift on RHEL Servers</a></li>
+    <li><a href="s4-apps-lab.html">Lab: Deploy Kubernetes Applications in MicroShift</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Lab: Deploy Kubernetes Applications in MicroShift</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Estimated reading time: <strong>10 minutes</strong>.</em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Objective</dt>
+<dd>
+<p>Deploy single containers and multi-container applications in MicroShift from a remote client.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Work In Progress
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_before_you_begin"><a class="anchor" href="#_before_you_begin"></a>Before You Begin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need a <em>test machine</em> where you installed, configured, and verified MicroShift, by following the instructions from the <a href="s2-install-lab.html" class="xref page">first lab</a> of this chapter.</p>
+</div>
+<div class="paragraph">
+<p>You also need a <em>development machine</em> from which you will access the MicroShift instance on your <em>test machine</em>, and that was configured with a kubeconfig file from the <a href="s2-install-lab.html" class="xref page">previous lab</a>, for access to pre-provisioned namespaces MicroShift</p>
+</div>
+<div class="paragraph">
+<p>Finally, you also need a <em>mirror registry machine</em>, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your <em>mirror registry machine</em> machine was configured and verified by following the instructions from a <a href="#ch1-microshift:s3-prepare-lab.adoc" class="xref unresolved">previous lab</a> of this course.</p>
+</div>
+<div class="paragraph">
+<p>These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the course classroom, log in on the <code>workstation</code> VM, which is your <em>development machine</em>, as the user <code>student</code> with password <code>student</code>. If not, please adapt the instructions to your test environment.</p>
+</div>
+<div class="paragraph">
+<p>You will perform most steps in this lab on your <em>development machine</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log in on your <em>development machine</em> and verify that MicroShift is up and running on your <em>test machine</em>.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Check that you have a kubeconfig file for an unprivileged service account and a pre-provisioned namespace.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>export KUBECONFIG=~/remote-user</strong>
+$ <strong>oc whoami</strong>
+system:serviceaccount:userns:user
+$ <strong>oc project</strong>
+Using project "user" from context named "microshift" on server "https://serverb:6443".</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Other <code>oc</code> commands related to projects do <em>not</em> work with MicroShift.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Check that the MicroShift service is active, using impersonation to get cluster administration rights.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --as admin get node</strong>
+NAME      STATUS   ROLES                         AGE     VERSION
+serverb   Ready    control-plane,master,worker   3d21h   v1.30.5</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>List the APIs available on your MicroShift instance.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc api-resources | wc -l</strong>
+70
+$ <strong>oc api-resources</strong>
+NAME                                SHORTNAMES          APIVERSION                          NAMESPACED   KIND
+bindings                                                v1                                  true         Binding
+componentstatuses                   cs                  v1                                  false        ComponentStatus
+configmaps                          cm                  v1                                  true         ConfigMap
+...</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+On Red Hat OpenShift 4.17, you would get hundreds of APIs available, as opposed to a few dozen on Red Hat build of MicroShift.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Deploy a MySQL database with persistent storage, to verify that your MicroShift instance can provide dynamic storage for applications.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a deployment and configure it with environment variables required by the MySQL image from Red Hat.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc create deployment db  --replicas 0 --image servera.lab.example.com:8443/rhel9/mysql-80</strong>
+deployment.apps/db created
+$ <strong>oc set env deployment/db MYSQL_DATABASE=test MYSQL_USER=user MYSQL_PASSWORD=redhat123</strong>
+deployment.apps/db updated</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you replace the registry name and port with <code>registry.redhat.io</code>, it would work with an instance of MicroShift connected to the internet.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Configure the deployment with a PVC and scale the deployment to create a database server pod.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc set volumes deployment/db --add --name data --claim-name dbdata --claim-size 1G --claim-mode rwo --mount-path /var/lib/mysql/data</strong>
+deployment.apps/db volume updated
+$ <strong>oc scale deployment/db --replicas 1</strong>
+deployment.apps/db scaled</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that your namespace contains a PVC and wait until the database pod is ready and running.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc get pvc</strong>
+NAME     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS          VOLUMEATTRIBUTESCLASS   AGE
+dbdata   Bound    pvc-4091fb84-3804-4ca6-8c83-032235361db9   976564Ki   RWO            topolvm-provisioner   &lt;unset&gt;                 57s
+$ <strong>oc get deployment</strong>
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+db     0/1     1            0           4m22s
+$ <strong>oc get deployment</strong>
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+db     1/1     1            1           45s
+$ <strong>oc get pod</strong>
+NAME                  READY   STATUS    RESTARTS   AGE
+db-55c5557878-6scc8   1/1     Running   0          18s</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a network tunnel from your <em>development machine</em> to the database pod. Leave this command running as you move to the next step.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc port-forward $(oc get pod -o name -l app=db) 3306:3306</strong>
+Forwarding from 127.0.0.1:3306 -&gt; 3306
+Forwarding from [::1]:3306 -&gt; 3306</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Open another terminal and use it to connect to the database pod using the MySQL client included in RHEL.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install mysql</strong>
+...
+Complete!
+$ <strong>mysql -h127.0.0.1 -uuser -predhat123 test</strong>
+...
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql&gt;
+mysql&gt; <strong>create table test (id integer primary key, data varchar(200));</strong>
+Query OK, 0 rows affected (0.17 sec)
+
+mysql&gt; <strong>insert into test values (1, 'one');</strong>
+Query OK, 1 row affected (0.02 sec)
+
+mysql&gt; <strong>insert into test values (2, 'two');</strong>
+Query OK, 1 row affected (0.01 sec)
+
+mysql&gt; <strong>select * from test;</strong>
++----+------+
+| id | data |
++----+------+
+|  1 | one  |
+|  2 | two  |
++----+------+
+2 rows in set (0.00 sec)
+
+mysql&gt; <strong>exit</strong>
+Bye</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Return to the first terminal, running the <code>oc port-forward</code> command, and terminate the network tunnel with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Switch to your <em>test machine</em> and verify that MicroShift created a new logical volume to store data from the PVC.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>export KUBECONFIG=~/local-admin</strong>
+$ <strong>PV=$( oc get pvc dbdata -n userns -o jsonpath='{.spec.volumeName}' )</strong>
+$ <strong>echo $PV</strong>
+pvc-24f9b9f4-e95a-4307-9d2b-5af6230b90bc
+$ <strong>oc get pv $PV</strong>
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM           STORAGECLASS          VOLUMEATTRIBUTESCLASS   REASON   AGE
+pvc-24f9b9f4-e95a-4307-9d2b-5af6230b90bc   976564Ki   RWO            Delete           Bound    userns/dbdata   topolvm-provisioner   &lt;unset&gt;                          19s
+$ <strong>LV=$( oc --as admin get pv $PV -o jsonpath='{.spec.csi.volumeHandle}' )</strong>
+$ <strong>echo $LV</strong>
+bea16431-baad-43fc-800e-f5d9f138e430
+$ <strong>sudo lvs rhel/$LV</strong>
+  LV                                   VG   Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  bea16431-baad-43fc-800e-f5d9f138e430 rhel -wi-a----- 956.00m</code></pre>
+</div>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>While you are already on your <em>test machine</em>, check that port 8080 is not used by any of the RHEL services running on the <em>test machine</em>, especially MicroShift.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo ss -tulnp</strong>
+Netid     State      Recv-Q     Send-Q         Local Address:Port          Peer Address:Port    Process
+udp       UNCONN     0          0                  127.0.0.1:323                0.0.0.0:*        users:(("chronyd",pid=856,fd=5))
+udp       UNCONN     0          0                    0.0.0.0:5353               0.0.0.0:*        users:(("microshift",pid=1528,fd=100))
+...</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You do <em>not</em> need to open the firewall for applications you deploy in MicroShift because OVN configures netflow rules that bypass the system firewall, for all services and routes that you create in MicroShift.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Switch to your <em>development machine</em> and deploy a hello world web application, to verify that you can expose applications in MicroShift for external access using OpenShift routes.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a deployment for the hello word application and wait until its pod is ready and running.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc create deployment hello --image quay.io/flozanorht/php-ubi:9</strong>
+deployment.apps/hellp created
+$ <strong>oc get deployment,pod</strong>
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/hello   1/1     1            1           37s
+
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/db-55c5557878-6scc8      1/1     Running   0          6m14s
+pod/hello-7fd66dd674-2bnjc   1/1     Running   0          37s</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you replace the registry name and port with <code>quay.io</code> it would work with an instance of MicroShift connected to the Internet.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create a service and an OpenShift route to expose the hello world application to external access. Notice that, with MicroShift, unprivileged users <em>cannot</em> manage routes.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc expose deployment/hello --port 8080</strong>
+service/hello exposed
+$ <strong>oc get service</strong>
+NAME       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+hellophp   ClusterIP   10.43.136.146   &lt;none&gt;        8080/TCP   10s
+$ <strong>oc expose service hello</strong>
+Error from server (Forbidden): routes.route.openshift.io is forbidden: User "system:serviceaccount:userns:user" cannot create resource "routes" in API group "route.openshift.io" in the namespace "userns"
+$ <strong>oc --as admin expose service hello</strong>
+route.route.openshift.io/hello exposed
+$ <strong>oc --as admin get route</strong>
+NAME       HOST                             ADMITTED   SERVICE    TLS
+hello      hello-userns.apps.example.com    True       hello</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Edit your <code>/etc/hosts</code> file to map the host name of the route to the IP address of your <em>test machine</em> by appending the following line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">172.25.250.11 hello-userns.apps.example.com</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In a real-world scenario, you would configure a DNS server to resolve any hostname within the applications domain of your MicroShift instance to its IP address.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Check that your <em>test machine</em> can access the hello world application using the host name assigned to it by MicroShift.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>curl http://hello-userns.apps.example.com</strong>
+&lt;html&gt;
+&lt;body&gt;
+Hello, world!
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete the route and service to prepare for the next step.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc --as admin delete route hello</strong>
+route.route.openshift.io "hello" deleted
+$ <strong>oc delete service hello</strong>
+service "hello" deleted</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Create a load balancer service to expose the hello world application without using an HTTP proxy.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a service of type load balancer and get its external IP address. That address should match the IP address of your <em>test machine</em>. You could choose any TCP port that is free on your <em>test machine</em>, but for simplicity, this lab uses the same TCP port the hello world applications uses inside its container.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc expose deployment/hello --port 8080 --type LoadBalancer</strong>
+service/hello exposed
+$ <strong>oc get service</strong>
+NAME       TYPE           CLUSTER-IP      EXTERNAL-IP       PORT(S)          AGE
+hello      LoadBalancer   10.43.189.145   172.25.250.11     8080:31736/TCP   28s</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>oc expose</code> command configures load balancer services with a node port, which is unnecessary, and the result is that the same service accepts connections on <em>two</em> different ports of the machine running MicroShift. Switching to the <code>oc create service loadbalancer</code> command makes no difference; it also configures an unnecessary node port.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Check that you can access the hello world application by using the load balancer IP address and port, that is, using the public host name of your <em>test machine</em>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>curl http://serverb.lab.example.com:8080</strong>
+&lt;html&gt;
+&lt;body&gt;
+Hello, world!
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To get rid of the node port, you can perform the following commands to patch the service resource.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc patch service hello --type json --patch '[{"op": "replace", "path": "/spec/allocateLoadBalancerNodePorts", "value": false }]'</strong>
+service/hello patched
+$ <strong>oc patch service hello --type json --patch '[{"op": "remove", "path": "/spec/ports/0/nodePort"}]'</strong>
+service/hello patched
+$ <strong>oc get service</strong>
+NAME       TYPE           CLUSTER-IP    EXTERNAL-IP       PORT(S)    AGE
+hello      LoadBalancer   10.43.25.48   172.25.250.11     8080/TCP   13m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, you could use the <code>oc edit</code> command to make these changes, or create the load balancer service from YAML manifests instead of using imperative commands.</p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Delete all resources you created during this lab.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Delete the database deployment and its PVC. Notice that deleting a PVC also deletes its persistent volume.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc delete deployment db</strong>
+deployment.apps "db" deleted
+$ <strong>oc delete pvc dbdata</strong>
+persistentvolumeclaim "dbdata" deleted
+$ <strong>oc --as admin get pv</strong>
+No resources found</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete the hello world deployment and its service.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc delete service hello</strong>
+service "hello" deleted.
+$ <strong>oc delete deployment hello</strong>
+deployment.apps "hello" deleted</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Finally, undo the edits to your <code>/etc/hosts</code> file.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>With these two test deployments, you verified that your MicroShift instance can provide persistent storage and ingress network connectivity to its applications.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_next_steps"><a class="anchor" href="#_next_steps"></a>Next Steps</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The next chapter applies all that you learned in this chapter to a RHEL for Edge image, which you can use to provision pre-configured MicroShift instances.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="s3-access-lab.html">Lab: Access MicroShift as a Developer or Platform Engineer</a></span>
+  <span class="next"><a href="s5-summary.html">Summary</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
