@@ -1,0 +1,47 @@
+:time_estimate: 9
+
+= Lab: Create RHEL for Edge Images with MicroShift
+
+_Estimated reading time: *{time_estimate} minutes*._
+
+Objective::
+
+Build RHEL for Edge Images with MicroShift, using Image Builder, and publish then on remote OSTree repositories.
+
+WARNING: Work In Progress
+
+== Before you Begin
+
+You need a few machines to perform the hands-on activities in this course. 
+
+* A _development machine_ with RHEL and unrestricted `sudo`, where you will install Image Builder and RPM-OSTree tools, create test VMs using Libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.
+
+* A _package server machine_ already configured to serve DNF repositories for RHEL, Fast Datapath for RHEL, and Red Hat OpenShift Container Platform.
+
+* A _web server machine_ with RHEL and unrestricted `sudo`, to host OSTree repositories
+
+* A _mirror registry machine_ with RHEL and unrestricted `sudo`, to host a https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift[mirror registry for Red Hat OpenShift].
+
+These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.
+
+If you are using the course environment, you will log in on the `workstation` VM as the user `student` with password `student`. The `workstation` VM is your _development machine_. You will start SSH sessions from the `workstation` VM to the `servera` VM, which is your _web server machine_ and also your _mirror registry machine_, using the same user.
+
+== Instructions
+
+1. Lorem ipsum.
+
+.. Lorem ipsum
++
+[source,subs="verbatim,quotes"]
+--
+$ *command argument*
+...
+Partial output
+--
+
+Lorem ipsum
+
+== What's Next
+
+Lorem ipsum
+
