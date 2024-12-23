@@ -176,13 +176,13 @@ Work In Progress
 <p>You need a <em>test machine</em> where you installed, configured, and verified MicroShift, by following the instructions from the <a href="s2-install-lab.html" class="xref page">first lab</a> of this chapter.</p>
 </div>
 <div class="paragraph">
-<p>You also need a <em>development machine</em> from which you will access the MicroShift instance on your <em>test machine</em>, and that was configured with a kubeconfig file from the <a href="s2-install-lab.html" class="xref page">previous lab</a>, for access to a pre-provisioned namespaces MicroShift</p>
+<p>You also need a <em>development machine</em> from which you will access the MicroShift instance on your <em>test machine</em>, and that was configured with a kubeconfig file from the <a href="s2-install-lab.html" class="xref page">previous lab</a>, for access to pre-provisioned namespaces MicroShift</p>
 </div>
 <div class="paragraph">
-<p>Finally, you also need a <em>mirror registry</em> machine, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your <em>mirror registry machine</em> machine was configured and verified by following the instructions from the <a href="../ch1-microshift/s3-prepare-lab.html" class="xref page">first lab</a> of this course.</p>
+<p>Finally, you also need a <em>mirror registry</em> machine, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your <em>mirror registry machine</em> machine was configured and verified by following the instructions from a <a href="../ch1-microshift/s3-prepare-lab.html" class="xref page">previous lab</a> of this course.</p>
 </div>
 <div class="paragraph">
-<p>These instructions were tested on RHEL 9.4 [tentative!] but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
+<p>These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
 </div>
 <div class="paragraph">
 <p>If you are using the course classroom, you will log in on the <code>workstation</code> VM, which is your <em>development machine</em>, as the user <code>student</code> with password <code>student</code>. If not, please adapt the instructions to your test environment.</p>
@@ -198,7 +198,7 @@ Work In Progress
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Log in on your <em>development machine</em> and verify that MicroShift is up and running.</p>
+<p>Log in on your <em>development machine</em> and verify that MicroShift is up and running on your <em>test machine</em>.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -207,9 +207,9 @@ Work In Progress
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>export KUBECONFIG=~/remote-user</strong>
 $ <strong>oc whoami</strong>
-system:serviceaccount:user:user
+system:serviceaccount:userns:user
 $ <strong>oc project</strong>
-Using project "user" from context named "microshift" on server "https://serverb.lab.example.com:6443".</code></pre>
+Using project "user" from context named "microshift" on server "https://serverb:6443".</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -235,6 +235,33 @@ serverb   Ready    control-plane,master,worker   3d21h   v1.30.5</code></pre>
 </div>
 </div>
 </li>
+<li>
+<p>List the APIs available on your MicroShift instance.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc api-resources | wc -l</strong>
+70
+$ <strong>oc api-resources</strong>
+NAME                                SHORTNAMES          APIVERSION                          NAMESPACED   KIND
+bindings                                                v1                                  true         Binding
+componentstatuses                   cs                  v1                                  false        ComponentStatus
+configmaps                          cm                  v1                                  true         ConfigMap
+...</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+On Red Hat OpenShift 4.17, you would get hundreds of APIs available, as opposed to a few dozen on Red Hat build of MicroShift.
+</td>
+</tr>
+</table>
+</div>
+</li>
 </ol>
 </div>
 </li>
@@ -246,7 +273,7 @@ serverb   Ready    control-plane,master,worker   3d21h   v1.30.5</code></pre>
 <p>Create a deployment and configure it with environment variables required my the MySQL image from Red Hat.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc create deployment db  --replicas 0 --image registry.lab.example.com:8443/rhel9/mysql-80</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc create deployment db  --replicas 0 --image servera.lab.example.com:8443/rhel9/mysql-80</strong>
 deployment.apps/db created
 $ <strong>oc set env deployment/db MYSQL_DATABASE=test MYSQL_USER=user MYSQL_PASSWORD=redhat123</strong>
 deployment.apps/db updated</code></pre>
@@ -317,7 +344,7 @@ $ <strong>mysql -h127.0.0.1 -uuser -predhat123 test</strong>
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 mysql&gt;
-mysql&gt; <strong>create table test (id integer primary key, data varchar(200)) ;</strong>
+mysql&gt; <strong>create table test (id integer primary key, data varchar(200));</strong>
 Query OK, 0 rows affected (0.17 sec)
 
 mysql&gt; <strong>insert into test values (1, 'one');</strong>
@@ -351,12 +378,12 @@ Bye</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>export KUBECONFIG=~/local-admin</strong>
-$ <strong>PV=$( oc get pvc dbdata -n user -o jsonpath='{.spec.volumeName}' )</strong>
+$ <strong>PV=$( oc get pvc dbdata -n userns -o jsonpath='{.spec.volumeName}' )</strong>
 $ <strong>echo $PV</strong>
 pvc-24f9b9f4-e95a-4307-9d2b-5af6230b90bc
 $ <strong>oc get pv $PV</strong>
-NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM         STORAGECLASS          VOLUMEATTRIBUTESCLASS   REASON   AGE
-pvc-24f9b9f4-e95a-4307-9d2b-5af6230b90bc   976564Ki   RWO            Delete           Bound    user/dbdata   topolvm-provisioner   &lt;unset&gt;                          19s
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM           STORAGECLASS          VOLUMEATTRIBUTESCLASS   REASON   AGE
+pvc-24f9b9f4-e95a-4307-9d2b-5af6230b90bc   976564Ki   RWO            Delete           Bound    userns/dbdata   topolvm-provisioner   &lt;unset&gt;                          19s
 $ <strong>LV=$( oc --as admin get pv $PV -o jsonpath='{.spec.csi.volumeHandle}' )</strong>
 $ <strong>echo $LV</strong>
 bea16431-baad-43fc-800e-f5d9f138e430
@@ -372,9 +399,9 @@ $ <strong>sudo lvs rhel/$LV</strong>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo ss -tulnp</strong>
-Netid      State       Recv-Q      Send-Q             Local Address:Port              Peer Address:Port      Process
-udp        UNCONN      0           0                        0.0.0.0:49989                  0.0.0.0:*          users:(("avahi-daemon",pid=728,fd=14))
-udp        UNCONN      0           0                        0.0.0.0:5353                   0.0.0.0:*          users:(("microshift",pid=1880,fd=89))
+Netid     State      Recv-Q     Send-Q         Local Address:Port          Peer Address:Port    Process
+udp       UNCONN     0          0                  127.0.0.1:323                0.0.0.0:*        users:(("chronyd",pid=856,fd=5))
+udp       UNCONN     0          0                    0.0.0.0:5353               0.0.0.0:*        users:(("microshift",pid=1528,fd=100))
 ...</code></pre>
 </div>
 </div>
@@ -402,13 +429,14 @@ You do <em>not</em> need to open the firewall for applications you deploy in Mic
 <p>Create a deployment for the hello word application and wait until its pod is ready and running.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc create deployment hellop --image quay.io/flozanorht/php-ubi:9</strong>
-deployment.apps/hellop created
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc create deployment hello --image quay.io/flozanorht/php-ubi:9</strong>
+deployment.apps/hellp created
 $ <strong>oc get deployment,pod</strong>
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
 deployment.apps/hello   1/1     1            1           37s
 
 NAME                         READY   STATUS    RESTARTS   AGE
+pod/db-55c5557878-6scc8      1/1     Running   0          6m14s
 pod/hello-7fd66dd674-2bnjc   1/1     Running   0          37s</code></pre>
 </div>
 </div>
@@ -435,12 +463,12 @@ $ <strong>oc get service</strong>
 NAME       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
 hellophp   ClusterIP   10.43.136.146   &lt;none&gt;        8080/TCP   10s
 $ <strong>oc expose service hello</strong>
-Error from server (Forbidden): routes.route.openshift.io is forbidden: User "system:serviceaccount:user:user" cannot create resource "routes" in API group "route.openshift.io" in the namespace "user"
+Error from server (Forbidden): routes.route.openshift.io is forbidden: User "system:serviceaccount:userns:user" cannot create resource "routes" in API group "route.openshift.io" in the namespace "userns"
 $ <strong>oc --as admin expose service hello</strong>
 route.route.openshift.io/hello exposed
 $ <strong>oc --as admin get route</strong>
 NAME       HOST                             ADMITTED   SERVICE    TLS
-hello      hello-user.apps.example.com      True       hello</code></pre>
+hello      hello-userns.apps.example.com    True       hello</code></pre>
 </div>
 </div>
 </li>
@@ -448,7 +476,7 @@ hello      hello-user.apps.example.com      True       hello</code></pre>
 <p>Edit your <code>/etc/hosts</code> file to map the host name of the route to the IP address of your <em>test machine</em> by appending the following line:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">172.25.250.11 hello-user.apps.example.com</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">172.25.250.11 hello-userns.apps.example.com</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -468,7 +496,7 @@ In a real-world scenario, you would configure a DNS server to resolve any hostna
 <p>Check that your <em>test machine</em> can access the hello world application using the host name assigned to it by MicroShift.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>curl http://hello-user.apps.example.com</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>curl http://hello-userns.apps.example.com</strong>
 &lt;html&gt;
 &lt;body&gt;
 Hello, world!
@@ -523,7 +551,7 @@ The <code>oc expose</code> command configures load balancer services with a node
 <p>Check that you can access the hello word application using the load balancer IP address and port, that is, using the public host name of your <em>test machine</em>.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>curl http://serverb.labs.example.com:8080</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>curl http://serverb.lab.example.com:8080</strong>
 &lt;html&gt;
 &lt;body&gt;
 Hello, world!
@@ -538,8 +566,8 @@ Hello, world!
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc patch service hello --type json --patch '[{"op": "replace", "path": "/spec/allocateLoadBalancerNodePorts", "value": false }]'</strong>
 service/hello patched
-$ <strong>oc patch service hello --type json --patch '[{"op": "remove", "path": "/spec/ports/0/nodePort"}]'
-service/hello patched</strong>
+$ <strong>oc patch service hello --type json --patch '[{"op": "remove", "path": "/spec/ports/0/nodePort"}]'</strong>
+service/hello patched
 $ <strong>oc get service</strong>
 NAME       TYPE           CLUSTER-IP    EXTERNAL-IP       PORT(S)    AGE
 hello      LoadBalancer   10.43.25.48   172.25.250.11     8080/TCP   13m</code></pre>
@@ -553,7 +581,11 @@ hello      LoadBalancer   10.43.25.48   172.25.250.11     8080/TCP   13m</code><
 </div>
 </li>
 <li>
-<p>Delete the database deployment and its PVC, and also the hello world deployment and its service. Notice that deleting a PVC also deletes its persistent volume.</p>
+<p>Delete all resources you created during this lab.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Delete the database deployment and its PVC. Notice that deleting a PVC also deletes its persistent volume.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc delete deployment db</strong>
@@ -561,15 +593,25 @@ deployment.apps "db" deleted
 $ <strong>oc delete pvc dbdata</strong>
 persistentvolumeclaim "dbdata" deleted
 $ <strong>oc --as admin get pv</strong>
-No resources found
-$ <strong>oc delete service hello</strong>
+No resources found</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete the hello world deployment and its service.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc delete service hello</strong>
 service "hello" deleted.
 $ <strong>oc delete deployment hello</strong>
 deployment.apps "hello" deleted</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>You can also undo the edits to your <code>/etc/hosts</code> file.</p>
+</li>
+<li>
+<p>Finally, undo the edits to your <code>/etc/hosts</code> file.</p>
+</li>
+</ol>
 </div>
 </li>
 </ol>
