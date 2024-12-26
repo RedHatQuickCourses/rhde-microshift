@@ -28,7 +28,61 @@ If you are using the course environment, you will log in on the `workstation` VM
 
 == Instructions
 
+Working copy of ks and toml on ~student!
+
+[source,subs="verbatim,quotes"]
+--
+First attempt: DONE
+* Build an edge-commit image *without* embeding containers, but configured to use the mirror registry.
+* Use file customizations and first boot services to ensure MicroShift is ready without day-2 customizations
+* Create user for console and SSH login from kickstart
+Results:
+* Booted with MicroShift enabled/started and sudo fine
+* No kubeconfig for core user -- error in ks/firstboot (but can do only AFTER microshift starts!)
+* My mistake, no remote access to test VM
+
+First attempt,retry: DONE
+* SSH access works fine
+* Remote access to MicroShift works fine
+* Remote access to routes and LB services works fine.
+
+Second attempt:
+* Embed kickstart embeded into an installer image
+* Scripted firstboot to create kubeconfigs for the core user (which is created only by kickstart!?!)
+Results:
+* compose fails to process ks customizations, have to use minimal blueprint + mkksiso
+* scripted firstboot failing, maybe because it's running before microshift starts?
+* PENDING while loop to wait until microshift creates its kubeconfig files
+
+Third attempt:
+* Embed containers into ostree commit, work out registry auth and mirror registry refs
+* Provision VM with mirror registry down to prove it's air-gapped
+Results:
+* once I fixed by osbuild-worker config file and rebooted, it works
+* PENDING test with mirror registry down
+
+Fourth attempt:
+* Create service account, namespace, and role bindings from blueprint or custom RPM
+* Extract sa token and create kubeconfig from kickstart?
+
+Tentative:
+* Pre-deploy hello from manifests in ostree commit (custom rpm package?)
+--
+
 1. Lorem ipsum.
+
+.. Configure image builder for the mirror registry
++
+[source,subs="verbatim,quotes"]
+--
+$ sudo mkdir /etc/osbuild-worker/
+$ sudo cat /etc/osbuild-worker/osbuild-worker.toml
+[containers]
+auth_file_path = "/etc/osbuild-worker/containers-auth.json"
+$ sudo cp mirror-pull-secret /etc/osbuild-worker/containers-auth.json
+# sudo systemctl restart osbuild-worker ## will this work? will I need a reboot? YES
+# after reboot, it can build an edge commit image with container images
+--
 
 .. Lorem ipsum
 +
@@ -38,6 +92,139 @@ $ *command argument*
 ...
 Partial output
 --
+
+.. Crap, forgot to configure sources for RHOCP and FDP in classroom :-(
++
+But my blupeprint was fine on depsolve and its compose is building... getting packages from Internet without entitlement? Ah, it failed. Looks like it failed on non-existant directory???
++
+LoL it passed depcheck because I didn't include MicroShift packages :-P
++
+[source,subs="verbatim,quotes"]
+--
+$ composer-cli sources add sources/openshift.toml 
+$ composer-cli sources add sources/fastdata.toml 
+$ composer-cli sources list
+appstream
+baseos
+fastdata
+openshift
+--
+
+.. Test BP
++
+[source,subs="verbatim,quotes"]
+--
+$ sudo dnf install mkpasswd
+...
+Complete!
+$ PASSWD=$( echo 'redhat123' | mkpasswd -s -m sha-512 )
+$ sed -i "s|REPLACE_WITH_PASSWD_HASH|$PASSWD|" rhel9-microshift.toml
+$ ssh-keygen -N '' -f edge-key -C 'initial key for edge user'
+Generating public/private rsa key pair.
+...
+$ SSH_PUB_KEY=$( cat edge-key.pub )
+$ sed -i "s|REPLACE_WTH_SSH_PUB_KEY|$SSH_PUB_KEY|" rhel9-microshift.toml
+#
+#sed didn't work for the pull secret, guess because it contains double quotes
+# cat trick doesn't work for quay CA
+# didn't try any trick for the image policy and crio config
+--
+
+.. Build edge commit image
++
+[source,subs="verbatim,quotes"]
+--
+$ composer-cli blueprints push rhel9-microshift.toml
+$ composer-cli blueprints depsolve rhel9-microshift | grep microshift
+blueprint: rhel9-microshift v0.1.0
+    microshift-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.x86_64
+    microshift-greenboot-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.noarch
+    microshift-networking-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.x86_64
+    microshift-selinux-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.noarch
+$ composer-cli compose start-ostree rhel9-microshift edge-commit --ref rhel/9/x86_64/ushift
+Warning: Please note that user customizations on "edge-commit" image type are deprecated and will be removed in the near future
+
+Compose be27c45f-e1ea-42eb-94b3-a0789243bea4 added to the queue
+$ UUID=be27c45f-e1ea-42eb-94b3-a0789243bea4
+$ composer-cli compose list
+ID                                     Status     Blueprint          Version   Type
+be27c45f-e1ea-42eb-94b3-a0789243bea4   RUNNING    rhel9-microshift   0.1.0     edge-commit
+...
+$ composer-cli compose image $UUID
+$ scp $UUID-commit.tar servera:~
+--
+
+.. Publish edge commit image
++
+[source,subs="verbatim,quotes"]
+--
+# servera
+$ UUID=be27c45f-e1ea-42eb-94b3-a0789243bea4  # copy from other terminal
+$ mkdir delete-me
+$ tar xf $UUID-commit.tar -C delete-me/
+$ ostree refs --repo delete-me/repo
+rhel/9/x86_64/ushift
+$ ostree --repo=/var/www/html/repo refs
+rhel/9/x86_64/edge
+### student may have nothing on the web server, in this case must initialize an empty ostree repo or just untar
+$ sudo ostree pull-local --repo=/var/www/html/repo delete-me/repo
+265 metadata, 649 content objects imported; 0 bytes content written
+--
+
+.. Test edge commit image [skip on actual lab]
++
+[source,subs="verbatim,quotes"]
+--
+$ virt-install --name edge-microshift-1 --os-variant rhel9.5 \
+--memory 4096 --vcpus 2 --disk size=20 --graphics=none --network bridge=virbr0 \
+--location /home/student/Downloads/rhel-9.5-x86_64-boot.iso \
+--extra-arg inst.ks=http://servera.lab.example.com/rhel9-microshift.ks \
+--extra-arg console=ttyS0 -v
+--
+
+.. Build edge installer image [ may not need lorax anymore]
++
+[source,subs="verbatim,quotes"]
+--
+# I think there's no need for lorax with ks customizations in blueprint
+$ sudo dnf install lorax
+$ composer-cli blueprints push rhel9-microshift-installer.toml
+ERROR: ManifestCreationFailed: failed to initialize osbuild manifest: edge-installer installer.kickstart.contents are not supported in combination with users or groups
+# Guess I don't have kickstart customizations yet :-(
+$ composer-cli compose start-ostree microshift-installer edge-installer --ref rhel/9/x86_64/ushift --url http://servera.lab.example.com/repo/
+Compose 6189329e-194c-447e-acec-6952d727399d added to the queue
+$ UUID=6189329e-194c-447e-acec-6952d727399d
+$ composer-cli compose image $UUID
+6189329e-194c-447e-acec-6952d727399d-installer.iso
+$ mkksiso --ks rhel9-microshift-installer.ks $UUID-installer.iso rhel9-microshift.iso
+...
+Writing to '/home/student/rhel9-microshift.iso' completed successfully.
+--
+
+.. Stop the mirror registry to prove you can provision and run a MicroShift VM air-gapped
++
+[source,subs="verbatim,quotes"]
+--
+$ sudo systemctl stop quay-app quay-pod quay-redis
+--
+
+.. Test edge installer image with custom ks
++
+[source,subs="verbatim,quotes"]
+--
+$ iso-info rhel9-microshift.iso 
+...
+Volume      : RHEL-9-5-0-BaseOS-x86_64
+No Joliet extensions
+$ LABEL=RHEL-9-5-0-BaseOS-x86_64
+$ virt-install --name edge-microshift-1 --os-variant rhel9.5 \
+--memory 4096 --vcpus 2 --disk size=20 --graphics=none --network bridge=virbr0 \
+--location /home/student/rhel9-microshift.iso \
+--extra-arg inst.ks=hd:LABEL=$LABEL:/rhel9-microshift-installer.ks \
+--extra-arg console=ttyS0 -v
+--
+
+[ Add steps to get the MicroShift RPM and review the release image list? Or/Also add to ch1? ]
 
 Lorem ipsum
 
