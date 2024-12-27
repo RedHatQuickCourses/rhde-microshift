@@ -1,4 +1,4 @@
-:time_estimate: 9
+:time_estimate: 5
 
 = Lab: Deploy MicroShift on Edge Devices
 
