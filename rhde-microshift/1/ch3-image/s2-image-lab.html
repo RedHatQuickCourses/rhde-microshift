@@ -160,7 +160,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><em>Estimated reading time: <strong>9 minutes</strong>.</em></p>
+<p><em>Estimated reading time: <strong>5 minutes</strong>.</em></p>
 </div>
 <div class="dlist">
 <dl>
@@ -193,7 +193,7 @@ Work In Progress
 <div class="ulist">
 <ul>
 <li>
-<p>A <em>development machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install Image Builder and RPM-OSTree tools, create test VMs using Libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.</p>
+<p>A <em>development machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install Image Builder and RPM-OSTree tools, create KVM VMs using Libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.</p>
 </li>
 <li>
 <p>A <em>package server machine</em> already configured to serve DNF repositories for RHEL, Fast Datapath for RHEL, and Red Hat OpenShift Container Platform.</p>
@@ -216,56 +216,25 @@ Work In Progress
 <p>If you are using the course environment, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from the <code>workstation</code> VM to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>, using the same user.</p>
 </div>
 <div class="paragraph">
-<p>You will also create a local test VM on your <em>development machine</em>, and we refer to that test VM as your <em>edge machine</em>.</p>
+<p>You will also create a local KVM virtual machine on your <em>development machine</em>, and we refer to that VM as your <em>edge machine</em>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performed, it is using the same machine as its previous step.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
 <div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">First attempt: DONE
-* Build an edge-commit image <strong>without</strong> embeding containers, but configured to use the mirror registry.
-* Use file customizations and first boot services to ensure MicroShift is ready without day-2 customizations
-* Create user for console and SSH login from kickstart
-Results:
-* Booted with MicroShift enabled/started and sudo fine
-* No kubeconfig for core user -- error in ks/firstboot (but can do only AFTER microshift starts!)
-* My mistake, no remote access to test VM
-
-First attempt,retry: DONE
-* SSH access works fine
-* Remote access to MicroShift works fine
-* Remote access to routes and LB services works fine.
-
-Second attempt: DONE
-* Embed kickstart embeded into an installer image
-* Scripted firstboot to create kubeconfigs for the core user (which is created only by kickstart!?!)
-* while loop to wait until microshift creates its kubeconfig files
-Results:
-* compose fails to process ks customizations, have to use minimal blueprint + mkksiso
-* LoL I was able to "oc get pod -A" and get no resources... MicroShift was still creating its pods!
-
-Third attempt:DONE
-* Embed containers into ostree commit, work out registry auth and mirror registry refs
-* Provision VM with mirror registry down to prove it's air-gapped
-Results:
-* once I fixed by osbuild-worker config file and rebooted, it works
-* PENDING test with mirror registry down: FAILED :-(
-* It's trying to connect to servera, as redirected from quay.io, not using the containers in the osgree commit.
-* Guess I need to build the image with references to the canonical image names, and maybe have an image config on workstation
-* test with "sudo crictl images" : I see the images from servera, which is not what microshift wants
-* system recovered after restarting quay. and "sudo crictl images" show images from quay.io
-
-Fourth attempt:
-* Create service account, namespace, and role bindings from blueprint or custom RPM
-* Extract sa token and create kubeconfig from kickstart?
-
-Tentative:
-* Pre-deploy hello from manifests in ostree commit (custom rpm package?)</code></pre>
-</div>
-</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -363,7 +332,7 @@ url = "http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms"
 </div>
 </li>
 <li>
-<p>Review an Image Builder blueprint for a pre-configured MicroShift instance.</p>
+<p>Download and inspect an Image Builder blueprint for a pre-configured MicroShift instance.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -520,150 +489,408 @@ path = "/etc/systemd/system/firstboot-microshift-user.service"
 </div>
 </li>
 <li>
-<p>Build and publish an edge system image.</p>
+<p>Build an edge system image.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Add the CA certificate for the mirror registry to the blueprint.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">WILL A SED WORK HERE?</code></pre>
-</div>
+<p>Add the CA certificate for the mirror registry to the blueprint. Because it was generated when you installed the mirror registry in a <a href="../ch1-microshift/s3-air-gapped-lab.html" class="xref page">previous lab</a>, we cannot have it in the course samples repository.</p>
+<div class="paragraph">
+<p>Open the <code>rhel9-microshift.toml</code> file in a text editor and replace the <code>REPLACE_QUAY_CA</code> text with the entire contents of the <code>quay-rootCA.pem</code> file.</p>
 </div>
 </li>
 <li>
-<p>Build edge commit image</p>
+<p>Push the blueprint and start a compose for an edge commit image.</p>
+<div class="paragraph">
+<p>Save the UUID of the compose in a shell variable so you can use it in other commands.</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ composer-cli blueprints push rhel9-microshift.toml
-$ composer-cli blueprints depsolve rhel9-microshift | grep microshift
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli blueprints push rhel9-microshift.toml</strong>
+$ <strong>composer-cli blueprints depsolve rhel9-microshift | grep microshift</strong>
 blueprint: rhel9-microshift v0.1.0
     microshift-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.x86_64
     microshift-greenboot-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.noarch
     microshift-networking-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.x86_64
     microshift-selinux-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.noarch
-$ composer-cli compose start-ostree rhel9-microshift edge-commit --ref rhel/9/x86_64/ushift
+$ <strong>composer-cli compose start-ostree rhel9-microshift edge-commit --ref rhel/9/x86_64/ushift</strong>
 Warning: Please note that user customizations on "edge-commit" image type are deprecated and will be removed in the near future
 
 Compose be27c45f-e1ea-42eb-94b3-a0789243bea4 added to the queue
-$ UUID=be27c45f-e1ea-42eb-94b3-a0789243bea4
-$ composer-cli compose list
-ID                                     Status     Blueprint          Version   Type
-be27c45f-e1ea-42eb-94b3-a0789243bea4   RUNNING    rhel9-microshift   0.1.0     edge-commit
-...
-$ composer-cli compose image $UUID
-$ scp $UUID-commit.tar servera:~</code></pre>
+$ <strong>UUID=be27c45f-e1ea-42eb-94b3-a0789243bea4</strong></code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Publish edge commit image</p>
+<p>Wait until the compose finishes. Be patient, it will take a few minutes.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs"># servera
-$ UUID=be27c45f-e1ea-42eb-94b3-a0789243bea4  # copy from other terminal
-$ mkdir delete-me
-$ tar xf $UUID-commit.tar -C delete-me/
-$ ostree refs --repo delete-me/repo
-rhel/9/x86_64/ushift
-$ ostree --repo=/var/www/html/repo refs
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli compose list</strong>
+ID                                     Status     Blueprint          Version   Type
+be27c45f-e1ea-42eb-94b3-a0789243bea4   RUNNING    rhel9-microshift   0.1.0     edge-commit
+...
+$ <strong>composer-cli compose list</strong>
+ID                                     Status     Blueprint          Version   Type
+be27c45f-e1ea-42eb-94b3-a0789243bea4   FINISHED   rhel9-microshift   0.1.0     edge-commit
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Copy the edge commit image to your <em>web server machine</em>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli compose image $UUID</strong>
+$ <strong>scp $UUID-commit.tar servera:~</strong></code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>On your <em>web server machine</em>, publish your new edge system image.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Copy and paste the UUID from your <em>development machine</em>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>UUID=be27c45f-e1ea-42eb-94b3-a0789243bea4</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Extract your edge commit image and check it contains an OSTree repository.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>mkdir delete-me</strong>
+$ <strong>tar xf $UUID-commit.tar -C delete-me/</strong>
+$ <strong>ostree refs --repo delete-me/repo</strong>
+rhel/9/x86_64/ushift</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>If your web server already contains an OSTree repository from activities from previous Red Hat Device Edge courses, pull your edge container image into the same repository.</p>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Do NOT run the <code>pull-local</code> command if you do not have an OSTree repository in the web server!
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ostree --repo=/var/www/html/repo refs</strong>
 rhel/9/x86_64/edge
-<mark>#</mark> student may have nothing on the web server, in this case must initialize an empty ostree repo or just untar
-$ sudo ostree pull-local --repo=/var/www/html/repo delete-me/repo
+$ <strong>sudo ostree pull-local --repo=/var/www/html/repo delete-me/repo</strong>
 265 metadata, 649 content objects imported; 0 bytes content written</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Create and publish kickstart</p>
+<p>If your web server does NOT contain an OSTree repository, just copy your edge commit image to the web server.</p>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If copy OSTree repostory files over another OSTree repository, you may get a corrupted repository.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ sudo dnf install mkpasswd
-...
-Complete!
-$ PASSWD=$( echo 'redhat123' | mkpasswd -s -m sha-512 )
-$ sed -i "s|REPLACE_WITH_PASSWD_HASH|$PASSWD|" rhel9-microshift.toml
-$ ssh-keygen -N '' -f edge-key -C 'initial key for edge user'
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ostree --repo=/var/www/html/repo refs</strong>
+error: opening repo: opendir(/var/www/html/repo): No such file or directory
+$ <strong>sudo cp -r delete-me/repo /var/www/html</strong></code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>On your <em>development machine</em>, download and inspect an Image Builder blueprint and a kickstart file for an edge installer image.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Download the <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/blueprints/rhel9-microshift-installer.toml">sample installer blueprint</a> from the course samples git repository. It is a minimal blueprint, without any customizations.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/blueprints/rhel9-microshift-installer.toml</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Download the <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/ks/rhel9-microshift-installer.ks">sample installer kickstart</a> from the course samples git repository.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/ks/rhel9-microshift-installer.ks</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Review the <code>rhel9-microshift-installer.ks</code> kickstart and make sure you understand it&#8217;s instructions:</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The code snipets here help you locate the relevant sections in the kickstart file, but they do not list the entirery of the file. Follow along with a text editor and navigate through the kickstart file.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Partition the root disk with LVM, but taking only 10G for the root partition, in order to leave empty space in the <code>rhel</code> volume group for use by MicroShift&#8217;s LVM Storage operator.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">zerombr
+clearpart --all --initlabel
+part /boot/efi --fstype=efi --size=200
+part /boot --fstype=xfs --asprimary --size=800
+part pv.01 --grow
+volgroup rhel pv.01
+logvol / --vgname=rhel --fstype=xfs --size=10240 --name=root</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Deploy the OSTree commit embeded in the installation media.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">ostreesetup --nogpg --osname=rhel --remote=edge --url=file:///run/install/repo/ostree/repo --ref=rhel/9/x86_64/ushift</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create an initial user with a known password, unlimited sudo, and SSH key.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">%post --log=/var/log/anaconda/post-install.log --erroronfail
+
+# local user for console login and SSH
+useradd -g wheel core
+echo "core:redhat123" | chpasswd
+mkdir /home/core/.ssh
+cat &gt; /home/core/.ssh/authorized_keys &lt;&lt; EOFSSH
+REPLACE_WTH_SSH_PUB_KEY
+EOFSSH
+
+%end</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+production systems would NOT enable password login.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Create an SSH key for use with your edge devices.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ssh-keygen -N '' -f edge-key -C 'initial key for edge devices'</strong>
 Generating public/private rsa key pair.
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Embed your new SSH key in the kickstart file.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>SSH_PUB_KEY=$( cat edge-key.pub )</strong>
+$ <strong>sed -i "s|REPLACE_WTH_SSH_PUB_KEY|$SSH_PUB_KEY|" rhel9-microshift-installer.ks</strong></code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Build an edge installer image and download it as an ISO file.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Push the blueprint for your edge installer image.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli blueprints push rhel9-microshift-installer.toml</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Start a composer for your edge installer image.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli compose start-ostree microshift-installer edge-installer --ref rhel/9/x86_64/ushift --url http://servera.lab.example.com/repo/</strong>
+Compose 170edc4e-9384-4e86-b616-7c09eaa718e4 added to the queue
+$ <strong>UUID=170edc4e-9384-4e86-b616-7c09eaa718e4</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Wait until your compose finishes. It will take a few minutes.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli compose list</strong>
+ID                                     Status     Blueprint              Version   Type
+170edc4e-9384-4e86-b616-7c09eaa718e4   RUNNING    microshift-installer   0.1.0     edge-installer
 ...
-$ SSH_PUB_KEY=$( cat edge-key.pub )
-$ sed -i "s|REPLACE_WTH_SSH_PUB_KEY|$SSH_PUB_KEY|" rhel9-microshift.toml
-#
-#sed didn't work for the pull secret, guess because it contains double quotes
-# cat trick doesn't work for quay CA
-# didn't try any trick for the image policy and crio config</code></pre>
+$ <strong>composer-cli compose list</strong>
+ID                                     Status     Blueprint              Version   Type
+170edc4e-9384-4e86-b616-7c09eaa718e4   FINISHED   microshift-installer   0.1.0     edge-installer</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Test edge commit image [skip on actual lab]</p>
+<p>Download your edge installer image.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ virt-install --name edge-microshift-1 --os-variant rhel9.5 \
---memory 4096 --vcpus 2 --disk size=20 --graphics=none --network bridge=virbr0 \
---location /home/student/Downloads/rhel-9.5-x86_64-boot.iso \
---extra-arg inst.ks=http://servera.lab.example.com/rhel9-microshift.ks \
---extra-arg console=ttyS0 -v</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli compose image $UUID</strong>
+170edc4e-9384-4e86-b616-7c09eaa718e4-installer.iso</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Add your custom kickstart file to your installer ISO file.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Install the Lorax tools for manipulating Anaconda installation media.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install lorax</strong>
+...
+Complete!</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Build edge installer image [ may not need lorax anymore]</p>
+<p>Create a new ISO file including your custom kickstart file.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs"># I think there's no need for lorax with ks customizations in blueprint
-$ sudo dnf install lorax
-$ composer-cli blueprints push rhel9-microshift-installer.toml
-ERROR: ManifestCreationFailed: failed to initialize osbuild manifest: edge-installer installer.kickstart.contents are not supported in combination with users or groups
-# Guess I don't have kickstart customizations yet :-(
-$ composer-cli compose start-ostree microshift-installer edge-installer --ref rhel/9/x86_64/ushift --url http://servera.lab.example.com/repo/
-Compose 6189329e-194c-447e-acec-6952d727399d added to the queue
-$ UUID=6189329e-194c-447e-acec-6952d727399d
-$ composer-cli compose image $UUID
-6189329e-194c-447e-acec-6952d727399d-installer.iso
-$ mkksiso --ks rhel9-microshift-installer.ks $UUID-installer.iso rhel9-microshift.iso
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>mkksiso --ks rhel9-microshift-installer.ks $UUID-installer.iso rhel9-microshift.iso</strong>
 ...
 Writing to '/home/student/rhel9-microshift.iso' completed successfully.</code></pre>
 </div>
 </div>
 </li>
-<li>
-<p>Stop the mirror registry to prove you can provision and run a MicroShift VM air-gapped</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ sudo systemctl stop quay-app quay-pod quay-redis</code></pre>
-</div>
+</ol>
 </div>
 </li>
 <li>
-<p>Test edge installer image with custom ks</p>
+<p>On your <em>web server machine</em>, stop the mirror registry for Red Hat OpenShift, so you can prove that you can provision edge devices in air-gapped environments.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ iso-info rhel9-microshift.iso
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl stop quay-app quay-pod quay-redis</strong>
+$ <strong>sudo systemctl is-active quay-app quay-pod quay-redis</strong>
+failed
+inactive
+inactive</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>failed</code> state is expected for the <code>quay-app</code> service.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>On your <em>development machine</em>, create a KVM virtual machine to test your edge installer image.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Set a shell variable with the disk label of your installer image.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>iso-info rhel9-microshift.iso</strong>
 ...
 Volume      : RHEL-9-5-0-BaseOS-x86_64
 No Joliet extensions
-$ LABEL=RHEL-9-5-0-BaseOS-x86_64
-$ virt-install --name edge-microshift-1 --os-variant rhel9.5 \
---memory 4096 --vcpus 2 --disk size=20 --graphics=none --network bridge=virbr0 \
---location /home/student/rhel9-microshift.iso \
---extra-arg inst.ks=hd:LABEL=$LABEL:/rhel9-microshift-installer.ks \
---extra-arg console=ttyS0 -v
-# Ctrl+] to leave the console
-$ ssh -i edge-key core@ushift</code></pre>
+$ <strong>LABEL=RHEL-9-5-0-BaseOS-x86_64</strong></code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Check that MicroShift is healthy</p>
+<p>Create a KVM virtual machine from your installer image. The installation should proceed unattended until you get a login prompt.</p>
+<div class="paragraph">
+<p>You could use different <code>virt-install</code> commands or the Cockpit web UI. The use of <code>--location</code> and <code>--extra-arg</code> in the following command enables the VM to run with a serial console, so you don&#8217;t need to leave your shell and don&#8217;t need to open a graphical console for your <em>edge machine</em>.</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ export KUBECONFIG=~/local-admin
-# warn that quick typers may get "no resources found" errors from oc get pod (and also get node?)
-$ oc get node
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>virt-install --name edge-microshift-1 --os-variant rhel9.5 \
+--memory 4096 --vcpus 2 --disk size=20 --graphics=none --network bridge=virbr0 \
+--location /home/student/rhel9-microshift.iso \
+--extra-arg inst.ks=hd:LABEL=$LABEL:/rhel9-microshift-installer.ks \
+--extra-arg console=ttyS0 -v</strong>
+...
+ushift login:</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>NOTE:
+You may need to press <kbd>Enter</kbd> to see the login prompt, after the VM stops displaying console messages.</p>
+</div>
+</li>
+<li>
+<p>Disconnect from the VM console. by pressong <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>]</kbd></span>, and start a SSH session to your <em>edge machine</em>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ssh -i edge-key core@ushift</strong></code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>On your <em>edge machine</em>, verify that MicroShift is fully initialized.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Check that MicroShift is healthy and all its pods are ready and running. Beware it may take a while for MicroShift to finish starting all its pods.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>export KUBECONFIG=~/local-admin</strong>
+$ <strong>oc get node</strong>
 NAME     STATUS   ROLES                         AGE   VERSION
 ushift   Ready    control-plane,master,worker   10m   v1.30.5
-$ oc get pod -A
+$ <strong>oc get pod -A</strong>
 NAMESPACE                  NAME                                       READY   STATUS    RESTARTS   AGE
 kube-system                csi-snapshot-controller-69ddff88c8-6g4wr   1/1     Running   0          4m20s
 kube-system                csi-snapshot-webhook-74dc497864-xgjzz      1/1     Running   0          4m24s
@@ -674,12 +901,41 @@ openshift-ovn-kubernetes   ovnkube-master-xc84v                       4/4     Ru
 openshift-ovn-kubernetes   ovnkube-node-mgsz2                         1/1     Running   0          4m21s
 openshift-service-ca       service-ca-9db855698-pwbfg                 1/1     Running   0          4m19s
 openshift-storage          lvms-operator-7f544467bc-94227             1/1     Running   0          4m22s
-openshift-storage          vg-manager-5n494                           1/1     Running   0          3m55s
-$ oc run shell -it --restart Never --image-pull-policy IfNotPresent --image servera.lab.example.com:8443/ubi9/ubi -- rpm -q redhat-release
-redhat-release-9.5-0.6.el9.x86_64
-# it failed with the mirror registry off, despite the ubi umage being available from 'crictl images' :-(
-# but oc run sets 'imagePullPolicy: Always' which explains the error, after fixing the oc run command it works fine :-)</code></pre>
+openshift-storage          vg-manager-5n494                           1/1     Running   0          3m55s</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you are a quick typer, you may get "no resources found" errors from <code>oc get pod</code>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>As an additional check, create a test pod from the sample application image we included in the blueprint.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc run shell -it --restart Never --image-pull-policy IfNotPresent --image servera.lab.example.com:8443/ubi9/ubi -- rpm -q redhat-release</strong>
+redhat-release-9.5-0.6.el9.x86_64</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If you create a pod with the default image pull policy of <code>Always</code> it will fail because we stopped the mirror registry.
+</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>
@@ -688,10 +944,7 @@ redhat-release-9.5-0.6.el9.x86_64
 </ol>
 </div>
 <div class="paragraph">
-<p>[ Add steps to get the MicroShift RPM and review the release image list? Or/Also add to ch1? ]</p>
-</div>
-<div class="paragraph">
-<p>Lorem ipsum</p>
+<p>You suceed provisioning an edge device, from an edge installer image, in an air-gapped environment: you only need the installation media to fully provision a ready-to-use RHEL for Edge system running a MicroShift instance.</p>
 </div>
 </div>
 </div>
