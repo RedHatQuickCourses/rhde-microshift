@@ -1,4 +1,4 @@
-:time_estimate: 5
+:time_estimate: 13
 :compose-commit-uuid-aaaaaaaaaaaaaa: be27c45f-e1ea-42eb-94b3-a0789243bea4
 :compose-installer-uuid-aaaaaaaaaaa: 170edc4e-9384-4e86-b616-7c09eaa718e4
 
@@ -22,7 +22,7 @@ You need a few machines to perform the hands-on activities in this course.
 
 * A _web server machine_ with RHEL and unrestricted `sudo`, to host OSTree repositories
 
-* A _mirror registry machine_ with RHEL and unrestricted `sudo`, already populated with the container iamges required bu MicroShoft and sample applications.
+* A _mirror registry machine_ with RHEL and unrestricted `sudo`, already populated with the container images required bu MicroShift and sample applications.
 
 Make sure that your _package server machine_ and _mirror registry machine_ are properly configured and verified by following the instructions from the xref:ch1-microshift:s4-air-gapped-lab.adoc[previous lab] of this course.
 
@@ -70,7 +70,7 @@ $ *sudo cp 999-microshift-mirror.conf /etc/containers/registries.conf.d*
 
 2. Configure the Image Builder service with package sources for the RPM repositories required by MicroShift
 
-.. Download the sources TOML files from the https://github.com/RedHatQuickCourses/rhde-build-samples/tree/main/sources[course samples git repository].
+.. Download the package sources TOML files from the https://github.com/RedHatQuickCourses/rhde-build-samples/tree/main/sources[course samples git repository].
 +
 [source,subs="verbatim,quotes"]
 --
@@ -97,22 +97,22 @@ include::1@samples:sources:example$openshift.toml[lines=4]
 ...
 --
 
-3. Download and inspect an Image Builder blueprint for a pre-configured MicroShift instance.
+3. Download and inspect an Image Builder blueprint for a preconfigured MicroShift instance.
 
 .. Download the https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/blueprints/rhel9-microshift.toml[sample blueprint] from the course samples git repository. It is a long blueprint but, assuming that you performed all activities from the https://redhatquickcourses.github.io/rhde-build/[first Red Hat Device Edge course] and also from the xref:ch2-package[previous chapter] of this course, there should be no surprises.
 
 .. Review the `rhel9-microshift.toml` blueprint and make sure you understand it's customizations:
 +
-NOTE: The code snipets here help you locate the relevant sections in the blueprint, but they do not list the entirery of each section. Follow along with a text editor and navigate through the blueprint file.
+NOTE: The code snippets here help you locate the relevant sections in the blueprint, but they do not list the entirely of most sections. Follow along with a text editor and navigate through the blueprint file.
 
-... Set the hostname to `ushift` where the letter "u" stands for the greek letter "micro".
+... Set the hostname to `ushift` where the letter "u" stands for the Greek letter "micro".
 +
 [source,subs="verbatim"]
 --
 include::1@samples:blueprints:example$rhel9-microshift.toml[lines=8..9]
 --
 
-... Install the `microshift` package.
+... Install the MicroShift packages and dependencies.
 +
 [source,subs="verbatim"]
 --
@@ -126,7 +126,7 @@ include::1@samples:blueprints:example$rhel9-microshift.toml[lines=11..12]
 include::1@samples:blueprints:example$rhel9-microshift.toml[lines=14..15]
 --
 
-... Expose the Kubernetes API port.
+... Expose the Kubernetes API endpoint.
 +
 [source,subs="verbatim"]
 --
@@ -165,7 +165,7 @@ include::1@samples:blueprints:example$rhel9-microshift.toml[lines=84..85]
 ...
 --
 
-... Embed the MicroShift release containers in the system image.
+... Embed the MicroShift release container images in the system image.
 +
 [source,subs="verbatim"]
 --
@@ -180,7 +180,7 @@ include::1@samples:blueprints:example$rhel9-microshift.toml[lines=106..110]
 include::1@samples:blueprints:example$rhel9-microshift.toml[lines=136..137]
 --
 
-... Embed a first boot service which configures Firewalld for the Kubernetes pod and service virtual networks.
+... Embed a first boot service which configures the system's firewall for the Kubernetes pod and service virtual networks.
 +
 [source,subs="verbatim"]
 --
@@ -195,6 +195,8 @@ include::1@samples:blueprints:example$rhel9-microshift.toml[lines=141..142]
 include::1@samples:blueprints:example$rhel9-microshift.toml[lines=157..158]
 ...
 --
++
+NOTE: The script starts before MicroShift is fully initialized so it was coded to wait until MicroShift autogenerates the Kubeconfig files.
 
 ... Invoke the previous script from another first boot service.
 +
@@ -313,7 +315,7 @@ $ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-sampl
 
 .. Review the `rhel9-microshift-installer.ks` kickstart and make sure you understand it's instructions:
 +
-NOTE: The code snipets here help you locate the relevant sections in the kickstart file, but they do not list the entirery of the file. Follow along with a text editor and navigate through the kickstart file.
+NOTE: The code snippets here help you locate the relevant sections in the kickstart file, but they do not list the entirety of the file. Follow along with a text editor and navigate through the kickstart file.
 
 ... Partition the root disk with LVM, but taking only 10G for the root partition, in order to leave empty space in the `rhel` volume group for use by MicroShift's LVM Storage operator.
 +
@@ -322,7 +324,7 @@ NOTE: The code snipets here help you locate the relevant sections in the kicksta
 include::1@samples:ks:example$rhel9-microshift-installer.ks[lines=6..13]
 --
 
-... Deploy the OSTree commit embeded in the installation media.
+... Deploy the OSTree commit embedded in the installation media.
 +
 [source,subs="verbatim"]
 --
@@ -336,7 +338,7 @@ include::1@samples:ks:example$rhel9-microshift-installer.ks[lines=18]
 include::1@samples:ks:example$rhel9-microshift-installer.ks[lines=20..30]
 --
 +
-NOTE: production systems would NOT enable password login.
+NOTE: production systems would NOT enable password login. We left it here as a convenience for the learner.
 
 .. Create an SSH key for use with your edge devices.
 +
@@ -364,7 +366,7 @@ $ *sed -i "s|REPLACE_WTH_SSH_PUB_KEY|$SSH_PUB_KEY|" rhel9-microshift-installer.k
 $ *composer-cli blueprints push rhel9-microshift-installer.toml*
 --
 
-.. Start a composer for your edge installer image.
+.. Start a compose for your edge installer image.
 +
 [source,subs="verbatim,quotes,attributes"]
 --
@@ -458,7 +460,7 @@ ushift login:
 NOTE:
 You may need to press kbd:[Enter] to see the login prompt, after the VM stops displaying console messages.
 
-.. Disconnect from the VM console. by pressong kbd:[Ctrl+\]], and start a SSH session to your _edge machine_.
+.. Disconnect from the VM console. by pressing kbd:[Ctrl+\]], and start a SSH session to your _edge machine_.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -489,7 +491,7 @@ openshift-storage          lvms-operator-7f544467bc-94227             1/1     Ru
 openshift-storage          vg-manager-5n494                           1/1     Running   0          3m55s
 --
 +
-NOTE: If you are a quick typer, you may get "no resources found" errors from `oc get pod`
+NOTE: If you are too quick, you may get "no resources found" errors from `oc get pod`. If this happens, just wait a few seconds and try again.
 
 .. As an additional check, create a test pod from the sample application image we included in the blueprint.
 +
@@ -501,9 +503,9 @@ redhat-release-9.5-0.6.el9.x86_64
 +
 IMPORTANT: If you create a pod with the default image pull policy of `Always` it will fail because we stopped the mirror registry.
 
-You suceed provisioning an edge device, from an edge installer image, in an air-gapped environment: you only need the installation media to fully provision a ready-to-use RHEL for Edge system running a MicroShift instance.
+You succeed provisioning an edge device, from an edge installer image, in an air-gapped environment: you only need the installation media to fully provision a ready-to-use RHEL for Edge system running a MicroShift instance.
 
 == What's Next
 
-Lorem ipsum
+This was the final activity of this course. If you wish, you can create service accounts and kubeconfig files for developer access using the same steps from ch2-package:s3-access-lab.adoc[previous labs] already demonstrated on package-based RHEL.
 

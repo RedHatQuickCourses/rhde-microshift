@@ -8,6 +8,10 @@ Objective::
 
 Deploy Kubernetes Applications in Edge Devices with MicroShift.
 
+[ Not completing this activity to release the course in time... assuming storage and networking are fine on the edge machine, but untested. ]
+
+[ It would be basically a repetition of previous labs, unless we include a custom RPM package with Kubernetes manifests, but this fits better RHDE-4 that focus on applications and their requirements ]
+
 WARNING: Work In Progress
 
 == Before you Begin

@@ -1,0 +1,13 @@
+= Summary
+
+In this chapter, you learned:
+
+* RHEL for Edge supports preconfiguring MicroShift and Kubernetes applications at image build time, and also supports deploying Kubernetes applications on day-2 using Kubernetes APIs.
+
+* You must configure the Image Builder service to access your private or mirror registries by editing configuration files and rebooting the machine running Image Builder.
+
+* Image Builder blueprint file customizations are suitable for small configuration files, and you can create custom RPM packages for larger and binary files.
+
+* If you embed MicroShift and application container images in your edge images, by using blueprint customizations, you can provision edge devices and run edge applications without requiring any access to remote container registries.
+
+* Once your edge device, running MicroShift, is provisioned, you can configure and access its MicroShift instance the same way you would do for package-based RHEL.
