@@ -20,15 +20,17 @@ You need a few machines to perform the hands-on activities in this course.
 
 * A _web server machine_ with RHEL and unrestricted `sudo`, to host OSTree repositories
 
-* A _mirror registry machine_ with RHEL and unrestricted `sudo`, to host a https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift[mirror registry for Red Hat OpenShift].
+* A _mirror registry machine_ with RHEL and unrestricted `sudo`, already populated with the container iamges required bu MicroShoft and sample applications.
+
+Make sure that your _package server machine_ and _mirror registry machine_ are properly configured and verified by following the instructions from the xref:ch1-microshift:s4-air-gapped-lab.adoc[previous lab] of this course.
 
 These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.
 
 If you are using the course environment, you will log in on the `workstation` VM as the user `student` with password `student`. The `workstation` VM is your _development machine_. You will start SSH sessions from the `workstation` VM to the `servera` VM, which is your _web server machine_ and also your _mirror registry machine_, using the same user.
 
-== Instructions
+You will also create a local test VM on your _development machine_, and we refer to that test VM as your _edge machine_.
 
-Working copy of ks and toml on ~student!
+== Instructions
 
 [source,subs="verbatim,quotes"]
 --
@@ -46,20 +48,24 @@ First attempt,retry: DONE
 * Remote access to MicroShift works fine
 * Remote access to routes and LB services works fine.
 
-Second attempt:
+Second attempt: DONE
 * Embed kickstart embeded into an installer image
 * Scripted firstboot to create kubeconfigs for the core user (which is created only by kickstart!?!)
+* while loop to wait until microshift creates its kubeconfig files
 Results:
 * compose fails to process ks customizations, have to use minimal blueprint + mkksiso
-* scripted firstboot failing, maybe because it's running before microshift starts?
-* PENDING while loop to wait until microshift creates its kubeconfig files
+* LoL I was able to "oc get pod -A" and get no resources... MicroShift was still creating its pods!
 
-Third attempt:
+Third attempt:DONE
 * Embed containers into ostree commit, work out registry auth and mirror registry refs
 * Provision VM with mirror registry down to prove it's air-gapped
 Results:
 * once I fixed by osbuild-worker config file and rebooted, it works
-* PENDING test with mirror registry down
+* PENDING test with mirror registry down: FAILED :-(
+* It's trying to connect to servera, as redirected from quay.io, not using the containers in the osgree commit.
+* Guess I need to build the image with references to the canonical image names, and maybe have an image config on workstation
+* test with "sudo crictl images" : I see the images from servera, which is not what microshift wants
+* system recovered after restarting quay. and "sudo crictl images" show images from quay.io
 
 Fourth attempt:
 * Create service account, namespace, and role bindings from blueprint or custom RPM
@@ -69,65 +75,179 @@ Tentative:
 * Pre-deploy hello from manifests in ostree commit (custom rpm package?)
 --
 
-1. Lorem ipsum.
+1. On your _development machine_, configure the Image Builder service to use the mirror registry.
 
-.. Configure image builder for the mirror registry
+.. Create an Image Builder worker configuration file that refers to credentials for accessing the mirror registry.
++
+IMPORTANT: You already configured your _development machine_ with CA certificates and credentials to access the mirror registry in a xref:ch1-microshift:s3-air-gapped-lab.adoc[previous lab].
 +
 [source,subs="verbatim,quotes"]
 --
-$ sudo mkdir /etc/osbuild-worker/
-$ sudo cat /etc/osbuild-worker/osbuild-worker.toml
+$ *cat > /etc/osbuild-worker/osbuild-worker.toml << EOF
 [containers]
 auth_file_path = "/etc/osbuild-worker/containers-auth.json"
-$ sudo cp mirror-pull-secret /etc/osbuild-worker/containers-auth.json
-# sudo systemctl restart osbuild-worker ## will this work? will I need a reboot? YES
-# after reboot, it can build an edge commit image with container images
+EOF*
+$ *sudo mkdir /etc/osbuild-worker*
+$ *sudo cp osbuild-worker.toml /etc/osbuild-worker/osbuild-worker.toml*
+$ *sudo cp mirror-pull-secret /etc/osbuild-worker/containers-auth.json*
 --
 
-.. Lorem ipsum
+.. Configure the container runtime to get MicroShift release images from the mirror registry.
++
+NOTE: The registry configuration file is the same one you already used to configure MicroShift in a xref:ch2-package:s2-install-lab[previous lab].
 +
 [source,subs="verbatim,quotes"]
 --
-$ *command argument*
-...
-Partial output
+$ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/999-microshift-mirror.conf*
+$ *sudo cp 999-microshift-mirror.conf /etc/containers/registries.conf.d*
 --
 
-.. Crap, forgot to configure sources for RHOCP and FDP in classroom :-(
-+
-But my blupeprint was fine on depsolve and its compose is building... getting packages from Internet without entitlement? Ah, it failed. Looks like it failed on non-existant directory???
-+
-LoL it passed depcheck because I didn't include MicroShift packages :-P
+.. Reboot your _development machine_ so its Image Builder service reads its new configuration files.
+
+2. Configure the Image Builder service with package sources for the RPM repositories required by MicroShift
+
+.. Download the sources TOML files from the https://github.com/RedHatQuickCourses/rhde-build-samples/tree/main/sources[course samples git repository].
 +
 [source,subs="verbatim,quotes"]
 --
-$ composer-cli sources add sources/openshift.toml 
-$ composer-cli sources add sources/fastdata.toml 
-$ composer-cli sources list
+$ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/sources/openshift.toml*
+$ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/sources/fastdata.toml*
+--
+
+.. Configure your Image Builder service with the additional package sources.
++
+These package sources refer to the same RPM repositories that you already used in the xref:ch2-package:s2-install-lab.adoc[previous chapter] to deploy MicroShift on package-based RHEL.
++
+[source,subs="verbatim,quotes"]
+--
+$ *composer-cli sources add sources/openshift.toml*
+$ *composer-cli sources add sources/fastdata.toml* 
+$ *composer-cli sources list*
 appstream
 baseos
 fastdata
 openshift
+$ *composer-cli sources info openshift*
+...
+include::1@samples:sources:example$openshift.toml[lines=4]
+...
 --
 
-.. Test BP
+
+3. Review an Image Builder blueprint for a pre-configured MicroShift instance.
+
+.. Download the https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/blueprints/rhel9-microshift.toml[sample blueprint] from the course samples git repository. It is a long blueprint but, assuming that you performed all activities from the https://redhatquickcourses.github.io/rhde-build/[first Red Hat Device Edge course] and also from the xref:ch2-package[previous chapter] of this course, there should be no surprises.
+
+.. Review the `rhel9-microshift.toml` blueprint and make sure you understand it's customizations:
++
+NOTE: The code snipets here help you locate the relevant sections in the blueprint, but they do not list the entirery of each section. Follow along with a text editor and navigate through the blueprint file.
+
+... Set the hostname to `ushift` where the letter "u" stands for the greek letter "micro".
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=8..9]
+--
+
+... Install the `microshift` package.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=11..12]
+--
+
+... Enable two first boot services, which are defined later in the blueprint.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=14..15]
+--
+
+... Expose the Kubernetes API port.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=20..21]
+--
+
+... Add a pull secret for the mirror registry.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=23..24]
+...
+--
+
+... Add a CA certificate for the mirror registry.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=38..39]
+...
+--
+
+... Add a registry configuration which redirects MicroShift container images to the mirror registry.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=47..48]
+...
+--
+
+... Add an image policy which disables signature validation.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=84..85]
+...
+--
+
+... Embed the MicroShift release containers in the system image.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=106..110]
+...
+--
+
+... Embed a test application container in the system image.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=136..137]
+--
+
+... Embed a first boot service which configures Firewalld for the Kubernetes pod and service virtual networks.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=141..142]
+...
+--
+
+... Embed a script which copies the autogenerated kubeconfig files to the `core` user home directory.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=157..158]
+...
+--
+
+... Invoke the previous script from another first boot service.
++
+[source,subs="verbatim"]
+--
+include::1@samples:blueprints:example$rhel9-microshift.toml[lines=174..175]
+...
+--
+
+4. Build and publish an edge system image.
+
+.. Add the CA certificate for the mirror registry to the blueprint.
 +
 [source,subs="verbatim,quotes"]
 --
-$ sudo dnf install mkpasswd
-...
-Complete!
-$ PASSWD=$( echo 'redhat123' | mkpasswd -s -m sha-512 )
-$ sed -i "s|REPLACE_WITH_PASSWD_HASH|$PASSWD|" rhel9-microshift.toml
-$ ssh-keygen -N '' -f edge-key -C 'initial key for edge user'
-Generating public/private rsa key pair.
-...
-$ SSH_PUB_KEY=$( cat edge-key.pub )
-$ sed -i "s|REPLACE_WTH_SSH_PUB_KEY|$SSH_PUB_KEY|" rhel9-microshift.toml
-#
-#sed didn't work for the pull secret, guess because it contains double quotes
-# cat trick doesn't work for quay CA
-# didn't try any trick for the image policy and crio config
+WILL A SED WORK HERE?
 --
 
 .. Build edge commit image
@@ -170,6 +290,27 @@ rhel/9/x86_64/edge
 $ sudo ostree pull-local --repo=/var/www/html/repo delete-me/repo
 265 metadata, 649 content objects imported; 0 bytes content written
 --
+
+.. Create and publish kickstart
++
+[source,subs="verbatim,quotes"]
+--
+$ sudo dnf install mkpasswd
+...
+Complete!
+$ PASSWD=$( echo 'redhat123' | mkpasswd -s -m sha-512 )
+$ sed -i "s|REPLACE_WITH_PASSWD_HASH|$PASSWD|" rhel9-microshift.toml
+$ ssh-keygen -N '' -f edge-key -C 'initial key for edge user'
+Generating public/private rsa key pair.
+...
+$ SSH_PUB_KEY=$( cat edge-key.pub )
+$ sed -i "s|REPLACE_WTH_SSH_PUB_KEY|$SSH_PUB_KEY|" rhel9-microshift.toml
+#
+#sed didn't work for the pull secret, guess because it contains double quotes
+# cat trick doesn't work for quay CA
+# didn't try any trick for the image policy and crio config
+--
+
 
 .. Test edge commit image [skip on actual lab]
 +
@@ -222,7 +363,37 @@ $ virt-install --name edge-microshift-1 --os-variant rhel9.5 \
 --location /home/student/rhel9-microshift.iso \
 --extra-arg inst.ks=hd:LABEL=$LABEL:/rhel9-microshift-installer.ks \
 --extra-arg console=ttyS0 -v
+# Ctrl+] to leave the console
+$ ssh -i edge-key core@ushift
 --
+
+.. Check that MicroShift is healthy
++
+[source,subs="verbatim,quotes"]
+--
+$ export KUBECONFIG=~/local-admin
+# warn that quick typers may get "no resources found" errors from oc get pod (and also get node?)
+$ oc get node
+NAME     STATUS   ROLES                         AGE   VERSION
+ushift   Ready    control-plane,master,worker   10m   v1.30.5
+$ oc get pod -A
+NAMESPACE                  NAME                                       READY   STATUS    RESTARTS   AGE
+kube-system                csi-snapshot-controller-69ddff88c8-6g4wr   1/1     Running   0          4m20s
+kube-system                csi-snapshot-webhook-74dc497864-xgjzz      1/1     Running   0          4m24s
+openshift-dns              dns-default-tj2wf                          2/2     Running   0          4m5s
+openshift-dns              node-resolver-lfg6k                        1/1     Running   0          4m21s
+openshift-ingress          router-default-575b4fc7-cnnsc              1/1     Running   0          4m19s
+openshift-ovn-kubernetes   ovnkube-master-xc84v                       4/4     Running   0          4m21s
+openshift-ovn-kubernetes   ovnkube-node-mgsz2                         1/1     Running   0          4m21s
+openshift-service-ca       service-ca-9db855698-pwbfg                 1/1     Running   0          4m19s
+openshift-storage          lvms-operator-7f544467bc-94227             1/1     Running   0          4m22s
+openshift-storage          vg-manager-5n494                           1/1     Running   0          3m55s
+$ oc run shell -it --restart Never --image-pull-policy IfNotPresent --image servera.lab.example.com:8443/ubi9/ubi -- rpm -q redhat-release
+redhat-release-9.5-0.6.el9.x86_64
+# it failed with the mirror registry off, despite the ubi umage being available from 'crictl images' :-(
+# but oc run sets 'imagePullPolicy: Always' which explains the error, after fixing the oc run command it works fine :-)
+--
+
 
 [ Add steps to get the MicroShift RPM and review the release image list? Or/Also add to ch1? ]
 
