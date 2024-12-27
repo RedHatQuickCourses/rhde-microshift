@@ -103,7 +103,7 @@
     <a class="nav-link" href="s2-image-lab.html">Lab: Create RHEL for Edge Images with MicroShift</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="s3-deploy-lab.html">Lab: Deploy MicroShift on Edge Devices</a>
+    <a class="nav-link" href="s4-summary.html">Summary</a>
   </li>
 </ul>
   </li>
@@ -160,13 +160,13 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><em>Estimated reading time: <strong>5 minutes</strong>.</em></p>
+<p><em>Estimated reading time: <strong>6 minutes</strong>.</em></p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Objective</dt>
 <dd>
-<p>Deploy MicroShift with Image Builder and RPM-OSTree.</p>
+<p>Deploy MicroShift on edge devices with Image Builder and RPM-OSTree.</p>
 </dd>
 </dl>
 </div>
@@ -185,13 +185,112 @@ Work In Progress
 </div>
 </div>
 <div class="sect1">
+<h2 id="_shift_left_do_it_all_at_image_build_time"><a class="anchor" href="#_shift_left_do_it_all_at_image_build_time"></a>Shift Left: Do It All At Image Build Time</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you plan a a deployment of MicroShift in edge devices, you must consider the lifecycles of devices and their applications. It is never just MicroShift. The sole purpose of MicroShift is support applications which are deployed from container images and resource manifests.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/s1-edge-fig-1.svg" alt="s1 edge fig 1">
+</div>
+<div class="title">Figure 1. Tools and activities in the lifecycle of edge devices</div>
+</div>
+<div class="paragraph">
+<p>Some organizations embrace the "shift left" approach, and wish to perform as much as possible during day zero, at image build time. The RHEL for Edge tooling supports that approach. An Image Builder blueprint supports embeding multiple artifacts in an edge system image, such as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Custom RPM packages, from private RPM repositories.</p>
+</li>
+<li>
+<p>Container images, which are preloaded in the local container engine.</p>
+</li>
+<li>
+<p>File customizations, used to include a few small text files and scripts.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you need to include too many files, larger files, or binary files, which are not convenient to manage as blueprint file customizations, you should consider creating custom RPM packages, as described by <a href="https://www.redhat.com/en/blog/how-to-create-a-fully-self-contained-os-image-that-includes-your-kubernetes-workload">How to create a fully self contained OS image that includes your Kubernetes workload</a>. That is usually the case for Kubernetes application manifests.</p>
+</div>
+<div class="paragraph">
+<p>Not everything can be done, or should be done, at day zero. There will be always some configuration that you wish to perform at installation time or later, to mitigate security concerns or to address variability between different edge sites or even individual edge devices.</p>
+</div>
+<div class="paragraph">
+<p>As a best practice, you should not embed into edge system images anything that could be used to access other systems with write privileges. For example, it is fine embedding the public key of a corporate certificate authority (CA) or pull secrets for downloading container images from a private registry. But it is <strong>NOT</strong> fine embedding credentials to access a database, even credentials allowed to execute only queries, because of the risk of information leakage.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_distinct_lifecycles_for_os_and_applications_keep_it_the_way_we_are_used_to"><a class="anchor" href="#_distinct_lifecycles_for_os_and_applications_keep_it_the_way_we_are_used_to"></a>Distinct Lifecycles for OS and Applications: Keep it The Way We Are Used To</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Some organizations prefer to keep separate lifecycles for the operating system and applications on their edge devices. This meets their team structure and enables separation of concerns, but requires that edge devices have good enough access to container image registries, RPM repositories, and also Git repositories, if employing popular GitOps techniques.</p>
+</div>
+<div class="paragraph">
+<p>To NOT shift left has the advantage of keeping processes for provisioning and managing edge devices closer to the processes already used for data center server and office workstations. This may be appropriate for edge sites that have their own IT infrastructure, which it is similar to corporate sites, and for edge sites that have reliable and fast network connectivity to corporate sites.</p>
+</div>
+<div class="paragraph">
+<p>The RHEL for Edge tooling also supports that approach, by allowing:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Activation of a <code>/usr</code> overlay to install additional packages.</p>
+</li>
+<li>
+<p>Pull container images from container image registries.</p>
+</li>
+<li>
+<p>Remote access to the Kubernetes API endpoints of individual edge device running MicroShift.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_rhel_for_edge_image_workflow"><a class="anchor" href="#_rhel_for_edge_image_workflow"></a>RHEL for Edge Image Workflow</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Short review of the workflow and tools from rhde-buid</p>
+<p>In any case (shift left or not), there are benefits in building edge system images which include pre-configured MicroShift instances. You decide how much you will preconfigure, from offering an empty MicroShift instance, which is ready for remote access as a cluster administrator to offering a MicroShift, to offering a MicroShift instance already running multiple workloads.</p>
 </div>
 <div class="paragraph">
-<p>Lorem ipsum</p>
+<p>If your edge deployment is air-gapped, you probably need an edge installer image, which is produced from an edge commit image stored in a remote OSTree repository, which also provides operating system updates to edge devices.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/s1-edge-fig-2.svg" alt="s1 edge fig 2">
+</div>
+<div class="title">Figure 2. Wokflow for building and deploying RHEL for Edge on edge devices</div>
+</div>
+<div class="paragraph">
+<p>If you need a refresher of the finer details or troubleshooting hints for managing the RHEL for Edge image Builder service, the RPM-OSTree tooling, and OSTree repositories, please review the <a href="https://redhatquickcourses.github.io/selinux-policies/">first of the Red Hat Device Edge course</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_image_builder_and_private_container_registries"><a class="anchor" href="#_image_builder_and_private_container_registries"></a>Image Builder and Private Container Registries</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Image Builder service treats RPM packages and container images in different ways. While it does <strong>NOT</strong> use the system&#8217;s DNF settings to access RPM repositories, and requires its own configurations for accessing local package servers, it does use the system&#8217;s container engine settings for image policies.</p>
+</div>
+<div class="paragraph">
+<p>You also configure Image Builder to access RPM package repositories using the Image Builder API, through either the <code>composer-cli</code> command or its Cockpit module, but to configure Image Builder to access container registries you must make manual edits to configuration files in different directories:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Edit files under <code>/etc/containers</code> to enable container image mirrors, signature verification, or TLS certificate validation.</p>
+</li>
+<li>
+<p>Edit files under <code>/etc/osbuild-worker/</code> to provide the Image Builder worker processes with credentials to access any container registry you need, be one of the Red Hat registries or a private registry.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Notice that air-gapped image builds and air-gapped edge device provisioning present different constraints. The Image Builder service usually runs at a corporate site, with high speed and reliable access to package servers and container registries. Edge devices may not have good enough connectivity to those services and require that you include all artifacts in a system image.</p>
 </div>
 </div>
 </div>
@@ -199,7 +298,7 @@ Work In Progress
 <h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a>What&#8217;s Next</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Lorem ipsum</p>
+<p>The next and final activity of this course shows an Image Builder blueprint that configures a MicroShift instance and embeds all required configuration files and container image, and builds the edge images from local RPM repositories and a mirror registry, without requiring access to Red Hat servers over the Internet.</p>
 </div>
 </div>
 </div>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Lab: Create RHEL for Edge Images with MicroShift :: Deploying MicroShift on Red Hat Device Edge</title>
     <link rel="prev" href="s1-microshift-edge.html">
-    <link rel="next" href="s3-deploy-lab.html">
+    <link rel="next" href="s4-summary.html">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -103,7 +103,7 @@
     <a class="nav-link" href="s2-image-lab.html">Lab: Create RHEL for Edge Images with MicroShift</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="s3-deploy-lab.html">Lab: Deploy MicroShift on Edge Devices</a>
+    <a class="nav-link" href="s4-summary.html">Summary</a>
   </li>
 </ul>
   </li>
@@ -160,7 +160,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><em>Estimated reading time: <strong>5 minutes</strong>.</em></p>
+<p><em>Estimated reading time: <strong>13 minutes</strong>.</em></p>
 </div>
 <div class="dlist">
 <dl>
@@ -202,7 +202,7 @@ Work In Progress
 <p>A <em>web server machine</em> with RHEL and unrestricted <code>sudo</code>, to host OSTree repositories</p>
 </li>
 <li>
-<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, already populated with the container iamges required bu MicroShoft and sample applications.</p>
+<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, already populated with the container images required bu MicroShift and sample applications.</p>
 </li>
 </ul>
 </div>
@@ -299,7 +299,7 @@ $ <strong>sudo cp 999-microshift-mirror.conf /etc/containers/registries.conf.d</
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Download the sources TOML files from the <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/tree/main/sources">course samples git repository</a>.</p>
+<p>Download the package sources TOML files from the <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/tree/main/sources">course samples git repository</a>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/sources/openshift.toml</strong>
@@ -332,7 +332,7 @@ url = "http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms"
 </div>
 </li>
 <li>
-<p>Download and inspect an Image Builder blueprint for a pre-configured MicroShift instance.</p>
+<p>Download and inspect an Image Builder blueprint for a preconfigured MicroShift instance.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -347,7 +347,7 @@ url = "http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms"
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The code snipets here help you locate the relevant sections in the blueprint, but they do not list the entirery of each section. Follow along with a text editor and navigate through the blueprint file.
+The code snippets here help you locate the relevant sections in the blueprint, but they do not list the entirely of most sections. Follow along with a text editor and navigate through the blueprint file.
 </td>
 </tr>
 </table>
@@ -355,7 +355,7 @@ The code snipets here help you locate the relevant sections in the blueprint, bu
 <div class="olist lowerroman">
 <ol class="lowerroman" type="i">
 <li>
-<p>Set the hostname to <code>ushift</code> where the letter "u" stands for the greek letter "micro".</p>
+<p>Set the hostname to <code>ushift</code> where the letter "u" stands for the Greek letter "micro".</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">[customizations]
@@ -364,7 +364,7 @@ hostname = "ushift"</code></pre>
 </div>
 </li>
 <li>
-<p>Install the <code>microshift</code> package.</p>
+<p>Install the MicroShift packages and dependencies.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">[[packages]]
@@ -382,7 +382,7 @@ enabled = ["sshd", "microshift", "firstboot-microshift", "firstboot-microshift-u
 </div>
 </li>
 <li>
-<p>Expose the Kubernetes API port.</p>
+<p>Expose the Kubernetes API endpoint.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">[customizations.firewall]
@@ -431,7 +431,7 @@ path = "/etc/containers/policy.json"
 </div>
 </li>
 <li>
-<p>Embed the MicroShift release containers in the system image.</p>
+<p>Embed the MicroShift release container images in the system image.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">[[containers]]
@@ -453,7 +453,7 @@ source = "servera.lab.example.com:8443/ubi9/ubi"</code></pre>
 </div>
 </li>
 <li>
-<p>Embed a first boot service which configures Firewalld for the Kubernetes pod and service virtual networks.</p>
+<p>Embed a first boot service which configures the system&#8217;s firewall for the Kubernetes pod and service virtual networks.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">[[customizations.files]]
@@ -470,6 +470,18 @@ path = "/etc/systemd/system/firstboot-microshift.service"
 path = "/etc/microshift/firstboot-microshift-user"
 ...</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The script starts before MicroShift is fully initialized so it was coded to wait until MicroShift autogenerates the Kubeconfig files.
+</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
@@ -647,7 +659,7 @@ $ <strong>sudo cp -r delete-me/repo /var/www/html</strong></code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The code snipets here help you locate the relevant sections in the kickstart file, but they do not list the entirery of the file. Follow along with a text editor and navigate through the kickstart file.
+The code snippets here help you locate the relevant sections in the kickstart file, but they do not list the entirety of the file. Follow along with a text editor and navigate through the kickstart file.
 </td>
 </tr>
 </table>
@@ -669,7 +681,7 @@ logvol / --vgname=rhel --fstype=xfs --size=10240 --name=root</code></pre>
 </div>
 </li>
 <li>
-<p>Deploy the OSTree commit embeded in the installation media.</p>
+<p>Deploy the OSTree commit embedded in the installation media.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">ostreesetup --nogpg --osname=rhel --remote=edge --url=file:///run/install/repo/ostree/repo --ref=rhel/9/x86_64/ushift</code></pre>
@@ -700,7 +712,7 @@ EOFSSH
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-production systems would NOT enable password login.
+production systems would NOT enable password login. We left it here as a convenience for the learner.
 </td>
 </tr>
 </table>
@@ -744,7 +756,7 @@ $ <strong>sed -i "s|REPLACE_WTH_SSH_PUB_KEY|$SSH_PUB_KEY|" rhel9-microshift-inst
 </div>
 </li>
 <li>
-<p>Start a composer for your edge installer image.</p>
+<p>Start a compose for your edge installer image.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli compose start-ostree microshift-installer edge-installer --ref rhel/9/x86_64/ushift --url http://servera.lab.example.com/repo/</strong>
@@ -868,7 +880,7 @@ You may need to press <kbd>Enter</kbd> to see the login prompt, after the VM sto
 </div>
 </li>
 <li>
-<p>Disconnect from the VM console. by pressong <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>]</kbd></span>, and start a SSH session to your <em>edge machine</em>.</p>
+<p>Disconnect from the VM console. by pressing <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>]</kbd></span>, and start a SSH session to your <em>edge machine</em>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ssh -i edge-key core@ushift</strong></code></pre>
@@ -911,7 +923,7 @@ openshift-storage          vg-manager-5n494                           1/1     Ru
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If you are a quick typer, you may get "no resources found" errors from <code>oc get pod</code>
+If you are too quick, you may get "no resources found" errors from <code>oc get pod</code>. If this happens, just wait a few seconds and try again.
 </td>
 </tr>
 </table>
@@ -944,7 +956,7 @@ If you create a pod with the default image pull policy of <code>Always</code> it
 </ol>
 </div>
 <div class="paragraph">
-<p>You suceed provisioning an edge device, from an edge installer image, in an air-gapped environment: you only need the installation media to fully provision a ready-to-use RHEL for Edge system running a MicroShift instance.</p>
+<p>You succeed provisioning an edge device, from an edge installer image, in an air-gapped environment: you only need the installation media to fully provision a ready-to-use RHEL for Edge system running a MicroShift instance.</p>
 </div>
 </div>
 </div>
@@ -952,13 +964,13 @@ If you create a pod with the default image pull policy of <code>Always</code> it
 <h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a>What&#8217;s Next</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Lorem ipsum</p>
+<p>This was the final activity of this course. If you wish, you can create service accounts and kubeconfig files for developer access using the same steps from ch2-package:s3-access-lab.adoc[previous labs] already demonstrated on package-based RHEL.</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="s1-microshift-edge.html">RHEL for Edge images With MicroShift</a></span>
-  <span class="next"><a href="s3-deploy-lab.html">Lab: Deploy MicroShift on Edge Devices</a></span>
+  <span class="next"><a href="s4-summary.html">Summary</a></span>
 </nav>
 </article>
   </div>
