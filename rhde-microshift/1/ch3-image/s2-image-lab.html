@@ -202,9 +202,12 @@ Work In Progress
 <p>A <em>web server machine</em> with RHEL and unrestricted <code>sudo</code>, to host OSTree repositories</p>
 </li>
 <li>
-<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, to host a <a href="https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift">mirror registry for Red Hat OpenShift</a>.</p>
+<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, already populated with the container iamges required bu MicroShoft and sample applications.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Make sure that your <em>package server machine</em> and <em>mirror registry machine</em> are properly configured and verified by following the instructions from the <a href="#ch1-microshift:s4-air-gapped-lab.adoc" class="xref unresolved">previous lab</a> of this course.</p>
 </div>
 <div class="paragraph">
 <p>These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
@@ -212,14 +215,14 @@ Work In Progress
 <div class="paragraph">
 <p>If you are using the course environment, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from the <code>workstation</code> VM to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>, using the same user.</p>
 </div>
+<div class="paragraph">
+<p>You will also create a local test VM on your <em>development machine</em>, and we refer to that test VM as your <em>edge machine</em>.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Working copy of ks and toml on ~student!</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">First attempt: DONE
@@ -236,20 +239,24 @@ First attempt,retry: DONE
 * Remote access to MicroShift works fine
 * Remote access to routes and LB services works fine.
 
-Second attempt:
+Second attempt: DONE
 * Embed kickstart embeded into an installer image
 * Scripted firstboot to create kubeconfigs for the core user (which is created only by kickstart!?!)
+* while loop to wait until microshift creates its kubeconfig files
 Results:
 * compose fails to process ks customizations, have to use minimal blueprint + mkksiso
-* scripted firstboot failing, maybe because it's running before microshift starts?
-* PENDING while loop to wait until microshift creates its kubeconfig files
+* LoL I was able to "oc get pod -A" and get no resources... MicroShift was still creating its pods!
 
-Third attempt:
+Third attempt:DONE
 * Embed containers into ostree commit, work out registry auth and mirror registry refs
 * Provision VM with mirror registry down to prove it's air-gapped
 Results:
 * once I fixed by osbuild-worker config file and rebooted, it works
-* PENDING test with mirror registry down
+* PENDING test with mirror registry down: FAILED :-(
+* It's trying to connect to servera, as redirected from quay.io, not using the containers in the osgree commit.
+* Guess I need to build the image with references to the canonical image names, and maybe have an image config on workstation
+* test with "sudo crictl images" : I see the images from servera, which is not what microshift wants
+* system recovered after restarting quay. and "sudo crictl images" show images from quay.io
 
 Fourth attempt:
 * Create service account, namespace, and role bindings from blueprint or custom RPM
@@ -262,71 +269,265 @@ Tentative:
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Lorem ipsum.</p>
+<p>On your <em>development machine</em>, configure the Image Builder service to use the mirror registry.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Configure image builder for the mirror registry</p>
+<p>Create an Image Builder worker configuration file that refers to credentials for accessing the mirror registry.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You already configured your <em>development machine</em> with CA certificates and credentials to access the mirror registry in a <a href="../ch1-microshift/s3-air-gapped-lab.html" class="xref page">previous lab</a>.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ sudo mkdir /etc/osbuild-worker/
-$ sudo cat /etc/osbuild-worker/osbuild-worker.toml
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cat &gt; /etc/osbuild-worker/osbuild-worker.toml &lt;&lt; EOF
 [containers]
 auth_file_path = "/etc/osbuild-worker/containers-auth.json"
-$ sudo cp mirror-pull-secret /etc/osbuild-worker/containers-auth.json
-# sudo systemctl restart osbuild-worker ## will this work? will I need a reboot? YES
-# after reboot, it can build an edge commit image with container images</code></pre>
+EOF</strong>
+$ <strong>sudo mkdir /etc/osbuild-worker</strong>
+$ <strong>sudo cp osbuild-worker.toml /etc/osbuild-worker/osbuild-worker.toml</strong>
+$ <strong>sudo cp mirror-pull-secret /etc/osbuild-worker/containers-auth.json</strong></code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Lorem ipsum</p>
+<p>Configure the container runtime to get MicroShift release images from the mirror registry.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The registry configuration file is the same one you already used to configure MicroShift in a <a href="#ch2-package:s2-install-lab">previous lab</a>.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>command argument</strong>
-...
-Partial output</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/999-microshift-mirror.conf</strong>
+$ <strong>sudo cp 999-microshift-mirror.conf /etc/containers/registries.conf.d</strong></code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Crap, forgot to configure sources for RHOCP and FDP in classroom :-(</p>
-<div class="paragraph">
-<p>But my blupeprint was fine on depsolve and its compose is building&#8230;&#8203; getting packages from Internet without entitlement? Ah, it failed. Looks like it failed on non-existant directory???</p>
+<p>Reboot your <em>development machine</em> so its Image Builder service reads its new configuration files.</p>
+</li>
+</ol>
 </div>
+</li>
+<li>
+<p>Configure the Image Builder service with package sources for the RPM repositories required by MicroShift</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Download the sources TOML files from the <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/tree/main/sources">course samples git repository</a>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/sources/openshift.toml</strong>
+$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/sources/fastdata.toml</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure your Image Builder service with the additional package sources.</p>
 <div class="paragraph">
-<p>LoL it passed depcheck because I didn&#8217;t include MicroShift packages :-P</p>
+<p>These package sources refer to the same RPM repositories that you already used in the <a href="../ch2-package/s2-install-lab.html" class="xref page">previous chapter</a> to deploy MicroShift on package-based RHEL.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ composer-cli sources add sources/openshift.toml
-$ composer-cli sources add sources/fastdata.toml
-$ composer-cli sources list
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli sources add sources/openshift.toml</strong>
+$ <strong>composer-cli sources add sources/fastdata.toml</strong>
+$ <strong>composer-cli sources list</strong>
 appstream
 baseos
 fastdata
-openshift</code></pre>
+openshift
+$ <strong>composer-cli sources info openshift</strong>
+...
+url = "http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms"
+...</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Review an Image Builder blueprint for a pre-configured MicroShift instance.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Download the <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/blueprints/rhel9-microshift.toml">sample blueprint</a> from the course samples git repository. It is a long blueprint but, assuming that you performed all activities from the <a href="https://redhatquickcourses.github.io/rhde-build/">first Red Hat Device Edge course</a> and also from the <a href="#ch2-package">previous chapter</a> of this course, there should be no surprises.</p>
+</li>
+<li>
+<p>Review the <code>rhel9-microshift.toml</code> blueprint and make sure you understand it&#8217;s customizations:</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The code snipets here help you locate the relevant sections in the blueprint, but they do not list the entirery of each section. Follow along with a text editor and navigate through the blueprint file.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Set the hostname to <code>ushift</code> where the letter "u" stands for the greek letter "micro".</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[customizations]
+hostname = "ushift"</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Test BP</p>
+<p>Install the <code>microshift</code> package.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ sudo dnf install mkpasswd
-...
-Complete!
-$ PASSWD=$( echo 'redhat123' | mkpasswd -s -m sha-512 )
-$ sed -i "s|REPLACE_WITH_PASSWD_HASH|$PASSWD|" rhel9-microshift.toml
-$ ssh-keygen -N '' -f edge-key -C 'initial key for edge user'
-Generating public/private rsa key pair.
-...
-$ SSH_PUB_KEY=$( cat edge-key.pub )
-$ sed -i "s|REPLACE_WTH_SSH_PUB_KEY|$SSH_PUB_KEY|" rhel9-microshift.toml
-#
-#sed didn't work for the pull secret, guess because it contains double quotes
-# cat trick doesn't work for quay CA
-# didn't try any trick for the image policy and crio config</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">[[packages]]
+name = "microshift"</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enable two first boot services, which are defined later in the blueprint.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[customizations.services]
+enabled = ["sshd", "microshift", "firstboot-microshift", "firstboot-microshift-user" ]</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Expose the Kubernetes API port.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[customizations.firewall]
+ports = ["6443:tcp"]</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add a pull secret for the mirror registry.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[[customizations.files]]
+path = "/etc/crio/openshift-pull-secret"
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add a CA certificate for the mirror registry.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[[customizations.files]]
+path = "/etc/pki/ca-trust/source/anchors/quay-rootCA.pem"
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add a registry configuration which redirects MicroShift container images to the mirror registry.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[[customizations.files]]
+path = "/etc/containers/registries.conf.d/999-microshift-mirror.conf"
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add an image policy which disables signature validation.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[[customizations.files]]
+path = "/etc/containers/policy.json"
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Embed the MicroShift release containers in the system image.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[[containers]]
+source = "quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:98bcfe497a8550cff543321ba5c6535b9823aa4b091daf89ebba0bbcafa19208"
+
+[[containers]]
+source = "quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:1b0a5de3da8895f72deed91a79f4ecf83464370ce253494d28b8c98a1586bfc0"
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Embed a test application container in the system image.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[[containers]]
+source = "servera.lab.example.com:8443/ubi9/ubi"</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Embed a first boot service which configures Firewalld for the Kubernetes pod and service virtual networks.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[[customizations.files]]
+path = "/etc/systemd/system/firstboot-microshift.service"
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Embed a script which copies the autogenerated kubeconfig files to the <code>core</code> user home directory.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[[customizations.files]]
+path = "/etc/microshift/firstboot-microshift-user"
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Invoke the previous script from another first boot service.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[[customizations.files]]
+path = "/etc/systemd/system/firstboot-microshift-user.service"
+...</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Build and publish an edge system image.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Add the CA certificate for the mirror registry to the blueprint.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">WILL A SED WORK HERE?</code></pre>
 </div>
 </div>
 </li>
@@ -370,6 +571,27 @@ rhel/9/x86_64/edge
 <mark>#</mark> student may have nothing on the web server, in this case must initialize an empty ostree repo or just untar
 $ sudo ostree pull-local --repo=/var/www/html/repo delete-me/repo
 265 metadata, 649 content objects imported; 0 bytes content written</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create and publish kickstart</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ sudo dnf install mkpasswd
+...
+Complete!
+$ PASSWD=$( echo 'redhat123' | mkpasswd -s -m sha-512 )
+$ sed -i "s|REPLACE_WITH_PASSWD_HASH|$PASSWD|" rhel9-microshift.toml
+$ ssh-keygen -N '' -f edge-key -C 'initial key for edge user'
+Generating public/private rsa key pair.
+...
+$ SSH_PUB_KEY=$( cat edge-key.pub )
+$ sed -i "s|REPLACE_WTH_SSH_PUB_KEY|$SSH_PUB_KEY|" rhel9-microshift.toml
+#
+#sed didn't work for the pull secret, guess because it contains double quotes
+# cat trick doesn't work for quay CA
+# didn't try any trick for the image policy and crio config</code></pre>
 </div>
 </div>
 </li>
@@ -426,7 +648,37 @@ $ virt-install --name edge-microshift-1 --os-variant rhel9.5 \
 --memory 4096 --vcpus 2 --disk size=20 --graphics=none --network bridge=virbr0 \
 --location /home/student/rhel9-microshift.iso \
 --extra-arg inst.ks=hd:LABEL=$LABEL:/rhel9-microshift-installer.ks \
---extra-arg console=ttyS0 -v</code></pre>
+--extra-arg console=ttyS0 -v
+# Ctrl+] to leave the console
+$ ssh -i edge-key core@ushift</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that MicroShift is healthy</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ export KUBECONFIG=~/local-admin
+# warn that quick typers may get "no resources found" errors from oc get pod (and also get node?)
+$ oc get node
+NAME     STATUS   ROLES                         AGE   VERSION
+ushift   Ready    control-plane,master,worker   10m   v1.30.5
+$ oc get pod -A
+NAMESPACE                  NAME                                       READY   STATUS    RESTARTS   AGE
+kube-system                csi-snapshot-controller-69ddff88c8-6g4wr   1/1     Running   0          4m20s
+kube-system                csi-snapshot-webhook-74dc497864-xgjzz      1/1     Running   0          4m24s
+openshift-dns              dns-default-tj2wf                          2/2     Running   0          4m5s
+openshift-dns              node-resolver-lfg6k                        1/1     Running   0          4m21s
+openshift-ingress          router-default-575b4fc7-cnnsc              1/1     Running   0          4m19s
+openshift-ovn-kubernetes   ovnkube-master-xc84v                       4/4     Running   0          4m21s
+openshift-ovn-kubernetes   ovnkube-node-mgsz2                         1/1     Running   0          4m21s
+openshift-service-ca       service-ca-9db855698-pwbfg                 1/1     Running   0          4m19s
+openshift-storage          lvms-operator-7f544467bc-94227             1/1     Running   0          4m22s
+openshift-storage          vg-manager-5n494                           1/1     Running   0          3m55s
+$ oc run shell -it --restart Never --image-pull-policy IfNotPresent --image servera.lab.example.com:8443/ubi9/ubi -- rpm -q redhat-release
+redhat-release-9.5-0.6.el9.x86_64
+# it failed with the mirror registry off, despite the ubi umage being available from 'crictl images' :-(
+# but oc run sets 'imagePullPolicy: Always' which explains the error, after fixing the oc run command it works fine :-)</code></pre>
 </div>
 </div>
 </li>
