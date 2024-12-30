@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>RHEL for Edge images With MicroShift :: Deploying MicroShift on Red Hat Device Edge</title>
+    <link rel="prev" href="index.html">
+    <link rel="next" href="s2-image-lab.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Deploying MicroShift on Red Hat Device Edge</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/rhde-microshift/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header><div class="body">
+<div class="nav-container" data-component="rhde-microshift" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../ch1-microshift/index.html">Introduction to Red Hat Build of MicroShift</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch1-microshift/s1-microshift-vs-ocp.html">Introduction to MicroShift and Red Hat Device Edge</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch1-microshift/s2-prepare-lab.html">Lab: Prepare a Test Environment for Red Hat Device Edge</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch1-microshift/s3-air-gapped-lab.html">Lab: Prepare a Test Environment for MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch1-microshift/s4-summary.html">Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../ch2-package/index.html">Deploy MicroShift on RHEL Servers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s1-install-config.html">Install and Configure MicroShift on Package-Based RHEL</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s2-install-lab.html">Lab: Install MicroShift from RPM Packages</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s3-access-lab.html">Lab: Access MicroShift as a Developer or Platform Engineer</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s4-apps-lab.html">Lab: Deploy Kubernetes Applications in MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s5-summary.html">Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Deploy MicroShift on Edge Devices</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="s1-microshift-edge.html">RHEL for Edge images With MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s2-image-lab.html">Lab: Create RHEL for Edge Images with MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s4-summary.html">Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Deploying MicroShift on Red Hat Device Edge</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Deploying MicroShift on Red Hat Device Edge</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <a class="title" href="../../../samples/1/index.html">samples</a>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../samples/1/index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></li>
+    <li><a href="index.html">Deploy MicroShift on Edge Devices</a></li>
+    <li><a href="s1-microshift-edge.html">RHEL for Edge images With MicroShift</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">RHEL for Edge images With MicroShift</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Estimated reading time: <strong>6 minutes</strong>.</em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Objective</dt>
+<dd>
+<p>Deploy MicroShift on edge devices with Image Builder and RPM-OSTree.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Work In Progress
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_shift_left_do_it_all_at_image_build_time"><a class="anchor" href="#_shift_left_do_it_all_at_image_build_time"></a>Shift Left: Do It All At Image Build Time</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you plan a a deployment of MicroShift in edge devices, you must consider the lifecycles of devices and their applications. It is never just MicroShift. The sole purpose of MicroShift is support applications which are deployed from container images and resource manifests.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/s1-edge-fig-1.svg" alt="s1 edge fig 1">
+</div>
+<div class="title">Figure 1. Tools and activities in the lifecycle of edge devices</div>
+</div>
+<div class="paragraph">
+<p>Some organizations embrace the "shift left" approach, and wish to perform as much as possible during day zero, at image build time. The RHEL for Edge tooling supports that approach. An Image Builder blueprint supports embeding multiple artifacts in an edge system image, such as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Custom RPM packages, from private RPM repositories.</p>
+</li>
+<li>
+<p>Container images, which are preloaded in the local container engine.</p>
+</li>
+<li>
+<p>File customizations, used to include a few small text files and scripts.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you need to include too many files, larger files, or binary files, which are not convenient to manage as blueprint file customizations, you should consider creating custom RPM packages, as described by <a href="https://www.redhat.com/en/blog/how-to-create-a-fully-self-contained-os-image-that-includes-your-kubernetes-workload">How to create a fully self contained OS image that includes your Kubernetes workload</a>. That is usually the case for Kubernetes application manifests.</p>
+</div>
+<div class="paragraph">
+<p>Not everything can be done, or should be done, at day zero. There will be always some configuration that you wish to perform at installation time or later, to mitigate security concerns or to address variability between different edge sites or even individual edge devices.</p>
+</div>
+<div class="paragraph">
+<p>As a best practice, you should not embed into edge system images anything that could be used to access other systems with write privileges. For example, it is fine embedding the public key of a corporate certificate authority (CA) or pull secrets for downloading container images from a private registry. But it is <strong>NOT</strong> fine embedding credentials to access a database, even credentials allowed to execute only queries, because of the risk of information leakage.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_distinct_lifecycles_for_os_and_applications_keep_it_the_way_we_are_used_to"><a class="anchor" href="#_distinct_lifecycles_for_os_and_applications_keep_it_the_way_we_are_used_to"></a>Distinct Lifecycles for OS and Applications: Keep it The Way We Are Used To</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Some organizations prefer to keep separate lifecycles for the operating system and applications on their edge devices. This meets their team structure and enables separation of concerns, but requires that edge devices have good enough access to container image registries, RPM repositories, and also Git repositories, if employing popular GitOps techniques.</p>
+</div>
+<div class="paragraph">
+<p>To NOT shift left has the advantage of keeping processes for provisioning and managing edge devices closer to the processes already used for data center server and office workstations. This may be appropriate for edge sites that have their own IT infrastructure, which it is similar to corporate sites, and for edge sites that have reliable and fast network connectivity to corporate sites.</p>
+</div>
+<div class="paragraph">
+<p>The RHEL for Edge tooling also supports that approach, by allowing:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Activation of a <code>/usr</code> overlay to install additional packages.</p>
+</li>
+<li>
+<p>Pull container images from container image registries.</p>
+</li>
+<li>
+<p>Remote access to the Kubernetes API endpoints of individual edge device running MicroShift.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rhel_for_edge_image_workflow"><a class="anchor" href="#_rhel_for_edge_image_workflow"></a>RHEL for Edge Image Workflow</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In any case (shift left or not), there are benefits in building edge system images which include pre-configured MicroShift instances. You decide how much you will preconfigure, from offering an empty MicroShift instance, which is ready for remote access as a cluster administrator to offering a MicroShift, to offering a MicroShift instance already running multiple workloads.</p>
+</div>
+<div class="paragraph">
+<p>If your edge deployment is air-gapped, you probably need an edge installer image, which is produced from an edge commit image stored in a remote OSTree repository, which also provides operating system updates to edge devices.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/s1-edge-fig-2.svg" alt="s1 edge fig 2">
+</div>
+<div class="title">Figure 2. Wokflow for building and deploying RHEL for Edge on edge devices</div>
+</div>
+<div class="paragraph">
+<p>If you need a refresher of the finer details or troubleshooting hints for managing the RHEL for Edge image Builder service, the RPM-OSTree tooling, and OSTree repositories, please review the <a href="https://redhatquickcourses.github.io/selinux-policies/">first of the Red Hat Device Edge course</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_image_builder_and_private_container_registries"><a class="anchor" href="#_image_builder_and_private_container_registries"></a>Image Builder and Private Container Registries</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Image Builder service treats RPM packages and container images in different ways. While it does <strong>NOT</strong> use the system&#8217;s DNF settings to access RPM repositories, and requires its own configurations for accessing local package servers, it does use the system&#8217;s container engine settings for image policies.</p>
+</div>
+<div class="paragraph">
+<p>You also configure Image Builder to access RPM package repositories using the Image Builder API, through either the <code>composer-cli</code> command or its Cockpit module, but to configure Image Builder to access container registries you must make manual edits to configuration files in different directories:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Edit files under <code>/etc/containers</code> to enable container image mirrors, signature verification, or TLS certificate validation.</p>
+</li>
+<li>
+<p>Edit files under <code>/etc/osbuild-worker/</code> to provide the Image Builder worker processes with credentials to access any container registry you need, be one of the Red Hat registries or a private registry.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Notice that air-gapped image builds and air-gapped edge device provisioning present different constraints. The Image Builder service usually runs at a corporate site, with high speed and reliable access to package servers and container registries. Edge devices may not have good enough connectivity to those services and require that you include all artifacts in a system image.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a>What&#8217;s Next</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The next and final activity of this course shows an Image Builder blueprint that configures a MicroShift instance and embeds all required configuration files and container image, and builds the edge images from local RPM repositories and a mirror registry, without requiring access to Red Hat servers over the Internet.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="index.html">Deploy MicroShift on Edge Devices</a></span>
+  <span class="next"><a href="s2-image-lab.html">Lab: Create RHEL for Edge Images with MicroShift</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

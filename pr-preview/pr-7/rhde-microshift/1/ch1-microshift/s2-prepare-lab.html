@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lab: Prepare a Test Environment for Red Hat Device Edge :: Deploying MicroShift on Red Hat Device Edge</title>
+    <link rel="prev" href="s1-microshift-vs-ocp.html">
+    <link rel="next" href="s3-air-gapped-lab.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Deploying MicroShift on Red Hat Device Edge</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/rhde-microshift/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header><div class="body">
+<div class="nav-container" data-component="rhde-microshift" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Introduction to Red Hat Build of MicroShift</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s1-microshift-vs-ocp.html">Introduction to MicroShift and Red Hat Device Edge</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="s2-prepare-lab.html">Lab: Prepare a Test Environment for Red Hat Device Edge</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s3-air-gapped-lab.html">Lab: Prepare a Test Environment for MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="s4-summary.html">Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../ch2-package/index.html">Deploy MicroShift on RHEL Servers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s1-install-config.html">Install and Configure MicroShift on Package-Based RHEL</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s2-install-lab.html">Lab: Install MicroShift from RPM Packages</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s3-access-lab.html">Lab: Access MicroShift as a Developer or Platform Engineer</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s4-apps-lab.html">Lab: Deploy Kubernetes Applications in MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch2-package/s5-summary.html">Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../ch3-image/index.html">Deploy MicroShift on Edge Devices</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch3-image/s1-microshift-edge.html">RHEL for Edge images With MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch3-image/s2-image-lab.html">Lab: Create RHEL for Edge Images with MicroShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../ch3-image/s4-summary.html">Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Deploying MicroShift on Red Hat Device Edge</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Deploying MicroShift on Red Hat Device Edge</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <a class="title" href="../../../samples/1/index.html">samples</a>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../samples/1/index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Deploying MicroShift on Red Hat Device Edge</a></li>
+    <li><a href="index.html">Introduction to Red Hat Build of MicroShift</a></li>
+    <li><a href="s2-prepare-lab.html">Lab: Prepare a Test Environment for Red Hat Device Edge</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Lab: Prepare a Test Environment for Red Hat Device Edge</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Estimated reading time: <strong>9 minutes</strong>.</em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Objective</dt>
+<dd>
+<p>Prepare a test environment for building RHEL for Edge images and managing OSTree repositories.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Work In Progress
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_before_you_begin"><a class="anchor" href="#_before_you_begin"></a>Before you Begin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need a few machines to perform the hands-on activities in this course.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <em>development machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install Image Builder and RPM-OSTree tools, create test VMs using Libvirt, and also run the OpenShift client to access your MicroShift instances in other machines.</p>
+</li>
+<li>
+<p>A <em>test machine</em> with RHEL and unrestricted <code>sudo</code>, where you will install MicroShift on package-based RHEL.</p>
+</li>
+<li>
+<p>A <em>package server machine</em> already configured to serve DNF repositories for RHEL, Fast Datapath for RHEL, and Red Hat OpenShift Container Platform.</p>
+</li>
+<li>
+<p>A <em>web server machine</em> with RHEL and unrestricted <code>sudo</code>, to host OSTree repositories</p>
+</li>
+<li>
+<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, to host a <a href="https://www.redhat.com/en/blog/introducing-mirror-registry-for-red-hat-openshift">mirror registry for Red Hat OpenShift</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the course environment, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from the <code>workstation</code> VM to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>, using the same user.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performed, it is using the same machine as its previous step.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the course environment, the <code>classroom</code> VM, with the <code>materials</code> alias, is your <em>package server machine</em> but you are <em>not</em> expected to start SSH sessions nor perform any activity on it.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the same course environment where you performed the activities from the <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/index.html">Building Red Hat Device Edge Images</a> quick course, you should have some requirements already set up. They are listed here anyway, for learners that are starting this course in a new course environment.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It should be possible to perform all activities in this course using a <a href="https://developers.redhat.com/products/rhel/download">free Red Hat Developers free subscription</a>, which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gaped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure your <em>development machine</em> with the RHEL for Edge tools. It should be ready if you already performed the activities from the first course in the same course environment.</p>
+<div class="paragraph">
+<p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the  <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html">first course</a> which focus on deploying Image Builder and RPM-OSTree.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Install the RPM packages for the Image Builder service and its CLI. Notice that RPM-OSTree packages are also installed, as dependencies.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install osbuild-composer composer-cli</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optionally, install the RPM packages for the Cockpit service and its Composer module.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install cockpit cockpit-composer</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enable and activate the Image Builder socket.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl enable osbuild-composer.socket --now</strong>
+Created symlink /etc/systemd/system/sockets.target.wants/osbuild-composer.socket → /usr/lib/systemd/system/osbuild-composer.socket.</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optionally, enable and activate the Cockpit socket and enable remote access to Cockpit.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl enable cockpit.socket --now</strong>
+Created symlink /etc/systemd/system/sockets.target.wants/cockpit.socket → /usr/lib/systemd/system/cockpit.socket.
+$ <strong>sudo firewall-cmd --add-service=cockpit --permanent</strong>
+success
+$ <strong>sudo firewall-cmd --reload</strong>
+success</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Grant your unprivileged user (the <code>student</code> user) with access to the Image Builder service.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo usermod -a -G weldr student</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure your unprivileged user with Bash command autocompletion for the Image Builder CLI.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>echo 'source /etc/bash_completion.d/composer-cli' &gt;&gt; $HOME/.bashrc</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Log out and log in again, then verify that autocompletion works for the Image Builder CLI</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli <kbd>Tab</kbd><kbd>Tab</kbd></strong>
+blueprints  compose     distros     help        modules     projects    sources     upload</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To check that you have access to the Image Builder service, list its supported image types.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli compose types</strong>
+ami
+edge-commit
+edge-container
+edge-installer
+edge-raw-image
+edge-simplified-installer
+gce
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install the JQ command-line JSON processor, because it&#8217;s useful for scripting Image Builder tasks.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install jq</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Configure package sources for Image Builder.</p>
+<div class="paragraph">
+<p>Your <em>development machine</em> should be already configured with access to RHEL and MicroShift package repositories, but Image Builder does <em>not</em> use the configurations from DNF and YUM, and, if you do not configure image sources, Image Builder will try to download packages from Red Hat repositories over the Internet.</p>
+</div>
+<div class="paragraph">
+<p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the  <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html">first course</a> which focus on deploying Image Builder and RPM-OSTree.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a directory to store your repository overrides.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo mkdir -p /etc/osbuild-composer/repositories</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Copy the example configuration file for your distribution from the <code>/usr/share/osbuild-composer/</code> directory.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo cp /usr/share/osbuild-composer/repositories/rhel-9.5.json /etc/osbuild-composer/repositories/</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Modify the configuration file to match your local DNF repository. Pay attention to attributes such as <code>baseurl</code>, <code>rhsm</code>, and <code>check_gpg</code>.</p>
+<div class="paragraph">
+<p>In the course environment, you should make the following edits:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">...
+  "x86_64": [
+    {
+      "name": "baseos",
+      "baseurl": "http://content.example.com/rhel9.5/x86_64/dvd/BaseOS",
+...
+      "rhsm": false,
+      "check_gpg": true
+...
+    {
+      "name": "appstream",
+      "baseurl": "http://content.example.com/rhel9.5/x86_64/dvd/AppStream",
+...
+      "rhsm": false,
+      "check_gpg": true
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can download a <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/repositories/rhel-9.5.json">configuration file</a> with all changes done from the sample applications repository in GitHub.</p>
+</div>
+</li>
+<li>
+<p>Restart the Image Builder service. Be patient, it&#8217;s may not be quick.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl restart osbuild-composer</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the repository overrides are in effect.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli sources list</strong>
+appstream
+baseos
+$ <strong>composer-cli sources info baseos</strong>
+check_gpg = false
+check_repogpg = false
+...
+rhsm = false
+system = true
+type = "yum-baseurl"
+url = "http://content.example.com/rhel9.5/x86_64/dvd/BaseOS"
+$ <strong>composer-cli sources info appstream</strong>
+check_gpg = false
+check_repogpg = false
+...
+rhsm = false
+system = true
+type = "yum-baseurl"
+url = "http://content.example.com/rhel9.5/x86_64/dvd/ApStream"</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Later in this course, you will configure additional package sources for packages required by MicroShift. For now, it is just ensuring you have all the changes that would have been made in the <a href="https://redhatquickcourses.github.io/rhde-build">first Red Hat Device Edge course</a>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Configure your <em>development machine</em> with the Libvirt tools. It should be ready if you already performed the activities from the first course in the same course environment.</p>
+<div class="paragraph">
+<p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch3-test/s2-boot-lab.html">first course</a> which focus on deploying Libvirt and using KVM virtualization.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Install the Libvirt tools.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install qemu-kvm libvirt virt-install virt-viewer</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optionally, install the virtual machines module for Cockpit</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install cockpit-machines</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Grant your unprivileged user permission to create and manage virtual machines (VMs).</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo groupmod libvirt -a -U student</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Log off and log in again to update the user membership of your unprivileged user and check that it can use Libvirt&#8217;s session interface.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>virsh uri</strong>
+qemu:///session
+$ <strong>virsh nodeinfo</strong>
+CPU model:           x86_64
+...</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Libvirt installation already sets up socket activation for Libvirt&#8217;s session interface.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Configure unprivileged user access to Libvirt&#8217;s default network. This enables inbound network connections to session VMs.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This was <em>not</em> configured in the first course about Red Hat Device Edge, and it will be necessary to test edge images with MicroShift.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Check that IP forwarding is enabled, which is the default for RHEL installations.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sysctl net.ipv4.ip_forward</strong>
+net.ipv4.ip_forward = 1</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install Libvirt&#8217;s NSS module.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install libvirt-nss</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the <code>/etc/qemu/bridge.conf</code> configuration file and make it world-readable.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo mkdir /etc/qemu</strong>
+$ <strong>sudo bash -c 'echo "allow virbr0" &gt; /etc/qemu/bridge.conf'</strong>
+$ <strong>sudo chmod a+r /etc/qemu/bridge.conf</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enable and start the Libvirt network daemon.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl enable virtnetworkd --now</strong>
+Created symlink /etc/systemd/system/multi-user.target.wants/virtnetworkd.service → /usr/lib/systemd/system/virtnetworkd.service.</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that Libvirt initialized its default network and the <code>virb0</code> bridge device.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo virsh net-list</strong>
+ Name      State    Autostart   Persistent
+--------------------------------------------
+default   active   yes         yes
+$ <strong>ip -br addr show virbr0</strong>
+virbr0           DOWN           192.168.122.1/24</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Edit your the <code>/etc/nsswtich.conf</code> configuration file by adding the Libvirt NSS modules right before the <code>myhostname</code> module. This enables resolving hostnames of session VMs to their IP addresses.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">hosts:      files dns <strong>libvirt libvirt_guest</strong> myhostname</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+in production systems, it is recommended that you use the <code>authselect</code> utility instead of making edits to the <code>/etc/nsswtich.conf</code> file.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Configure your <em>web server machine</em> to host OSTree repositories. It should be ready if you already performed the activities from the first course in the same course environment.</p>
+<div class="paragraph">
+<p>If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the <a href="https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch2-publish/s2-ostree-lab.html">first course</a> which focus on configuring an Apache Web Server for OSTree repository management.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Install the Apache Web Server packages from RHEL.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install httpd</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enable and start the Apache Web Server system service.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl enable httpd --now</strong>
+Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Allow remote access to the Apache Web Server on the system&#8217;s firewall.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo firewall-cmd --add-service=http --permanent</strong>
+success
+$ <strong>sudo firewall-cmd --reload</strong>
+success</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install the RPM-OSTree and the lower level OSTree tooling on the web server machine, because you will need to perform maintenance on the OSTree repositories you store on it.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install rpm-ostree ostree</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>You now have your <em>development machine</em> ready to build and test RHEL for Edge system images, and your <em>web server machine</em> ready to store and distribute OSTree repositories for edge devices.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a>What&#8217;s Next</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The next lab configures the requirements for air-gapped deployments of MicroShift.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="s1-microshift-vs-ocp.html">Introduction to MicroShift and Red Hat Device Edge</a></span>
+  <span class="next"><a href="s3-air-gapped-lab.html">Lab: Prepare a Test Environment for MicroShift</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
