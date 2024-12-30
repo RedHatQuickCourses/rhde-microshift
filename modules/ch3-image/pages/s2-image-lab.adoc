@@ -604,6 +604,8 @@ NOTE: If you are too quick, you may get a `NotReady` state from `oc get node`, o
 --
 $ *oc run shell -it --restart Never --image-pull-policy IfNotPresent --image servera.lab.example.com:8443/ubi9/ubi -- rpm -q redhat-release*
 redhat-release-9.5-0.6.el9.x86_64
+$ *oc delete pod shell*
+pod "shell" deleted
 --
 +
 IMPORTANT: If you create a pod with the default image pull policy of `Always` it will fail because we stopped the mirror registry.

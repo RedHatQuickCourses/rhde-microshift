@@ -54,7 +54,7 @@ On the classroom environment, you will find configuration files which point to t
 $ *ls /etc/yum.repos.d*
 fast-datapath-for-rhel-9-x86_64-rpms.repo  rhel-9.5-for-x86_64-baseos-rpms.repo
 rhel-9.5-for-x86_64-appstream-rpms.repo    rhocp-4.17-for-rhel-9-x86_64-rpms.repo
-$ *cat /etc/yum.repos.d/ocp4.repo*
+$ *cat /etc/yum.repos.d/rhocp-4.17-for-rhel-9-x86_64-rpms.repo*
 include::1@samples:yum:example$ocp4.repo[lines=1..3]
 ...
 --
@@ -105,7 +105,7 @@ For the classroom environment, the pull secret for the mirror registry is also a
 +
 [source,subs="verbatim,quotes"]
 --
-$ *podman login -u microshift -p redhat123 https://servera.lab.example.com:8443*
+$ *podman login -u microshift -p redhat123 servera.lab.example.com:8443*
 Login Succeeded!
 $ *cp $XDG_RUNTIME_DIR/containers/auth.json mirror-pull-secret*
 --
@@ -309,7 +309,7 @@ $ *sudo firewall-cmd --reload*
 
 .. Enable and start MicroShift.
 +
-Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Note that it will _not_ be ready yet when the `systemctl` command returns.>>>>>>> main
+Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Note that it will _not_ be ready yet when the `systemctl` command returns.
 +
 [source,subs="verbatim,quotes"]
 --
