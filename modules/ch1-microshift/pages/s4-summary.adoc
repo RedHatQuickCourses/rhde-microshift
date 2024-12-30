@@ -1,6 +1,6 @@
 = Summary
 
-In this chapter, you learned:
+In this chapter, you learnt:
 
 * MicroShift rebuilds selected components of the OpenShift control plane as a single process, managed by Systemd.
 

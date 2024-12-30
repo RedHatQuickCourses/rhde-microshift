@@ -10,6 +10,7 @@ Prepare a test environment for air-gaped deployment of MicroShift in both packag
 
 WARNING: Work In Progress
 
+// Can we please remove the warning note once the review is done?
 == Before you Begin
 
 You need a few machines to perform the hands-on activities in this course. 
@@ -59,7 +60,7 @@ $ *sudo firewall-cmd --reload*
 success
 --
 
-.. Download the mirror registry for Red Hat OpenShift installer.
+.. Download the mirror registry for the Red Hat OpenShift installer.
 +
 NOTE: In a connected environment, you would get it from the https://console.redhat.com/openshift/downloads#tool-mirror-registry[downloads] page of the Red Hat Hybrid Cloud Console, but there is already a copy of the installer in the http://content.example.com/rhde/rhocp/[course environment].
 +
@@ -247,7 +248,7 @@ NOTE: In production environments, it is recommended that you deploy Red Hat Sate
 
 .. Open `http://content.example.com/rhde/rpms/` in a web browser. This directory contains a copy of the Red Hat OpenShift and Fast Datapath for RHEL repositories, created using the `reposync` command.
 
-You now have your _mirror registry machine_ and your _package server machine_ ready to support air-gaped deployment of MicroShift in both package-based RHEL and in RHEL for Edge images.
+You now have your _mirror registry machine_ and your _package server machine_ ready to support the air-gaped deployment of MicroShift in both package-based RHEL and in RHEL for Edge images.
 
 == What's Next
 
