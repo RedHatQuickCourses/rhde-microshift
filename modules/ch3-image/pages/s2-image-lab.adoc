@@ -42,7 +42,7 @@ IMPORTANT: Be sure you execute each step on the correct machine. If a step is no
 +
 [source,subs="verbatim,quotes"]
 --
-$ *systemtl is-active osbuild-composer.socket*
+$ *systemctl is-active osbuild-composer.socket*
 active
 $ *composer-cli compose types*
 ami
@@ -81,11 +81,11 @@ $ *curl http://servera.lab.example.com*
 
 .. Check that your _web server machine_ is already serving an OSTree repository.
 +
- :  If it isn't, this lab will show how to configure it.
+NOTE: If it isn't, this lab will show how to configure it.
 +
 [source,subs="verbatim,quotes"]
 --
-$ *$ curl http://servera.lab.example.com/repo/config*
+$ *curl http://servera.lab.example.com/repo/config*
 [core]
 repo_version=1
 mode=archive-z2
@@ -125,11 +125,11 @@ IMPORTANT: You already configured your _development machine_ with CA certificate
 +
 [source,subs="verbatim,quotes"]
 --
-$ *cat > /etc/osbuild-worker/osbuild-worker.toml << EOF
+$ *sudo mkdir /etc/osbuild-worker*
+$ *cat > osbuild-worker.toml << EOF
 [containers]
 auth_file_path = "/etc/osbuild-worker/containers-auth.json"
 EOF*
-$ *sudo mkdir /etc/osbuild-worker*
 $ *sudo cp osbuild-worker.toml /etc/osbuild-worker/osbuild-worker.toml*
 $ *sudo cp mirror-pull-secret /etc/osbuild-worker/containers-auth.json*
 --
@@ -142,6 +142,14 @@ NOTE: The registry configuration file is the same one you already used to config
 --
 $ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/999-microshift-mirror.conf*
 $ *sudo cp 999-microshift-mirror.conf /etc/containers/registries.conf.d*
+--
+
+.. Disable signature verification on container images required by MicroShift by downloading a https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/containers-policy.json.nosigs[container image policy file/ from the course samples git repository.
++
+[source,subs="verbatim,quotes"]
+--
+$ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/containers-policy.json.nosigs*
+$ *sudo cp containers-policy.json.nosigs /etc/containers/policy.json*
 --
 
 .. Reboot your _development machine_ so its Image Builder service reads its new configuration files.
@@ -165,8 +173,8 @@ These package sources refer to the same RPM repositories that you already used i
 +
 [source,subs="verbatim,quotes"]
 --
-$ *composer-cli sources add sources/openshift.toml*
-$ *composer-cli sources add sources/fastdata.toml* 
+$ *composer-cli sources add openshift.toml*
+$ *composer-cli sources add fastdata.toml* 
 $ *composer-cli sources list*
 appstream
 baseos
@@ -181,6 +189,11 @@ include::1@samples:sources:example$openshift.toml[lines=4]
 4. Download and inspect an Image Builder blueprint for a preconfigured MicroShift instance.
 
 .. Download the https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/blueprints/rhel9-microshift.toml[sample blueprint] from the course samples git repository. It is a long blueprint but, assuming that you performed all activities from the https://redhatquickcourses.github.io/rhde-build/[first Red Hat Device Edge course] and also from the xref:ch2-package[previous chapter] of this course, there should be no surprises.
++
+[source,subs="verbatim,quotes"]
+--
+$ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/blueprints/rhel9-microshift.toml*
+--
 
 .. Review the `rhel9-microshift.toml` blueprint and make sure you understand it's customizations:
 +
@@ -307,7 +320,7 @@ blueprint: rhel9-microshift v0.1.0
     microshift-selinux-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.noarch
 --
 +
-NOTE: If Image Builder cannot access the container images referenced by the blueprint, it will show an error at the `composer-cli blueprints push` command.
+NOTE: if you get errors related to downloading container images, it is probably because you forgot to reboot your _development machine_ after configuring it for acessing the mirror registry.
 
 .. Start a compose for an edge commit image.
 +
@@ -596,6 +609,10 @@ redhat-release-9.5-0.6.el9.x86_64
 IMPORTANT: If you create a pod with the default image pull policy of `Always` it will fail because we stopped the mirror registry.
 
 You succeed provisioning an edge device, from an edge installer image, in an air-gapped environment: you only need the installation media to fully provision a ready-to-use RHEL for Edge system running a MicroShift instance.
+
+
+// May need cleanup in case of errors, similar to:
+// https://github.com/openshift/microshift/blob/main/scripts/devenv-builder/cleanup-composer.sh#L64-L99
 
 == What's Next
 
