@@ -160,7 +160,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><em>Estimated reading time: <strong>13 minutes</strong>.</em></p>
+<p><em>Estimated reading time: <strong>15 minutes</strong>.</em></p>
 </div>
 <div class="dlist">
 <dl>
@@ -207,7 +207,7 @@ Work In Progress
 </ul>
 </div>
 <div class="paragraph">
-<p>Make sure that your <em>package server machine</em> and <em>mirror registry machine</em> are properly configured and verified by following the instructions from the <a href="#ch1-microshift:s4-air-gapped-lab.adoc" class="xref unresolved">previous lab</a> of this course.</p>
+<p>Make sure that your <em>package server machine</em> and <em>mirror registry machine</em> are properly configured and verified by following the instructions from the <a href="../ch1-microshift/s3-air-gapped-lab.html" class="xref page">previous lab</a> of this course.</p>
 </div>
 <div class="paragraph">
 <p>These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
@@ -238,7 +238,103 @@ Be sure you execute each step on the correct machine. If a step is not explicit 
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>On your <em>development machine</em>, configure the Image Builder service to use the mirror registry.</p>
+<p>On your <em>development machine</em>, verify that you have all prerequisites from previous labs.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Check that the Image Builder service is running and your unprivileged user has access to it.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>systemtl is-active osbuild-composer.socket</strong>
+active
+$ <strong>composer-cli compose types</strong>
+ami
+edge-ami
+edge-commit
+edge-container
+edge-installer
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that the Image Buider service is configured with repository overrides for RHEL packages.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli sources list</strong>
+appstream
+baseos
+$ <strong>composer-cli sources info baseos</strong>
+check_gpg = true
+...
+url = "http://content.example.com/rhel9.5/x86_64/dvd/BaseOS"</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that you can access your <em>web server machine</em>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>curl http://servera.lab.example.com</strong>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;
+
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;
+        &lt;head&gt;
+                &lt;title&gt;Test Page for the HTTP Server on Red Hat Enterprise Linux&lt;/title&gt;
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that your <em>web server machine</em> is already serving an OSTree repository.</p>
+<div class="literalblock">
+<div class="content">
+<pre>:  If it isn't, this lab will show how to configure it.</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>$ curl http://servera.lab.example.com/repo/config</strong>
+[core]
+repo_version=1
+mode=archive-z2</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that your unprivileged user has access to Libvirt session VMs.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>virsh uri</strong>
+qemu:///session
+$ <strong>virsh nodeinfo</strong>
+CPU model:           x86_64
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that you have a valid pull secret for your your <em>mirror registry machine</em> and that you can access it with TLS validation enabled.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>podman search --authfile mirror-pull-secret servera.lab.example.com:8443/</strong>
+NAME                                                                 DESCRIPTION
+servera.lab.example.com:8443/lvms4/lvms-rhel9-operator
+servera.lab.example.com:8443/openshift-release-dev/ocp-v4.0-art-dev
+servera.lab.example.com:8443/rhel9/mysql-80
+servera.lab.example.com:8443/flozanorht/php-ubi
+servera.lab.example.com:8443/ubi9/ubi</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that output from the previous command shows that the mirror registry is already populated with MicroShift release images (<code>openshift-release-dev/ocp-v4.0-art-dev</code>) and LVM Storage operator images (<code>lvms4/lvms-rhel9-operator</code>).</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Configure the Image Builder service to use the mirror registry.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -478,7 +574,7 @@ path = "/etc/microshift/firstboot-microshift-user"
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The script starts before MicroShift is fully initialized so it was coded to wait until MicroShift autogenerates the Kubeconfig files.
+The script starts before MicroShift is fully initialized so it was coded to wait until MicroShift autogenerates the kubeconfig files.
 </td>
 </tr>
 </table>
@@ -511,10 +607,7 @@ path = "/etc/systemd/system/firstboot-microshift-user.service"
 </div>
 </li>
 <li>
-<p>Push the blueprint and start a compose for an edge commit image.</p>
-<div class="paragraph">
-<p>Save the UUID of the compose in a shell variable so you can use it in other commands.</p>
-</div>
+<p>Push the blueprint and check that Image Builder can resolve all RPM packages from it.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli blueprints push rhel9-microshift.toml</strong>
@@ -523,13 +616,47 @@ blueprint: rhel9-microshift v0.1.0
     microshift-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.x86_64
     microshift-greenboot-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.noarch
     microshift-networking-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.x86_64
-    microshift-selinux-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.noarch
-$ <strong>composer-cli compose start-ostree rhel9-microshift edge-commit --ref rhel/9/x86_64/ushift</strong>
+    microshift-selinux-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.noarch</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If Image Builder cannot access the container images referenced by the blueprint, it will show an error at the <code>composer-cli blueprints push</code> command.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Start a compose for an edge commit image.</p>
+<div class="paragraph">
+<p>Save the UUID of the compose in a shell variable so you can use it in other commands.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli compose start-ostree rhel9-microshift edge-commit --ref rhel/9/x86_64/ushift</strong>
 Warning: Please note that user customizations on "edge-commit" image type are deprecated and will be removed in the near future
 
 Compose be27c45f-e1ea-42eb-94b3-a0789243bea4 added to the queue
 $ <strong>UUID=be27c45f-e1ea-42eb-94b3-a0789243bea4</strong></code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can ignore the warning about "user customizations" because the blueprint does not include any.
+</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
@@ -614,7 +741,7 @@ $ <strong>sudo ostree pull-local --repo=/var/www/html/repo delete-me/repo</stron
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-If copy OSTree repostory files over another OSTree repository, you may get a corrupted repository.
+If you copy OSTree repository files over another OSTree repository, you may lose access to other OSTree commits previously stored in the OSTree repository. Only perform a file copy to an empty OSTree repository directory.
 </td>
 </tr>
 </table>
@@ -651,7 +778,7 @@ $ <strong>sudo cp -r delete-me/repo /var/www/html</strong></code></pre>
 </div>
 </li>
 <li>
-<p>Review the <code>rhel9-microshift-installer.ks</code> kickstart and make sure you understand it&#8217;s instructions:</p>
+<p>Review the <code>rhel9-microshift-installer.ks</code> kickstart and make sure you understand it&#8217;s instructions.</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -712,7 +839,7 @@ EOFSSH
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-production systems would NOT enable password login. We left it here as a convenience for the learner.
+production systems would NOT enable password login. We left it here as a convenience for the learner, so you can log in at the VM console for troubleshooting.
 </td>
 </tr>
 </table>
@@ -729,6 +856,18 @@ production systems would NOT enable password login. We left it here as a conveni
 Generating public/private rsa key pair.
 ...</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+if you get an error, because you already have an <code>edge-key</code> generated from previous Red Hat Device Edge courses, just ignore the error and continue with the next step.
+</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
@@ -819,7 +958,7 @@ Writing to '/home/student/rhel9-microshift.iso' completed successfully.</code></
 </div>
 </li>
 <li>
-<p>On your <em>web server machine</em>, stop the mirror registry for Red Hat OpenShift, so you can prove that you can provision edge devices in air-gapped environments.</p>
+<p>On your <em>web server machine</em>, stop the mirror registry for Red Hat OpenShift, so you can prove that your edge installer image can actually work in disconnected edge sites.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl stop quay-app quay-pod quay-redis</strong>
@@ -847,7 +986,7 @@ The <code>failed</code> state is expected for the <code>quay-app</code> service.
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Set a shell variable with the disk label of your installer image.</p>
+<p>Set a shell variable with the disk label of your installer image, by copy-and-paste from the output of the <code>iso-info</code> command.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>iso-info rhel9-microshift.iso</strong>
@@ -874,13 +1013,21 @@ $ <strong>LABEL=RHEL-9-5-0-BaseOS-x86_64</strong></code></pre>
 ushift login:</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>NOTE:
-You may need to press <kbd>Enter</kbd> to see the login prompt, after the VM stops displaying console messages.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You may need to press <kbd>Enter</kbd> to see the login prompt, after the VM stops displaying console messages.
+</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
-<p>Disconnect from the VM console. by pressing <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>]</kbd></span>, and start a SSH session to your <em>edge machine</em>.</p>
+<p>Dettach from the VM console, by pressing <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>]</kbd></span>, and start a SSH session to your <em>edge machine</em>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ssh -i edge-key core@ushift</strong></code></pre>
@@ -923,7 +1070,7 @@ openshift-storage          vg-manager-5n494                           1/1     Ru
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If you are too quick, you may get "no resources found" errors from <code>oc get pod</code>. If this happens, just wait a few seconds and try again.
+If you are too quick, you may get a <code>NotReady</code> state from <code>oc get node</code>, or a "no resources found" error from <code>oc get pod</code>. If any of this happens, just wait a few seconds and try again.
 </td>
 </tr>
 </table>
