@@ -245,7 +245,7 @@ Be sure you execute each step on the correct machine. If a step is not explicit 
 <p>Check that the Image Builder service is running and your unprivileged user has access to it.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>systemtl is-active osbuild-composer.socket</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>systemctl is-active osbuild-composer.socket</strong>
 active
 $ <strong>composer-cli compose types</strong>
 ami
@@ -287,14 +287,21 @@ url = "http://content.example.com/rhel9.5/x86_64/dvd/BaseOS"</code></pre>
 </li>
 <li>
 <p>Check that your <em>web server machine</em> is already serving an OSTree repository.</p>
-<div class="literalblock">
-<div class="content">
-<pre>:  If it isn't, this lab will show how to configure it.</pre>
-</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If it isn&#8217;t, this lab will show how to configure it.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>$ curl http://servera.lab.example.com/repo/config</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>curl http://servera.lab.example.com/repo/config</strong>
 [core]
 repo_version=1
 mode=archive-z2</code></pre>
@@ -353,11 +360,11 @@ You already configured your <em>development machine</em> with CA certificates an
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>cat &gt; /etc/osbuild-worker/osbuild-worker.toml &lt;&lt; EOF
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo mkdir /etc/osbuild-worker</strong>
+$ <strong>cat &gt; osbuild-worker.toml &lt;&lt; EOF
 [containers]
 auth_file_path = "/etc/osbuild-worker/containers-auth.json"
 EOF</strong>
-$ <strong>sudo mkdir /etc/osbuild-worker</strong>
 $ <strong>sudo cp osbuild-worker.toml /etc/osbuild-worker/osbuild-worker.toml</strong>
 $ <strong>sudo cp mirror-pull-secret /etc/osbuild-worker/containers-auth.json</strong></code></pre>
 </div>
@@ -381,6 +388,15 @@ The registry configuration file is the same one you already used to configure Mi
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/999-microshift-mirror.conf</strong>
 $ <strong>sudo cp 999-microshift-mirror.conf /etc/containers/registries.conf.d</strong></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Disable signature verification on container images required by MicroShift by downloading a <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/containers-policy.json.nosigs" class="bare">https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/microshift/containers-policy.json.nosigs</a>[container image policy file/ from the course samples git repository.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/microshift/containers-policy.json.nosigs</strong>
+$ <strong>sudo cp containers-policy.json.nosigs /etc/containers/policy.json</strong></code></pre>
 </div>
 </div>
 </li>
@@ -410,8 +426,8 @@ $ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-buil
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli sources add sources/openshift.toml</strong>
-$ <strong>composer-cli sources add sources/fastdata.toml</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli sources add openshift.toml</strong>
+$ <strong>composer-cli sources add fastdata.toml</strong>
 $ <strong>composer-cli sources list</strong>
 appstream
 baseos
@@ -433,6 +449,11 @@ url = "http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms"
 <ol class="loweralpha" type="a">
 <li>
 <p>Download the <a href="https://github.com/RedHatQuickCourses/rhde-build-samples/blob/main/blueprints/rhel9-microshift.toml">sample blueprint</a> from the course samples git repository. It is a long blueprint but, assuming that you performed all activities from the <a href="https://redhatquickcourses.github.io/rhde-build/">first Red Hat Device Edge course</a> and also from the <a href="#ch2-package">previous chapter</a> of this course, there should be no surprises.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/blueprints/rhel9-microshift.toml</strong></code></pre>
+</div>
+</div>
 </li>
 <li>
 <p>Review the <code>rhel9-microshift.toml</code> blueprint and make sure you understand it&#8217;s customizations:</p>
@@ -626,7 +647,7 @@ blueprint: rhel9-microshift v0.1.0
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If Image Builder cannot access the container images referenced by the blueprint, it will show an error at the <code>composer-cli blueprints push</code> command.
+if you get errors related to downloading container images, it is probably because you forgot to reboot your <em>development machine</em> after configuring it for acessing the mirror registry.
 </td>
 </tr>
 </table>
