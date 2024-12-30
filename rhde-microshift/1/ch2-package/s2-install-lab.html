@@ -264,7 +264,7 @@ Please do <em>not</em> register any VM on your virtual labs. Conserve the limite
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ls /etc/yum.repos.d</strong>
 fast-datapath-for-rhel-9-x86_64-rpms.repo  rhel-9.5-for-x86_64-baseos-rpms.repo
 rhel-9.5-for-x86_64-appstream-rpms.repo    rhocp-4.17-for-rhel-9-x86_64-rpms.repo
-$ <strong>cat /etc/yum.repos.d/ocp4.repo</strong>
+$ <strong>cat /etc/yum.repos.d/rhocp-4.17-for-rhel-9-x86_64-rpms.repo</strong>
 [rhocp-4.17-for-rhel-9-x86_64-rpms]
 baseurl = http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms
 enabled = true
@@ -357,7 +357,7 @@ Please, do <em>not</em> use your pull secret with VMs on your virtual labs. Plea
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>podman login -u microshift -p redhat123 https://servera.lab.example.com:8443</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>podman login -u microshift -p redhat123 servera.lab.example.com:8443</strong>
 Login Succeeded!
 $ <strong>cp $XDG_RUNTIME_DIR/containers/auth.json mirror-pull-secret</strong></code></pre>
 </div>
@@ -663,7 +663,7 @@ $ <strong>sudo firewall-cmd --reload</strong></code></pre>
 <li>
 <p>Enable and start MicroShift.</p>
 <div class="paragraph">
-<p>Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Note that it will <em>not</em> be ready yet when the <code>systemctl</code> command returns.&gt;&gt;&gt;&gt;&gt;&gt;&gt; main</p>
+<p>Be patient, it will take a few moments for MicroShift to generate Kubernetes configuration files, pull all its containers, and starts it daemons and pods. Note that it will <em>not</em> be ready yet when the <code>systemctl</code> command returns.</p>
 </div>
 <div class="listingblock">
 <div class="content">

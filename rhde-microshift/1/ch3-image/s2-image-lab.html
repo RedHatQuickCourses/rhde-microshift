@@ -1102,7 +1102,9 @@ If you are too quick, you may get a <code>NotReady</code> state from <code>oc ge
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc run shell -it --restart Never --image-pull-policy IfNotPresent --image servera.lab.example.com:8443/ubi9/ubi -- rpm -q redhat-release</strong>
-redhat-release-9.5-0.6.el9.x86_64</code></pre>
+redhat-release-9.5-0.6.el9.x86_64
+$ <strong>oc delete pod shell</strong>
+pod "shell" deleted</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
