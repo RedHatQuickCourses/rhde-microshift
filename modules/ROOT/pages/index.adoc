@@ -42,7 +42,7 @@ If you can provision your own RHEL servers or VMs, it should be possible to conf
 
 The main source is the https://docs.redhat.com/en/documentation/red_hat_build_of_microshift/4.17[product documentation for MicroShift] in Red Hat's documentation portal.
 
-We also recommend that you use the product documentation for https://docs.redhat.com/en/documentation/openshift_container_platform/4.17[Red Hat OpenShift Container Platform] for general Kubernetes topics, OpenShift extension APIs, and add-on operators which are supported in MicroShift.
+We also recommend that you use the product documentation for https://docs.redhat.com/en/documentation/openshift_container_platform/4.17[Red Hat OpenShift Container Platform] for general Kubernetes topics, OpenShift extension APIs, and add-on operators which may be supported in MicroShift.
 
 The Red Hat Build of MicroShift is supported as part of Red Hat Device Edge, check its https://docs.redhat.com/en/documentation/red_hat_device_edge/4/html/overview/index[overview document] for pointers to MicroShift, RHEL for Edge, and other components of Red Hat Device Edge, in particular the documentation about https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/composing_installing_and_managing_rhel_for_edge_images/index[Composing, installing, and managing RHEL for Edge images].
 
@@ -56,6 +56,6 @@ Red Hat - Product Portfolio Marketing & Learning
 
 Special thanks to Gregory Giguashvili and Vladislav Walek for for all their support while writing this course and testing its hands-on activities.
 
-Many thanks to Daniel Froehlich for his support reviewing the course design, its outline, work-in-progress contents, and answering my newbie questions.
+Many thanks to Daniel Froehlich for his support reviewing the course design, its outline, work-in-progress contents, and answering my newbie questions, and also to Eric Lavarde for reviews and feedback during course development.
 
 //Many thanks to Daniel Froehlich, Eric Lavarde, Jeff Ligon, Lester Claudio, Luis Arizmendi, Mourad Nakib, Sayan Paul, and Shauna Diaz for their support reviewing the course design, its outline, work-in-progress contents, and answering my newbie questions.

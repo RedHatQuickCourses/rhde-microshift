@@ -14,6 +14,6 @@ Figures on this course are designed using Google Slides, and the deck is availab
 
 Refer to the [Red Hat Quick Courses Contributor Guide](https://redhatquickcourses.github.io/welcome/1/guide/overview.html) for instructions about collaborating in this repository.
 
-The virtual classroom environment is a work in progress and its not yet available to leaners. It is available for development as HOL014 from the [Novello Shell](https://docs.google.com/document/d/191nIIcm9vteM-1RQKrbwm-4A-kqZBQfKUlX88Z3Nl6o/edit?usp=sharing).
+The virtual classroom environment is a work in progress and its not yet available to leaners. It is available for development as HOL014 from the [Novello Shell](https://docs.google.com/document/d/191nIIcm9vteM-1RQKrbwm-4A-kqZBQfKUlX88Z3Nl6o/edit?usp=sharing). This page will be updated as soon as the HOL014 classroom is available to learners, and it will be available to Red Hatters and partners, and also customers with a Red Hat Learning Subscription.
 
 See [here](https://docs.google.com/document/d/1WzCPaNG-IPubtlqYtvQlz6XHVVWtDZscWSBqwgLDzmo/edit?usp=sharing) notes about the progress on creating a classroom environment customized for the requirements of this and other RHDE courses.
