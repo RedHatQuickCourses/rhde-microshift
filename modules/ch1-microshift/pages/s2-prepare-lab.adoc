@@ -169,6 +169,8 @@ You can download a https://github.com/RedHatQuickCourses/rhde-build-samples/blob
 --
 $ *sudo systemctl restart osbuild-composer*
 --
++
+IMPORTANT: Restarting the `obuild-composer` service only works here because we assume you didn't start any compose, so there are no `osbuild-worker@<number>` services active. If there are, you must stop all of them or simply reboot the machine running Image Builder.
 
 .. Verify that the repository overrides are in effect.
 +
@@ -201,13 +203,15 @@ NOTE: Later in this course, you will configure additional package sources for pa
 +
 If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch3-test/s2-boot-lab.html[first course] which focus on deploying Libvirt and using KVM virtualization.
 
-.. Install the Libvirt tools.
+.. Install the Libvirt tools and enable the Libvirt socket.
 +
 [source,subs="verbatim,quotes"]
 --
 $ *sudo dnf install qemu-kvm libvirt virt-install virt-viewer*
 ...
 Complete!
+$ *sudo systemctl enable virtqemud.socket --now*
+Created symlink /etc/systemd/system/multi-user.target.wants/virtqemud.socket → /usr/lib/systemd/system/virtqemud.socket.
 --
 
 .. Optionally, install the virtual machines module for Cockpit
@@ -236,8 +240,6 @@ $ *virsh nodeinfo*
 CPU model:           x86_64
 ...
 --
-+
-NOTE: Libvirt installation already sets up socket activation for Libvirt's session interface.
 
 4. Configure unprivileged user access to Libvirt's default network. This enables inbound network connections to session VMs.
 +

@@ -194,7 +194,7 @@ NOTE: OpenShift release images, which are reused by MicroShift, are not identifi
 +
 [source,subs="verbatim,quotes"]
 --
-$ podman search servera.lab.example.com:8443/
+$ *podman search servera.lab.example.com:8443/*
 NAME                                                                 DESCRIPTION
 servera.lab.example.com:8443/lvms4/lvms-rhel9-operator               
 servera.lab.example.com:8443/openshift-release-dev/ocp-v4.0-art-dev
@@ -224,7 +224,7 @@ NOTE: In production environments, it is not recommended that you mirror images b
 +
 [source,subs="verbatim,quotes"]
 --
-$ podman search servera.lab.example.com:8443/
+$ *podman search servera.lab.example.com:8443/*
 NAME                                                                 DESCRIPTION
 servera.lab.example.com:8443/lvms4/lvms-rhel9-operator               
 servera.lab.example.com:8443/openshift-release-dev/ocp-v4.0-art-dev  
