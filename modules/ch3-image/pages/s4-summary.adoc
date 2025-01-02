@@ -2,7 +2,7 @@
 
 In this chapter, you learned:
 
-* RHEL for Edge supports preconfiguring MicroShift and Kubernetes applications at image build time, and also supports deploying Kubernetes applications on day 2 using Kubernetes APIs.
+* RHEL for Edge supports preconfiguring MicroShift and Kubernetes applications at image build time and also supports deploying Kubernetes applications on day 2 using Kubernetes APIs.
 
 * You must configure the Image Builder service to access your private or mirror registries by editing configuration files and rebooting the machine running Image Builder.
 

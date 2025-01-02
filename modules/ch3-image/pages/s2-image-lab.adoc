@@ -8,9 +8,11 @@ _Estimated reading time: *{time_estimate} minutes*._
 
 Objective::
 
-Build RHEL for Edge Images with MicroShift, using Image Builder, and publish then on remote OSTree repositories.
+Build RHEL for Edge Images with MicroShift, using Image Builder, and publish them on remote OSTree repositories.
 
 WARNING: Work In Progress
+
+// Can we please remove the warning note once editing is done?
 
 == Before you Begin
 
@@ -22,7 +24,7 @@ You need a few machines to perform the hands-on activities in this course.
 
 * A _web server machine_ with RHEL and unrestricted `sudo`, to host OSTree repositories
 
-* A _mirror registry machine_ with RHEL and unrestricted `sudo`, already populated with the container images required bu MicroShift and sample applications.
+* A _mirror registry machine_ with RHEL and unrestricted `sudo`, already populated with the container images required by MicroShift and sample applications.
 
 Make sure that your _package server machine_ and _mirror registry machine_ are properly configured and verified by following the instructions from the xref:ch1-microshift:s3-air-gapped-lab.adoc[previous lab] of this course.
 
@@ -53,7 +55,7 @@ edge-installer
 ...
 --
 
-.. Check that the Image Buider service is configured with repository overrides for RHEL packages.
+.. Check that the Image Builder service is configured with repository overrides for RHEL packages.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -195,9 +197,9 @@ include::1@samples:sources:example$openshift.toml[lines=4]
 $ *wget -q https://raw.githubusercontent.com/RedHatQuickCourses/rhde-build-samples/refs/heads/main/blueprints/rhel9-microshift.toml*
 --
 
-.. Review the `rhel9-microshift.toml` blueprint and make sure you understand it's customizations:
+.. Review the `rhel9-microshift.toml` blueprint and make sure you understand its customizations:
 +
-NOTE: The code snippets here help you locate the relevant sections in the blueprint, but they do not list the entirely of most sections. Follow along with a text editor and navigate through the blueprint file.
+NOTE: The code snippets here help you locate the relevant sections in the blueprint, but they do not list the entirety of most sections. Follow along with a text editor and navigate through the blueprint file.
 
 ... Set the hostname to `ushift` where the letter "u" stands for the Greek letter "micro".
 +
@@ -320,7 +322,7 @@ blueprint: rhel9-microshift v0.1.0
     microshift-selinux-4.17.3-202410241116.p0.gec0b5ea.assembly.4.17.3.el9.noarch
 --
 +
-NOTE: if you get errors related to downloading container images, it is probably because you forgot to reboot your _development machine_ after configuring it for acessing the mirror registry.
+NOTE: If you get errors related to downloading container images, it is probably because you forgot to reboot your _development machine_ after configuring it for accessing the mirror registry.
 
 .. Start a compose for an edge commit image.
 +
@@ -442,7 +444,7 @@ include::1@samples:ks:example$rhel9-microshift-installer.ks[lines=18]
 include::1@samples:ks:example$rhel9-microshift-installer.ks[lines=20..30]
 --
 +
-NOTE: production systems would NOT enable password login. We left it here as a convenience for the learner, so you can log in at the VM console for troubleshooting.
+NOTE: Production systems would NOT enable password login. We left it here as a convenience for the learner, so you can log in at the VM console for troubleshooting.
 
 .. Create an SSH key for use with your edge devices.
 +
@@ -453,7 +455,7 @@ Generating public/private rsa key pair.
 ...
 --
 +
-NOTE: if you get an error, because you already have an `edge-key` generated from previous Red Hat Device Edge courses, just ignore the error and continue with the next step.
+NOTE: If you get an error, because you already have an `edge-key` generated from previous Red Hat Device Edge courses, just ignore the error and continue with the next step.
 
 .. Embed your new SSH key in the kickstart file.
 +
@@ -565,7 +567,7 @@ ushift login:
 +
 NOTE: You may need to press kbd:[Enter] to see the login prompt, after the VM stops displaying console messages.
 
-.. Dettach from the VM console, by pressing kbd:[Ctrl+\]], and start a SSH session to your _edge machine_.
+.. Detach from the VM console, by pressing kbd:[Ctrl+\]], and start an SSH session to your _edge machine_.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -610,7 +612,7 @@ pod "shell" deleted
 +
 IMPORTANT: If you create a pod with the default image pull policy of `Always` it will fail because we stopped the mirror registry.
 
-You succeed provisioning an edge device, from an edge installer image, in an air-gapped environment: you only need the installation media to fully provision a ready-to-use RHEL for Edge system running a MicroShift instance.
+You succeed in provisioning an edge device, from an edge installer image, in an air-gapped environment: you only need the installation media to fully provision a ready-to-use RHEL for Edge system running a MicroShift instance.
 
 
 // May need cleanup in case of errors, similar to:
