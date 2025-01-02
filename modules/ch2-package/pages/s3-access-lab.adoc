@@ -103,7 +103,7 @@ $ *oc --as system:serviceaccount:userns:user create quota test --hard pods=2 -n 
 error: failed to create quota: resourcequotas is forbidden: User "system:serviceaccount:userns:user" cannot create resource "resourcequotas" in API group "" in the namespace "userns"
 --
 +
-NOTE: To grant rights to manage resources, such as quotas and network policies, to a namespace administrator, platform engineer, or site reliability engineer role, you must grant the `admin` cluster role instead of the `edit` cluster role.
+NOTE: To grant rights to manage policy resources, such as quotas and network policies, to a namespace administrator, platform engineer, or site reliability engineer role, you must grant the `admin` cluster role instead of the `edit` cluster role.
 
 
 3. Create another namespace and grant limited read-only access to the service account.

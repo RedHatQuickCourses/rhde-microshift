@@ -36,7 +36,7 @@ $ *export KUBECONFIG=~/remote-user*
 $ *oc whoami*
 system:serviceaccount:userns:user
 $ *oc project*
-Using project "user" from context named "microshift" on server "https://serverb:6443".
+Using project "userns" from context named "microshift" on server "https://serverb:6443".
 --
 +
 NOTE: Other `oc` commands related to projects do _not_ work with MicroShift.
