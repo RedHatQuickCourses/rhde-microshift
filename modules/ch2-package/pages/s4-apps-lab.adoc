@@ -18,13 +18,13 @@ Finally, you also need a _mirror registry machine_, already configured with a mi
 
 These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.
 
-If you are using the course classroom, log in on the `workstation` VM, which is your _development machine_, as the user `student` with password `student`. If not, please adapt the instructions to your test environment.
+If you are using the course classroom, log in to the `workstation` VM, which is your _development machine_, as the user `student` with password `student`. If not, please adapt the instructions to your test environment.
 
 You will perform most steps in this lab on your _development machine_.
 
 == Instructions
 
-1. Log in on your _development machine_ and verify that MicroShift is up and running on your _test machine_.
+1. Log in to your _development machine_ and verify that MicroShift is up and running on your _test machine_.
 
 .. Check that you have a kubeconfig file for an unprivileged service account and a pre-provisioned namespace.
 +

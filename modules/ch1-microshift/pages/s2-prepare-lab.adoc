@@ -24,7 +24,7 @@ You need a few machines to perform the hands-on activities in this course.
 
 These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.
 
-If you are using the course environment, you will log in on the `workstation` VM as the user `student` with password `student`. The `workstation` VM is your _development machine_. You will start SSH sessions from the `workstation` VM to the `servera` VM, which is your _web server machine_ and also your _mirror registry machine_, using the same user.
+If you are using the course environment, you will log in to the `workstation` VM as the user `student` with password `student`. The `workstation` VM is your _development machine_. You will start SSH sessions from the `workstation` VM to the `servera` VM, which is your _web server machine_ and also your _mirror registry machine_, using the same user.
 
 IMPORTANT: Be sure you execute each step on the correct machine. If a step is not explicit about the machine it should be performed, it is using the same machine as its previous step.
 
