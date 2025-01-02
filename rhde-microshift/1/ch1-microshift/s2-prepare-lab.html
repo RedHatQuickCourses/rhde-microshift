@@ -405,6 +405,18 @@ Complete!</code></pre>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo systemctl restart osbuild-composer</strong></code></pre>
 </div>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Restarting the <code>obuild-composer</code> service only works here because we assume you didn&#8217;t start any compose, so there are no <code>osbuild-worker@&lt;number&gt;</code> services active. If there are, you must stop all of them or simply reboot the machine running Image Builder.
+</td>
+</tr>
+</table>
+</div>
 </li>
 <li>
 <p>Verify that the repository overrides are in effect.</p>
@@ -455,12 +467,14 @@ Later in this course, you will configure additional package sources for packages
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Install the Libvirt tools.</p>
+<p>Install the Libvirt tools and enable the Libvirt socket.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install qemu-kvm libvirt virt-install virt-viewer</strong>
 ...
-Complete!</code></pre>
+Complete!
+$ <strong>sudo systemctl enable virtqemud.socket --now</strong>
+Created symlink /etc/systemd/system/multi-user.target.wants/virtqemud.socket → /usr/lib/systemd/system/virtqemud.socket.</code></pre>
 </div>
 </div>
 </li>
@@ -492,18 +506,6 @@ $ <strong>virsh nodeinfo</strong>
 CPU model:           x86_64
 ...</code></pre>
 </div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Libvirt installation already sets up socket activation for Libvirt&#8217;s session interface.
-</td>
-</tr>
-</table>
 </div>
 </li>
 </ol>
