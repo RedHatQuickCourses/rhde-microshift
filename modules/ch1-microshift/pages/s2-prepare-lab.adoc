@@ -10,6 +10,7 @@ Prepare a test environment for building RHEL for Edge images and managing OSTree
 
 WARNING: Work In Progress
 
+// Can we please remove the warning note once the review is done?
 == Before you Begin
 
 You need a few machines to perform the hands-on activities in this course. 
@@ -32,13 +33,13 @@ IMPORTANT: Be sure you execute each step on the correct machine. If a step is no
 
 In the course environment, the `classroom` VM, with the `materials` alias, is your _package server machine_ but you are _not_ expected to start SSH sessions nor perform any activity on it.
 
-If you are using the same course enviroment where you performed the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/index.html[Building Red Hat Device Edge Images] quick course, you should have some requirements already set up. They are listed here anyway, for learners that are starting this course in a new course environment.
+If you are using the same course environment where you performed the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/index.html[Building Red Hat Device Edge Images] quick course, you should have some requirements already set up. They are listed here anyway, for learners that are starting this course in a new course environment.
 
-NOTE: It should be possible to perform all activities in this course using a https://developers.redhat.com/products/rhel/download[free Red Hat Developers free subscrition], which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gaped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
+NOTE: It should be possible to perform all activities in this course using a https://developers.redhat.com/products/rhel/download[free Red Hat Developers free subscription], which gives you access to installation media, RPM packages, and container images for RHEL and Red Hat OpenShift. If you ignore the requirements for air-gaped installation of MicroShift, you could use a single RHEL VM and adapt the steps to your own environment.
 
 == Instructions
 
-1. Configure your _development machine_ with the RHEL for Edge tools. It should be ready if you already performed the activities from the first course on the same course environment.
+1. Configure your _development machine_ with the RHEL for Edge tools. It should be ready if you already performed the activities from the first course in the same course environment.
 +
 If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the  https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html[first course] which focus on deploying Image Builder and RPM-OSTree.
 
@@ -128,7 +129,7 @@ Complete!
 
 2. Configure package sources for Image Builder.
 +
-Your _development machine_ should be already configured with access to RHEL and MicroShift package repositories, but image builder does _not_ use the configurations from DNF and YUM, and, if you do not configure image sources, image builder will try to download packages from Red Hat repositories over the Internet.
+Your _development machine_ should be already configured with access to RHEL and MicroShift package repositories, but Image Builder does _not_ use the configurations from DNF and YUM, and, if you do not configure image sources, Image Builder will try to download packages from Red Hat repositories over the Internet.
 +
 If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the  https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch1-build/s4-install-lab.html[first course] which focus on deploying Image Builder and RPM-OSTree.
 
@@ -146,7 +147,7 @@ $ *sudo mkdir -p /etc/osbuild-composer/repositories*
 $ *sudo cp /usr/share/osbuild-composer/repositories/rhel-9.5.json /etc/osbuild-composer/repositories/*
 --
 
-.. Modify the configuration file to match your local DNF repository. Pay attention to attributes such as `baseurl`, `rhsm` and `check_gpg`.
+.. Modify the configuration file to match your local DNF repository. Pay attention to attributes such as `baseurl`, `rhsm`, and `check_gpg`.
 +
 In the course environment, you should make the following edits:
 +
@@ -197,11 +198,11 @@ type = "yum-baseurl"
 url = "http://content.example.com/rhel9.5/x86_64/dvd/ApStream"
 --
 +
-NOTE: Later in this course you will configure additional package sources for packages required by MicroShift. For now, it is just ensuring you have all changes that would have been made in the https://redhatquickcourses.github.io/rhde-build[first Red Hat Device Edge course].
+NOTE: Later in this course, you will configure additional package sources for packages required by MicroShift. For now, it is just ensuring you have all the changes that would have been made in the https://redhatquickcourses.github.io/rhde-build[first Red Hat Device Edge course].
 
-3. Configure your _development machine_ with the Libvirt tools. It should be ready if you already performed the activities from the first course on the same course environment.
+3. Configure your _development machine_ with the Libvirt tools. It should be ready if you already performed the activities from the first course in the same course environment.
 +
-If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch3-test/s2-boot-lab.html[first course] which focus deploying Libvirt and using KVM virtualization.
+If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch3-test/s2-boot-lab.html[first course] which focus on deploying Libvirt and using KVM virtualization.
 
 .. Install the Libvirt tools.
 +
@@ -221,7 +222,7 @@ $ *sudo dnf install cockpit-machines*
 Complete!
 --
 
-.. Grant your unprivileged user with permission to create and manage virtual machines (VMs).
+.. Grant your unprivileged user permission to create and manage virtual machines (VMs).
 +
 [source,subs="verbatim,quotes"]
 --
@@ -300,9 +301,9 @@ hosts:      files dns *libvirt libvirt_guest* myhostname
 +
 NOTE: in production systems, it is recommended that you use the `authselect` utility instead of making edits to the `/etc/nsswtich.conf` file.
 
-5. Configure your _web server machine_ to host OSTree repositories. It should be ready if you already performed the activities from the first course on the same course environment.
+5. Configure your _web server machine_ to host OSTree repositories. It should be ready if you already performed the activities from the first course in the same course environment.
 +
-If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch2-publish/s2-ostree-lab.html[first course] which focus configuring an Apache Web Server for OSTree repository management.
+If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch2-publish/s2-ostree-lab.html[first course] which focus on configuring an Apache Web Server for OSTree repository management.
 
 .. Install the Apache Web Server packages from RHEL.
 +

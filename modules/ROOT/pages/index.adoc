@@ -19,7 +19,7 @@ Operations-focused customer roles, who design and implement device edge images, 
 * Platform Engineers
 * DevOps Engineers
 
-Red Hat and Partner roles that perform demonstrations, PoC ad PoV of Red Hat Device Edge as part of a sales motion, such as Solutions Architects
+Red Hat and Partner roles that perform demonstrations, PoC and PoV of Red Hat Device Edge as part of a sales motion, such as Solutions Architects
 
 Red Hat and Partner roles that support Red Hat Device Edge on customers, such as Services Consultants and Customer Support Engineers.
 
@@ -28,13 +28,13 @@ Red Hat and Partner roles that support Red Hat Device Edge on customers, such as
 * Attend https://redhatquickcourses.github.io/rhde-build/[RHDE-1: Building Red Hat Device Edge Images] or having equivalent experience with RHEL for Edge.
 * Familiarity with RHEL system administration, to the level of RHCA (Red Hat Certified System Administrator) or equivalent knowledge.
 * Familiarity with OpenShift administration, to the level of Red Hat Certified OpenShift Administrator or equivalent knowledge.
-* Familiarity with Ansible playbooks and Ansible Automation Platform is useful but not required.
+* Familiarity with Ansible playbooks and the Ansible Automation Platform is useful but not required.
 * Familiarity with web server administration, such as Apache Web Server or NGinx, is useful but not required.
 * Familiarity with database server administration, such as MySQL or MariaDB, is useful but not required.
 
-== Clasroom Environment
+== Classroom Environment
 
-The virtual classroom environment is a work in progress and its not yet available to leaners.
+The virtual classroom environment is a work in progress and it's not yet available to learners.
 
 If you can provision your own RHEL servers or VMs, it should be possible to configure all that is required for the hands-on activities by using a https://developers.redhat.com/products/rhel/download[free subscriptoion] from the https://developers.redhat.com/about[Red Hat Developer Program], which gives access to RHEL installation media, RHEL package repositories, OpenShift package repositories, and OpenShift container images in Red Hat registries.
 
@@ -54,8 +54,6 @@ It is not expected that you need to use the https://microshift.io/[open source u
 Training Content Architect +
 Red Hat - Product Portfolio Marketing & Learning
 
-Special thanks to Gregory Giguashvili and Vladislav Walek for for all their support while writing this course and testing its hands-on activities.
+Special thanks to Gregory Giguashvili and Vladislav Walek for all their support while writing this course and testing its hands-on activities.
 
-Many thanks to Daniel Froehlich for his support reviewing the course design, its outline, work-in-progress contents, and answering my newbie questions, and also to Eric Lavarde for reviews and feedback during course development.
-
-//Many thanks to Daniel Froehlich, Eric Lavarde, Jeff Ligon, Lester Claudio, Luis Arizmendi, Mourad Nakib, Sayan Paul, and Shauna Diaz for their support reviewing the course design, its outline, work-in-progress contents, and answering my newbie questions.
+Many thanks to Daniel Froehlich for his support in reviewing the course design, its outline, work-in-progress contents, and answering my newbie questions, and also to Eric Lavarde for reviews and feedback during course development.
