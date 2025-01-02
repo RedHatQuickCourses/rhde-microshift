@@ -166,7 +166,7 @@
 <dl>
 <dt class="hdlist1">Objective</dt>
 <dd>
-<p>Build RHEL for Edge Images with MicroShift, using Image Builder, and publish then on remote OSTree repositories.</p>
+<p>Build RHEL for Edge Images with MicroShift, using Image Builder, and publish them on remote OSTree repositories.</p>
 </dd>
 </dl>
 </div>
@@ -202,7 +202,7 @@ Work In Progress
 <p>A <em>web server machine</em> with RHEL and unrestricted <code>sudo</code>, to host OSTree repositories</p>
 </li>
 <li>
-<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, already populated with the container images required bu MicroShift and sample applications.</p>
+<p>A <em>mirror registry machine</em> with RHEL and unrestricted <code>sudo</code>, already populated with the container images required by MicroShift and sample applications.</p>
 </li>
 </ul>
 </div>
@@ -258,7 +258,7 @@ edge-installer
 </div>
 </li>
 <li>
-<p>Check that the Image Buider service is configured with repository overrides for RHEL packages.</p>
+<p>Check that the Image Builder service is configured with repository overrides for RHEL packages.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>composer-cli sources list</strong>
@@ -456,7 +456,7 @@ url = "http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms"
 </div>
 </li>
 <li>
-<p>Review the <code>rhel9-microshift.toml</code> blueprint and make sure you understand it&#8217;s customizations:</p>
+<p>Review the <code>rhel9-microshift.toml</code> blueprint and make sure you understand its customizations:</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -464,7 +464,7 @@ url = "http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms"
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The code snippets here help you locate the relevant sections in the blueprint, but they do not list the entirely of most sections. Follow along with a text editor and navigate through the blueprint file.
+The code snippets here help you locate the relevant sections in the blueprint, but they do not list the entirety of most sections. Follow along with a text editor and navigate through the blueprint file.
 </td>
 </tr>
 </table>
@@ -647,7 +647,7 @@ blueprint: rhel9-microshift v0.1.0
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-if you get errors related to downloading container images, it is probably because you forgot to reboot your <em>development machine</em> after configuring it for acessing the mirror registry.
+If you get errors related to downloading container images, it is probably because you forgot to reboot your <em>development machine</em> after configuring it for accessing the mirror registry.
 </td>
 </tr>
 </table>
@@ -860,7 +860,7 @@ EOFSSH
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-production systems would NOT enable password login. We left it here as a convenience for the learner, so you can log in at the VM console for troubleshooting.
+Production systems would NOT enable password login. We left it here as a convenience for the learner, so you can log in at the VM console for troubleshooting.
 </td>
 </tr>
 </table>
@@ -885,7 +885,7 @@ Generating public/private rsa key pair.
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-if you get an error, because you already have an <code>edge-key</code> generated from previous Red Hat Device Edge courses, just ignore the error and continue with the next step.
+If you get an error, because you already have an <code>edge-key</code> generated from previous Red Hat Device Edge courses, just ignore the error and continue with the next step.
 </td>
 </tr>
 </table>
@@ -1048,7 +1048,7 @@ You may need to press <kbd>Enter</kbd> to see the login prompt, after the VM sto
 </div>
 </li>
 <li>
-<p>Dettach from the VM console, by pressing <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>]</kbd></span>, and start a SSH session to your <em>edge machine</em>.</p>
+<p>Detach from the VM console, by pressing <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>]</kbd></span>, and start an SSH session to your <em>edge machine</em>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ssh -i edge-key core@ushift</strong></code></pre>
@@ -1126,7 +1126,7 @@ If you create a pod with the default image pull policy of <code>Always</code> it
 </ol>
 </div>
 <div class="paragraph">
-<p>You succeed provisioning an edge device, from an edge installer image, in an air-gapped environment: you only need the installation media to fully provision a ready-to-use RHEL for Edge system running a MicroShift instance.</p>
+<p>You succeed in provisioning an edge device, from an edge installer image, in an air-gapped environment: you only need the installation media to fully provision a ready-to-use RHEL for Edge system running a MicroShift instance.</p>
 </div>
 </div>
 </div>
