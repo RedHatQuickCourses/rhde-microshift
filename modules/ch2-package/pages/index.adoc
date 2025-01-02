@@ -3,8 +3,6 @@
 Goal::
 Install and configure MicroShift in package-based Red Hat Enterprise Linux (RHEL).
 
-WARNING: Work In Progress
-
 == Introduction
 
 This chapter explores the installation requirements and essential configuration settings of MicroShift, as supported by Red Hat build of MicroShift, with a focus on deployment in air-gapped environments.

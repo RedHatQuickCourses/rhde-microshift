@@ -8,10 +8,6 @@ Objective::
 
 Understand how MicroShift is similar and different from Red Hat OpenShift
 
-WARNING: Work In Progress
-
-// Can you please remove the warning note once the course review has been completed?
-
 == What is Red Hat Device Edge
 
 Red Hat Device Edge is a software and support subscription that bundles three components:

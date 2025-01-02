@@ -3,10 +3,6 @@
 Goal::
 Add MicroShift to RHEL for Edge Images
 
-WARNING: Work In Progress
-
-// Can we please remove the warning note once the editing is done?
-
 == Introduction
 
 This chapter explores the requirements for building edge system images which include MicroShift, as supported by Red Hat build of MicroShift, including the caveats applicable to air-gaped environments.

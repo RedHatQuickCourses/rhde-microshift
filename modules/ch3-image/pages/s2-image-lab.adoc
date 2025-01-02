@@ -10,10 +10,6 @@ Objective::
 
 Build RHEL for Edge Images with MicroShift, using Image Builder, and publish them on remote OSTree repositories.
 
-WARNING: Work In Progress
-
-// Can we please remove the warning note once editing is done?
-
 == Before you Begin
 
 You need a few machines to perform the hands-on activities in this course. 

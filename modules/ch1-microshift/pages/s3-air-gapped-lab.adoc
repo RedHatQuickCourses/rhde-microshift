@@ -8,9 +8,6 @@ Objective::
 
 Prepare a test environment for air-gaped deployment of MicroShift in both package-based RHEL and RHEL for Edge.
 
-WARNING: Work In Progress
-
-// Can we please remove the warning note once the review is done?
 == Before you Begin
 
 You need a few machines to perform the hands-on activities in this course. 

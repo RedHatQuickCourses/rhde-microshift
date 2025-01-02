@@ -8,8 +8,6 @@ Objective::
 
 Deploy single containers and multi-container applications in MicroShift from a remote client.
 
-WARNING: Work In Progress
-
 == Before You Begin
 
 You need a _test machine_ where you installed, configured, and verified MicroShift, by following the instructions from the xref:s2-install-lab.adoc[first lab] of this chapter.

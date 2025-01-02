@@ -8,8 +8,6 @@ Objective::
 
 Configure remote access to MicroShift as privileged and unprivileged users.
 
-WARNING: Work In Progress
-
 == Before You Begin
 
 You need a _test machine_ where you installed, configured, and verified MicroShift, by following the instructions from the xref:s2-install-lab.adoc[previous lab].
