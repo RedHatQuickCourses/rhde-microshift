@@ -14,7 +14,7 @@ You need a _test machine_ where you installed, configured, and verified MicroShi
 
 You also need a _development machine_ from which you will access the MicroShift instance on your _test machine_, and that was configured with a kubeconfig file from the xref:s2-install-lab.adoc[previous lab], for access to pre-provisioned namespaces MicroShift
 
-Finally, you also need a _mirror registry machine_, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your _mirror registry machine_ machine was configured and verified by following the instructions from a xref:ch1-microshift:s3-prepare-lab.adoc[previous lab] of this course.
+Finally, you also need a _mirror registry machine_, already configured with a mirror registry for Red Hat OpenShift and pre-populated with container images required by MicroShift and course activities. Make sure that your _mirror registry machine_ machine was configured and verified by following the instructions from a xref:ch1-microshift:s2-prepare-lab.adoc[previous lab] of this course.
 
 These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.
 

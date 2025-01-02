@@ -16,7 +16,7 @@ You also need a _package server machine_ already configured to serve DNF reposit
 
 Finally, you need a _mirror registry machine_ with RHEL and unrestricted `sudo`, already populated with the container iamges required bu MicroShoft and sample applications.
 
-Make sure that your _package server machine_ and _mirror registry machine_ are properly configured and verified by following the instructions from the xref:ch1-microshift:s4-air-gapped-lab.adoc[previous lab] of this course.
+Make sure that your _package server machine_ and _mirror registry machine_ are properly configured and verified by following the instructions from the xref:ch1-microshift:s3-air-gapped-lab.adoc[previous lab] of this course.
 
 These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.
 
