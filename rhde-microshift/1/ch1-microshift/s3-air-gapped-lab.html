@@ -201,7 +201,7 @@
 <p>These instructions were tested on RHEL 9.5 but should work with minimal or no change on newer and older RHEL 9.x releases.</p>
 </div>
 <div class="paragraph">
-<p>If you are using the course environment, you will log in on the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from the <code>workstation</code> VM to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>, using the same user.</p>
+<p>If you are using the course environment, you will log in to the <code>workstation</code> VM as the user <code>student</code> with password <code>student</code>. The <code>workstation</code> VM is your <em>development machine</em>. You will start SSH sessions from the <code>workstation</code> VM to the <code>servera</code> VM, which is your <em>web server machine</em> and also your <em>mirror registry machine</em>, using the same user.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -370,7 +370,7 @@ $ <strong>sudo update-ca-trust</strong></code></pre>
 </div>
 </li>
 <li>
-<p>Log in on the mirror registry.</p>
+<p>Log in to the mirror registry.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>podman login -u microshift -p redhat123 https://servera.lab.example.com:8443</strong>
