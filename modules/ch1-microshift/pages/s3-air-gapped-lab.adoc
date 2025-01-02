@@ -60,7 +60,7 @@ $ *sudo firewall-cmd --reload*
 success
 --
 
-.. Download the mirror registry for the Red Hat OpenShift installer.
+.. Download the installer for mirror registry for Red Hat OpenShift installer.
 +
 NOTE: In a connected environment, you would get it from the https://console.redhat.com/openshift/downloads#tool-mirror-registry[downloads] page of the Red Hat Hybrid Cloud Console, but there is already a copy of the installer in the http://content.example.com/rhde/rhocp/[course environment].
 +
