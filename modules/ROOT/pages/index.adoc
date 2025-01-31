@@ -41,7 +41,7 @@ You can perform all activities in this course using the virtual classroom lab fr
 Use the following links to access the virtual classroom lab on Red Hat Online Learning (ROLE):
 
 * https://role.rhu.redhat.com/rol-rhu/app/courses/hol014-9.5/pages/pr01[HOL014 for Red Hat employees^].
-* https://rol.redhat.com/rol/app/courses/hol014-9.5/pages/pr01[HOL014 for Red Hat partners and customers^] with a Red Hat Learning Subscription.
+* https://rol.redhat.com/rol/app/courses/hol014-9.5/pages/pr01[HOL014 for Red Hat partners and customers^] with a *Red Hat Learning Subscription*.
 
 After you enter HOL014 on ROLE, follow the instructions there to create a new course classroom lab and access its virtual machines. If you already created a HOL014 classroom for another Red Hat Device Edge quick course, you can continue using the same classroom lab.
 
