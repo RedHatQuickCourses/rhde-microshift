@@ -1,0 +1,26 @@
+.. Install the Apache Web Server packages from RHEL.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo dnf install httpd*
+...
+Complete!
+--
+
+.. Enable and start the Apache Web Server system service.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo systemctl enable httpd --now*
+Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
+--
+
+.. Allow remote access to the Apache Web Server on the system's firewall.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo firewall-cmd --add-service=http --permanent*
+success
+$ *sudo firewall-cmd --reload*
+success
+--

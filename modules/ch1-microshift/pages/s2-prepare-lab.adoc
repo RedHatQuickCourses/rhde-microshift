@@ -199,137 +199,13 @@ url = "http://content.example.com/rhel9.5/x86_64/dvd/ApStream"
 +
 NOTE: Later in this course, you will configure additional package sources for packages required by MicroShift. For now, it is just ensuring you have all the changes that would have been made in the https://redhatquickcourses.github.io/rhde-build[first Red Hat Device Edge course].
 
-3. Configure your _development machine_ with the Libvirt tools. It should be ready if you already performed the activities from the first course in the same course environment.
-+
-If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch3-test/s2-boot-lab.html[first course] which focus on deploying Libvirt and using KVM virtualization.
-
-.. Install the Libvirt tools and enable the Libvirt socket.
-+
-[source,subs="verbatim,quotes"]
---
-$ *sudo dnf install qemu-kvm libvirt virt-install virt-viewer*
-...
-Complete!
-$ *sudo systemctl enable virtqemud.socket --now*
-Created symlink /etc/systemd/system/multi-user.target.wants/virtqemud.socket → /usr/lib/systemd/system/virtqemud.socket.
---
-
-.. Optionally, install the virtual machines module for Cockpit
-+
-[source,subs="verbatim,quotes"]
---
-$ *sudo dnf install cockpit-machines*
-...
-Complete!
---
-
-.. Grant your unprivileged user permission to create and manage virtual machines (VMs).
-+
-[source,subs="verbatim,quotes"]
---
-$ *sudo groupmod libvirt -a -U student*
---
-
-.. Log off and log in again to update the user membership of your unprivileged user and check that it can use Libvirt's session interface.
-+
-[source,subs="verbatim,quotes"]
---
-$ *virsh uri*
-qemu:///session
-$ *virsh nodeinfo*
-CPU model:           x86_64
-...
---
-
-4. Configure unprivileged user access to Libvirt's default network. This enables inbound network connections to session VMs.
-+
-IMPORTANT: This was _not_ configured in the first course about Red Hat Device Edge, and it will be necessary to test edge images with MicroShift.
-
-.. Check that IP forwarding is enabled, which is the default for RHEL installations.
-+
-[source,subs="verbatim,quotes"]
---
-$ *sysctl net.ipv4.ip_forward*
-net.ipv4.ip_forward = 1
---
-
-.. Install Libvirt's NSS module.
-+
-[source,subs="verbatim,quotes"]
---
-$ *sudo dnf install libvirt-nss*
-...
-Complete!
---
-
-.. Create the `/etc/qemu/bridge.conf` configuration file and make it world-readable.
-+
-[source,subs="verbatim,quotes"]
---
-$ *sudo mkdir /etc/qemu*
-$ *sudo bash -c 'echo "allow virbr0" > /etc/qemu/bridge.conf'*
-$ *sudo chmod a+r /etc/qemu/bridge.conf*
---
-
-.. Enable and start the Libvirt network daemon.
-+
-[source,subs="verbatim,quotes"]
---
-$ *sudo systemctl enable virtnetworkd --now*
-Created symlink /etc/systemd/system/multi-user.target.wants/virtnetworkd.service → /usr/lib/systemd/system/virtnetworkd.service.
---
-
-.. Check that Libvirt initialized its default network and the `virb0` bridge device.
-+
-[source,subs="verbatim,quotes"]
---
-$ *sudo virsh net-list*
- Name      State    Autostart   Persistent
---------------------------------------------
-default   active   yes         yes
-$ *ip -br addr show virbr0*
-virbr0           DOWN           192.168.122.1/24
---
-
-.. Edit your the `/etc/nsswtich.conf` configuration file by adding the Libvirt NSS modules right before the `myhostname` module. This enables resolving hostnames of session VMs to their IP addresses.
-+
-[source,subs="verbatim,quotes"]
---
-hosts:      files dns *libvirt libvirt_guest* myhostname
---
-+
-NOTE: in production systems, it is recommended that you use the `authselect` utility instead of making edits to the `/etc/nsswtich.conf` file.
+include::rhde-microshift:ch1-microshift:partial$s2-prepare-lab-libvirt.adoc[]
 
 5. Configure your _web server machine_ to host OSTree repositories. It should be ready if you already performed the activities from the first course in the same course environment.
 +
 If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch2-publish/s2-ostree-lab.html[first course] which focus on configuring an Apache Web Server for OSTree repository management.
 
-.. Install the Apache Web Server packages from RHEL.
-+
-[source,subs="verbatim,quotes"]
---
-$ *sudo dnf install httpd*
-...
-Complete!
---
-
-.. Enable and start the Apache Web Server system service.
-+
-[source,subs="verbatim,quotes"]
---
-$ *sudo systemctl enable httpd --now*
-Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
---
-
-.. Allow remote access to the Apache Web Server on the system's firewall.
-+
-[source,subs="verbatim,quotes"]
---
-$ *sudo firewall-cmd --add-service=http --permanent*
-success
-$ *sudo firewall-cmd --reload*
-success
---
+include::rhde-microshift:ch1-microshift:partial$s2-prepare-lab-apache.adoc[]
 
 .. Install the RPM-OSTree and the lower level OSTree tooling on the web server machine, because you will need to perform maintenance on the OSTree repositories you store on it.
 +

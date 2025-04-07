@@ -1,0 +1,105 @@
+
+3. Configure your _development machine_ with the Libvirt tools. It should be ready if you already performed the activities from the first course in the same course environment.
++
+If something goes wrong while performing these steps and you need troubleshooting aid, please refer to the activities from the https://redhatquickcourses.github.io/rhde-build/rhde-build/1/ch3-test/s2-boot-lab.html[first course] which focus on deploying Libvirt and using KVM virtualization.
+
+.. Install the Libvirt tools and enable the Libvirt socket.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo dnf install qemu-kvm libvirt virt-install virt-viewer*
+...
+Complete!
+$ *sudo systemctl enable virtqemud.socket --now*
+Created symlink /etc/systemd/system/multi-user.target.wants/virtqemud.socket → /usr/lib/systemd/system/virtqemud.socket.
+--
+
+.. Optionally, install the virtual machines module for Cockpit
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo dnf install cockpit-machines*
+...
+Complete!
+--
++
+// This is not really needed sbecause we're using session VMs
+// .. Grant your unprivileged user permission to create and manage virtual machines (VMs).
+// +
+// [source,subs="verbatim,quotes"]
+// --
+// $ *sudo groupmod libvirt -a -U student*
+// --
+//
+// .. Log off and log in again to update the user membership of your unprivileged user and check that it can use Libvirt's session interface.
+
+.. Check that it can use Libvirt's session interface.
++
+[source,subs="verbatim,quotes"]
+--
+$ *virsh uri*
+qemu:///session
+$ *virsh nodeinfo*
+CPU model:           x86_64
+...
+--
+
+4. Configure unprivileged user access to Libvirt's default network. This enables inbound network connections to session VMs.
++
+IMPORTANT: This was _not_ configured in the first course about Red Hat Device Edge, and it will be necessary to test edge images and bootc images with MicroShift.
+
+.. Check that IP forwarding is enabled, which is the default for RHEL installations.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sysctl net.ipv4.ip_forward*
+net.ipv4.ip_forward = 1
+--
+
+.. Install Libvirt's NSS module.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo dnf install libvirt-nss*
+...
+Complete!
+--
+
+.. Create the `/etc/qemu/bridge.conf` configuration file and make it world-readable.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo mkdir /etc/qemu*
+$ *sudo bash -c 'echo "allow virbr0" > /etc/qemu/bridge.conf'*
+$ *sudo chmod a+r /etc/qemu/bridge.conf*
+--
+
+.. Enable and start the Libvirt network daemon.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo systemctl enable virtnetworkd --now*
+Created symlink /etc/systemd/system/multi-user.target.wants/virtnetworkd.service → /usr/lib/systemd/system/virtnetworkd.service.
+--
+
+.. Check that Libvirt initialized its default network and the `virb0` bridge device.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo virsh net-list*
+ Name      State    Autostart   Persistent
+--------------------------------------------
+default   active   yes         yes
+$ *ip -br addr show virbr0*
+virbr0           DOWN           192.168.122.1/24
+--
+
+.. Edit your the `/etc/nsswtich.conf` configuration file by adding the Libvirt NSS modules right before the `myhostname` module. This enables resolving hostnames of session VMs to their IP addresses.
++
+[source,subs="verbatim,quotes"]
+--
+hosts:      files dns *libvirt libvirt_guest* myhostname
+--
++
+NOTE: in production systems, it is recommended that you use the `authselect` utility instead of making edits to the `/etc/nsswtich.conf` file.
+
