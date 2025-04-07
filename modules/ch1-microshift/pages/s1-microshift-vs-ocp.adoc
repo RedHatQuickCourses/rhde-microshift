@@ -18,7 +18,7 @@ Red Hat Device Edge is a software and support subscription that bundles three co
 
 // Copy of the diagram from ch1-s1-fig-1 of rhde-build
 
-image::s1-devices-fig-1.svg[title="Components of Red Hat Device Edge"]
+image::rhde-microshift:ch1-microshift:s1-devices-fig-1.svg[title="Components of Red Hat Device Edge"]
 
 All of these three components can be purchased as part of a number of other subscriptions from Red Hat subscriptions. For example, RHEL and Ansible are frequently purchased as their own subscriptions, instead of as part of a bundle, and MicroShift is also available as part of the Red Hat OpenShift Container Platform and Red Hat OpenShift Plus.
 
@@ -38,7 +38,7 @@ _Source: https://www.redhat.com/en/topics/edge-computing/microshift_
 
 The following figure compares MicroShift with the smallest edition of Red Hat OpenShift, which is Red Hat OpenShift Kubernetes Engine:
 
-image::s1-microshift-vs-ocp-fig-1.svg[title="MicroShift versus OpenShift"]
+image::rhde-microshift:ch1-microshift:s1-microshift-vs-ocp-fig-1.svg[title="MicroShift versus OpenShift"]
 
 It shows that, while both the Red Hat build of MicroShift and Red Hat OpenShift include Kubernetes as their container orchestrator, plus security and a number of cluster services, Red Hat OpenShift includes a larger set of cluster services. The figure also shows that Red Hat OpenShift relies on RHEL CoreOS as its cluster  node operating system, while MicroShift relies on plain RHEL and on RHEL services, such as the system journal daemon, for tasks that Red Hat OpenShift would defer to its cluster services.
 
