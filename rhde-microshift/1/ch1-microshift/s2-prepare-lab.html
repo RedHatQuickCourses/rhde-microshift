@@ -489,15 +489,7 @@ Complete!</code></pre>
 </div>
 </li>
 <li>
-<p>Grant your unprivileged user permission to create and manage virtual machines (VMs).</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo groupmod libvirt -a -U student</strong></code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Log off and log in again to update the user membership of your unprivileged user and check that it can use Libvirt&#8217;s session interface.</p>
+<p>Check that it can use Libvirt&#8217;s session interface.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>virsh uri</strong>
@@ -520,7 +512,7 @@ CPU model:           x86_64
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-This was <em>not</em> configured in the first course about Red Hat Device Edge, and it will be necessary to test edge images with MicroShift.
+This was <em>not</em> configured in the first course about Red Hat Device Edge, and it will be necessary to test edge images and bootc images with MicroShift.
 </td>
 </tr>
 </table>
