@@ -1,7 +1,7 @@
 
 1. Configure your _web server machine_ with a mirror registry for Red Hat OpenShift.
 +
-These steps are required for all kinds of MicroShift deploymentbe they on package-based or image-based, if you are performing air-gaped deployments.
+These steps are required for all kinds of MicroShift deployment, be they on package-based or image-based, if you are performing air-gaped deployments.
 
 .. The mirror registry for OpenShift runs as a local container, so install Podman.
 +
@@ -24,7 +24,7 @@ success
 
 .. Download the installer for mirror registry for Red Hat OpenShift installer.
 +
-NOTE: In a connected environment, you would get it from the https://console.redhat.com/openshift/downloads#tool-mirror-registry[downloads] page of the Red Hat Hybrid Cloud Console, but there is already a copy of the installer in the http://content.example.com/rhde/rhocp/[course environment].
+NOTE: In a connected environment, you would get it from the https://console.redhat.com/openshift/downloads#tool-mirror-registry[downloads] page of the Red Hat Hybrid Cloud Console, but there is already a copy of the installer in the course environment at \http://content.example.com/rhde/rhocp/.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -124,7 +124,7 @@ WARNING: You will later copy this file to your MicroShift instances, so it is im
 
 .. Download a file system copy of all images from the classroom server.
 +
-NOTE: When outside of the course environment, follow the instructions from product docs to extract a list of MicroShift release images from the `microshift` RPM package and download them to a staging directory. In the course environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on cloud bandwidth fees.
+NOTE: When outside of the course environment, follow the instructions from product docs to extract a list of MicroShift release images from the `microshift-release-info` RPM package and download them to a staging directory. In the course environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on cloud bandwidth fees.
 +
 [source,subs="verbatim,quotes"]
 --
