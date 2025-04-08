@@ -2,7 +2,7 @@
 
 This course teaches how to deploy and configure MicroShift on Red Hat Device Edge targets, using either traditional RHEL or RHEL for Edge, to support Kubernetes applications.
 
-WARNING: Sections and partials of this course are also used by [rhde-microshift-bootc]https://github.com/RedHatQuickCourses/rhde-microshift-bootc. When making updates, consider if the changes are generic to MicroShift, or are specific to either RPM-OSTree or RHEL image mode.
+WARNING: Sections and partials of this course are also used by [rhde-microshift-bootc](https://github.com/RedHatQuickCourses/rhde-microshift-bootc). When making updates, consider if the changes are generic to MicroShift, or are specific to either RPM-OSTree or RHEL image mode.
 
 Sample applications and configuration files are in the [rhde-build-samples](https://github.com/RedHatQuickCourses/rhde-build-samples/tree/main) repository.
 
