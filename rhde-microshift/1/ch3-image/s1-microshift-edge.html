@@ -173,7 +173,18 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_microshift_deployment_with_rhel_for_edge"><a class="anchor" href="#_microshift_deployment_with_rhel_for_edge"></a>MicroShift Deployment with RHEL for Edge</h2>
+<h2 id="_microshift_deployment_with_rpm_ostree"><a class="anchor" href="#_microshift_deployment_with_rpm_ostree"></a>MicroShift Deployment with RPM-OSTree</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Deploying MicroShift using edge images from image builder is not different than adding any other application on a RHEL system image. You could include MicroShift with a complete set of configuration files already embedded in an edge commit image, or you could include just MicroShift packages and add configuration files after installation as part of an on-boarding process or other day-2 activity.</p>
+</div>
+<div class="paragraph">
+<p>But, before we drive into the specifics of including MicroShift in edge images for air-gapped environments, let&#8217;s consider how image-based deployments differ than traditional package-based deployments and the most common ways that organizations use approach image-based deployments.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_application_versus_device_or_opearting_system_lifecycles"><a class="anchor" href="#_application_versus_device_or_opearting_system_lifecycles"></a>Application versus Device or Opearting System Lifecycles</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>When you plan a deployment of MicroShift on edge devices, you must consider the lifecycles of devices and their applications. It is never just MicroShift. The sole purpose of MicroShift is to support Kubernetes applications, which are deployed from container images and resource manifests.</p>
@@ -214,7 +225,7 @@
 <p>To NOT shift left has the advantage of keeping processes for provisioning and managing edge devices closer to the processes already used for data center servers and office workstations. This may be appropriate for edge sites that have their own IT infrastructure, which it is similar to corporate sites, and for edge sites that have reliable and fast network connectivity to corporate sites.</p>
 </div>
 <div class="paragraph">
-<p>The RHEL for Edge tooling also supports that approach, by allowing:</p>
+<p>Both the RHEL for Edge tooling (RPM-OSTree) and the RHEL image mode tooling (bootc) supports that approach, by allowing:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -230,7 +241,7 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>Organizations following that approach typically consider MicroShift as part of the OS, and use Image Builder to create a system image which is minimally configured for the edge site and corporate networks. Then they deploy applications using Kubernetes manifests, helm charts, and container registries like they would in their data centers.</p>
+<p>Organizations following that approach typically consider MicroShift as part of the OS, and build system images which are minimally configured for the edge site and corporate networks. Then they deploy applications using Kubernetes manifests, helm charts, and container registries like they would for servers in their data centers.</p>
 </div>
 <div class="paragraph">
 <p>These organizations could use the same system image for all devices and sites, independent of the applications to be deployed on each, or have only a few different system images to account for specific hardware and different OS releases.</p>
@@ -239,7 +250,7 @@
 <div class="sect2">
 <h3 id="_shift_left_do_it_all_at_image_build_time"><a class="anchor" href="#_shift_left_do_it_all_at_image_build_time"></a>Shift Left: Do It All At Image Build Time</h3>
 <div class="paragraph">
-<p>Some organizations embrace the "shift left" approach, and wish to perform as many tasks as possible during day zero, that is, at image build time. The RHEL for Edge tooling was designed to support that approach. An Image Builder blueprint supports embedding multiple artifacts in an edge system image, such as:</p>
+<p>Some organizations embrace the "shift left" approach, and wish to perform as many tasks as possible during day zero, that is, at image build time. Both the RHEL for Edge tooling (RPM-OSTree) and the RHEL image mode tooling (bootc) were designed to support that approach, by enabling embedding multiple artifacts in an edge system image, such as:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -250,21 +261,21 @@
 <p>Container images, which are preloaded in the local container engine.</p>
 </li>
 <li>
-<p>File customizations, used to include a few small text files and scripts.</p>
+<p>Configuration files and scripts.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>If you need to include too many files, larger files, or binary files, which are not convenient to manage as blueprint file customizations, you should consider creating custom RPM packages, as described by <a href="https://www.redhat.com/en/blog/how-to-create-a-fully-self-contained-os-image-that-includes-your-kubernetes-workload">How to create a fully self-contained OS image that includes your Kubernetes workload</a>. That is usually the case for Kubernetes application manifests.</p>
+<p>If you need to include too many files, larger files, or binary files, which are not convenient to manage as blueprint customizations for RPM-OStree or Container file instructions for bootc, you should consider creating custom RPM packages, as described by <a href="https://www.redhat.com/en/blog/how-to-create-a-fully-self-contained-os-image-that-includes-your-kubernetes-workload">How to create a fully self-contained OS image that includes your Kubernetes workload</a>. That is usually the case for Kubernetes application manifests.</p>
 </div>
 <div class="paragraph">
 <p>Not everything can be done, or should be done, at day zero. There will be always some configuration that you wish to perform at installation time (day one) or later, to mitigate security concerns or to address variability between different edge sites or even individual edge devices.</p>
 </div>
 <div class="paragraph">
-<p>As a best practice, you should not embed into edge system images anything that could be used to access other systems with write privileges, and you should consider carefully the risk of having credentials that allow read access embedded into a system image.</p>
+<p>As a recommended practice, you should not embed into edge system images anything that could be used to access other systems with write privileges, and you should consider carefully the risk of having credentials that allow read access embedded in a system image. You should plan day-1 processes to incorporate those credentials into your edge systems in a secure way.</p>
 </div>
 <div class="paragraph">
-<p>For example, it is probably fine to embed the public key of a corporate certificate authority (CA) or pull secrets for downloading container images from a private registry. But it is <strong>NOT</strong> fine embedding credentials to access a database, even credentials allowed to execute only queries, because of the risk of information leakage.</p>
+<p>For example, it is probably fine to embed the public key of a corporate certificate authority (CA) or pull secrets for downloading container images from a private registry. But it is <strong>NOT</strong> fine embedding credentials to access a corporate or site database, not even credentials with privileges to execute only queries, because of the risk of information leakage.</p>
 </div>
 </div>
 </div>
