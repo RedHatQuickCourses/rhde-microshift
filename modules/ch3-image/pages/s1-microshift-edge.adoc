@@ -11,7 +11,7 @@ Deploy MicroShift on edge devices with Image Builder and RPM-OSTree.
 
 == MicroShift on OSTree System Images
 
-Deploying MicroShift using edge images from image builder is not different than adding any other application on a RHEL system image. You could include MicroShift with a complete set of configuration files already embedded in an edge commit image; or you could include just MicroShift packages and add configuration files after installation, as part of an on-boarding process or other day-2 activity.
+Deploying MicroShift using edge images from image builder is not different than adding any other application to a RHEL system image. You could include MicroShift with a complete set of configuration files already embedded in an edge commit image; or you could include just MicroShift packages and add configuration files after installation, as part of an on-boarding process or other day-2 activity.
 
 But, before we drive into the specifics of including MicroShift in edge images for air-gapped environments, let's consider how image-based deployments differ than traditional package-based deployments and the most common ways that organizations use approach image-based deployments.
 
