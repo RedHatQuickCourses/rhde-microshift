@@ -571,7 +571,7 @@ virbr0           DOWN           192.168.122.1/24</code></pre>
 </div>
 </li>
 <li>
-<p>Edit your the <code>/etc/nsswtich.conf</code> configuration file by adding the Libvirt NSS modules right before the <code>myhostname</code> module. This enables resolving hostnames of session VMs to their IP addresses.</p>
+<p>Edit your the <code>/etc/nsswitch.conf</code> configuration file, as root, by adding the Libvirt NSS modules right before the <code>myhostname</code> module. This enables resolving hostnames of session VMs to their IP addresses.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">hosts:      files dns <strong>libvirt libvirt_guest</strong> myhostname</code></pre>

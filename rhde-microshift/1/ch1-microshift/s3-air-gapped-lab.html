@@ -266,7 +266,7 @@ success</code></pre>
 </div>
 </li>
 <li>
-<p>Download the installer for mirror registry for Red Hat OpenShift installer.</p>
+<p>Download the installer for mirror registry for Red Hat OpenShift.</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -360,6 +360,16 @@ $ <strong>systemctl status quay-redis</strong>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
+<p>Install the RHEL container tools because you need more than just Podman.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo dnf install container-tools</strong>
+...
+Complete!</code></pre>
+</div>
+</div>
+</li>
+<li>
 <p>Add the CA certificate of the mirror registry to your system trusted certificates.</p>
 <div class="listingblock">
 <div class="content">
@@ -410,11 +420,15 @@ You will later copy this file to your MicroShift instances, so it is important t
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-When outside of the course environment, follow the instructions from product docs to extract a list of MicroShift release images from the <code>microshift-release-info</code> RPM package and download them to a staging directory. In the course environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on cloud bandwidth fees.
+When outside of the course environment, follow the instructions from <a href="https://docs.redhat.com/en/documentation/red_hat_build_of_microshift/4.17/html/embedding_in_a_rhel_for_edge_image/microshift-deploy-with-mirror-registry">product docs</a> to extract a list of MicroShift release images from the <code>microshift-release-info</code> RPM package and download them to a staging directory. In the course environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on cloud bandwidth fees.
 </td>
 </tr>
 </table>
 </div>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>In the old HOL014 classroom, there was a filesystem tree that you must download using a recurive WGet, and which generates bunch of <code>index.html*</code> files that you can safely ignore.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget --mirror -np http://content.example.com/rhde/oci/</strong>
@@ -422,17 +436,23 @@ When outside of the course environment, follow the instructions from product doc
 Downloaded: 409 files, 2.9G in 1m 43s (28.9 MB/s)</code></pre>
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The previous command produces a bunch of <code>index.html*</code> files that you can safely ignore. We should have put a TAR backup in the course environment, instead of a directory tree.
-</td>
-</tr>
-</table>
+</li>
+<li>
+<p>In the updated HOL014 classroom, there are tar backups which you must download and extract.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q http://content.example.com/rhde/oci/microshift-containers.tar.gz</strong>
+$ <strong>tar xzf microshift-containers.tar.gz</strong>
+$ <strong>ls microshift-containers/</strong>
+lvms4  openshift-release-dev
+$ <strong>wget -q http://content.example.com/rhde/oci/app-containers.tar.gz</strong>
+$ <strong>tar xzf app-containers.tar.gz</strong>
+$ <strong>ls app-containers</strong>
+extra-images-list.txt  flozanorht  rhel9  ubi9</code></pre>
+</div>
+</div>
+</li>
+</ol>
 </div>
 </li>
 </ol>
