@@ -22,7 +22,7 @@ $ *sudo firewall-cmd --reload*
 success
 --
 
-.. Download the installer for mirror registry for Red Hat OpenShift installer.
+.. Download the installer for mirror registry for Red Hat OpenShift.
 +
 NOTE: In a connected environment, you would get it from the https://console.redhat.com/openshift/downloads#tool-mirror-registry[downloads] page of the Red Hat Hybrid Cloud Console, but there is already a copy of the installer in the course environment at \http://content.example.com/rhde/rhocp/.
 +
@@ -94,6 +94,15 @@ $ *sudo cp /var/quay/quay-rootCA/rootCA.pem /var/www/html/quay-rootCA.pem*
 +
 We will install MicroShift with common assumptions of air-gaped environments, where MicroShift should only pull container images that were previously vetted and only from private container registries, which in the course environment is the mirror registry.
 
+.. Install the RHEL container tools because you need more than just Podman.
++
+[source,subs="verbatim,quotes"]
+--
+$ *sudo dnf install container-tools*
+...
+Complete!
+--
+
 .. Add the CA certificate of the mirror registry to your system trusted certificates.
 +
 [source,subs="verbatim,quotes"]
@@ -124,7 +133,9 @@ WARNING: You will later copy this file to your MicroShift instances, so it is im
 
 .. Download a file system copy of all images from the classroom server.
 +
-NOTE: When outside of the course environment, follow the instructions from product docs to extract a list of MicroShift release images from the `microshift-release-info` RPM package and download them to a staging directory. In the course environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on cloud bandwidth fees.
+NOTE: When outside of the course environment, follow the instructions from https://docs.redhat.com/en/documentation/red_hat_build_of_microshift/4.17/html/embedding_in_a_rhel_for_edge_image/microshift-deploy-with-mirror-registry[product docs] to extract a list of MicroShift release images from the `microshift-release-info` RPM package and download them to a staging directory. In the course environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on cloud bandwidth fees.
+
+... In the old HOL014 classroom, there was a filesystem tree that you must download using a recurive WGet, and which generates bunch of `index.html*` files that you can safely ignore.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -132,8 +143,20 @@ $ *wget --mirror -np http://content.example.com/rhde/oci/*
 ...
 Downloaded: 409 files, 2.9G in 1m 43s (28.9 MB/s)
 --
+
+... In the updated HOL014 classroom, there are tar backups which you must download and extract.
 +
-NOTE: The previous command produces a bunch of `index.html*` files that you can safely ignore. We should have put a TAR backup in the course environment, instead of a directory tree.
+[source,subs="verbatim,quotes"]
+--
+$ *wget -q http://content.example.com/rhde/oci/microshift-containers.tar.gz*
+$ *tar xzf microshift-containers.tar.gz*
+$ *ls microshift-containers/*
+lvms4  openshift-release-dev
+$ *wget -q http://content.example.com/rhde/oci/app-containers.tar.gz*
+$ *tar xzf app-containers.tar.gz*
+$ *ls app-containers*
+extra-images-list.txt  flozanorht  rhel9  ubi9
+--
 
 3. Populate the mirror registry with container images required by MicroShift.
 

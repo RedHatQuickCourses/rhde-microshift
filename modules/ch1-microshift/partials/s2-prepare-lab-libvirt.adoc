@@ -94,7 +94,7 @@ $ *ip -br addr show virbr0*
 virbr0           DOWN           192.168.122.1/24
 --
 
-.. Edit your the `/etc/nsswtich.conf` configuration file by adding the Libvirt NSS modules right before the `myhostname` module. This enables resolving hostnames of session VMs to their IP addresses.
+.. Edit your the `/etc/nsswitch.conf` configuration file, as root, by adding the Libvirt NSS modules right before the `myhostname` module. This enables resolving hostnames of session VMs to their IP addresses.
 +
 [source,subs="verbatim,quotes"]
 --
