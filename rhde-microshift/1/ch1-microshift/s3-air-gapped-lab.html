@@ -320,7 +320,7 @@ INFO[2024-12-19 15:25:41] Quay uninstalled successfully</code></pre>
 </div>
 </li>
 <li>
-<p>If all is well, you should have three new containers, and two new system services.</p>
+<p>If all is well, you should have three new containers, and three new system services.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>sudo podman ps</strong>
@@ -337,8 +337,19 @@ $ <strong>systemctl status quay-redis</strong>
 ● quay-redis.service - Redis Podman Container for Quay
      Loaded: loaded (/etc/systemd/system/quay-redis.service; enabled; preset: disabled)
      Active: active (running) since Fri 2024-12-20 09:04:13 EST; 5h 19min ago
+...
+...
+$ <strong>systemctl status quay-pod</strong>
+● quay-pod.service - Infra Container for Quay
+     Loaded: loaded (/etc/systemd/system/quay-pod.service; enabled; preset: disabled)
+     Active: active (exited) since Mon 2025-04-28 16:35:15 EDT; 2h 9min ago
+   Main PID: 33761 (code=exited, status=0/SUCCESS)
+        CPU: 100ms
 ...</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>It is expected that the <code>quay-pod</code> system service runs once and exits.</p>
 </div>
 </li>
 <li>
@@ -428,7 +439,7 @@ When outside of the course environment, follow the instructions from <a href="ht
 <div class="olist lowerroman">
 <ol class="lowerroman" type="i">
 <li>
-<p>In the old HOL014 classroom, there was a filesystem tree that you must download using a recurive WGet, and which generates bunch of <code>index.html*</code> files that you can safely ignore.</p>
+<p>In the original HOL014 classroom, there was a filesystem tree that you must download using a recurive WGet, and which generates bunch of <code>index.html*</code> files that you can safely ignore.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget --mirror -np http://content.example.com/rhde/oci/</strong>
@@ -438,7 +449,7 @@ Downloaded: 409 files, 2.9G in 1m 43s (28.9 MB/s)</code></pre>
 </div>
 </li>
 <li>
-<p>In the updated HOL014 classroom, there are tar backups which you must download and extract.</p>
+<p>In the new HOL014 classroom, there are tar backups which you must download and extract.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>wget -q http://content.example.com/rhde/oci/microshift-containers.tar.gz</strong>

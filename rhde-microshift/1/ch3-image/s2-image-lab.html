@@ -263,36 +263,38 @@ url = "http://content.example.com/rhel9.5/x86_64/dvd/BaseOS"</code></pre>
 <p>Check that you can access your <em>web server machine</em>.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>curl http://servera.lab.example.com</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>curl -s http://servera.lab.example.com</strong> | head -n 5
 &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;
 
 &lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;
         &lt;head&gt;
-                &lt;title&gt;Test Page for the HTTP Server on Red Hat Enterprise Linux&lt;/title&gt;
-...</code></pre>
+                &lt;title&gt;Test Page for the HTTP Server on Red Hat Enterprise Linux&lt;/title&gt;</code></pre>
 </div>
 </div>
 </li>
 <li>
 <p>Check that your <em>web server machine</em> is already serving an OSTree repository.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-If it isn&#8217;t, this lab will show how to configure it.
-</td>
-</tr>
-</table>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>curl http://servera.lab.example.com/repo/config</strong>
 [core]
 repo_version=1
 mode=archive-z2</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>If the output of the previous command shows an HTTP 404 error, as follows, it means your <em>web server machine</em> is NOT serving any OSTree repository and this lab will show how to configure it.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ curl http://servera.lab.example.com/repo/config
+&lt;!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;404 Not Found&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Not Found&lt;/h1&gt;
+&lt;p&gt;The requested URL was not found on this server.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</code></pre>
 </div>
 </div>
 </li>
