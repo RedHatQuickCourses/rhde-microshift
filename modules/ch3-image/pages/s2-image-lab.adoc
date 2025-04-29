@@ -68,18 +68,15 @@ url = "http://content.example.com/rhel9.5/x86_64/dvd/BaseOS"
 +
 [source,subs="verbatim,quotes"]
 --
-$ *curl http://servera.lab.example.com*
+$ *curl -s http://servera.lab.example.com* | head -n 5
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
         <head>
                 <title>Test Page for the HTTP Server on Red Hat Enterprise Linux</title>
-...
 --
 
 .. Check that your _web server machine_ is already serving an OSTree repository.
-+
-NOTE: If it isn't, this lab will show how to configure it.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -87,6 +84,20 @@ $ *curl http://servera.lab.example.com/repo/config*
 [core]
 repo_version=1
 mode=archive-z2
+--
+
+.. If the output of the previous command shows an HTTP 404 error, as follows, it means your _web server machine_ is NOT serving any OSTree repository and this lab will show how to configure it.
++
+[source,subs="verbatim,quotes"]
+--
+$ curl http://servera.lab.example.com/repo/config
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL was not found on this server.</p>
+</body></html>
 --
 
 .. Check that your unprivileged user has access to Libvirt session VMs.

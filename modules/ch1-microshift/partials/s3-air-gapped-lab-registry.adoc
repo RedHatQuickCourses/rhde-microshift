@@ -62,7 +62,7 @@ $ *sudo ./mirror-registry/mirror-registry uninstall -v --quayRoot /var/quay --au
 INFO[2024-12-19 15:25:41] Quay uninstalled successfully 
 --
 
-.. If all is well, you should have three new containers, and two new system services.
+.. If all is well, you should have three new containers, and three new system services.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -81,7 +81,17 @@ $ *systemctl status quay-redis*
      Loaded: loaded (/etc/systemd/system/quay-redis.service; enabled; preset: disabled)
      Active: active (running) since Fri 2024-12-20 09:04:13 EST; 5h 19min ago
 ...
+...
+$ *systemctl status quay-pod*
+● quay-pod.service - Infra Container for Quay
+     Loaded: loaded (/etc/systemd/system/quay-pod.service; enabled; preset: disabled)
+     Active: active (exited) since Mon 2025-04-28 16:35:15 EDT; 2h 9min ago
+   Main PID: 33761 (code=exited, status=0/SUCCESS)
+        CPU: 100ms
+...
 --
++
+It is expected that the `quay-pod` system service runs once and exits.
 
 .. Publish the CA certificate of the mirror registry on the Apache Web Server, so other machines can download it and connect to the mirror registry without disabling TLS validation.
 +
@@ -135,7 +145,7 @@ WARNING: You will later copy this file to your MicroShift instances, so it is im
 +
 NOTE: When outside of the course environment, follow the instructions from https://docs.redhat.com/en/documentation/red_hat_build_of_microshift/4.17/html/embedding_in_a_rhel_for_edge_image/microshift-deploy-with-mirror-registry[product docs] to extract a list of MicroShift release images from the `microshift-release-info` RPM package and download them to a staging directory. In the course environment, we provide you with a backup of the staging directory to avoid the need for internet access and save on cloud bandwidth fees.
 
-... In the old HOL014 classroom, there was a filesystem tree that you must download using a recurive WGet, and which generates bunch of `index.html*` files that you can safely ignore.
+... In the original HOL014 classroom, there was a filesystem tree that you must download using a recurive WGet, and which generates bunch of `index.html*` files that you can safely ignore.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -144,7 +154,7 @@ $ *wget --mirror -np http://content.example.com/rhde/oci/*
 Downloaded: 409 files, 2.9G in 1m 43s (28.9 MB/s)
 --
 
-... In the updated HOL014 classroom, there are tar backups which you must download and extract.
+... In the new HOL014 classroom, there are tar backups which you must download and extract.
 +
 [source,subs="verbatim,quotes"]
 --
