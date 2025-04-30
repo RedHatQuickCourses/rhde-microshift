@@ -5,10 +5,14 @@
 
 This course teaches how to deploy and configure MicroShift on Red Hat Device Edge targets, using either traditional RHEL or RHEL for Edge, to support Kubernetes applications.
 
-It is part of a Red Hat Device Learning path, which currently includes two courses:
+It is part of a Red Hat Device Learning path, which currently includes three courses in two different tracks:
 
-* https://redhatquickcourses.github.io/rhde-build/[Building Red Hat Device Edge Images^] (prerequisite course)
-* *Deploying MicroShift on Red Hat Device Edge Quick Course* (this course)
+* For customers using RHEL for Edge and RPM-OSTree based edge images:
+** https://redhatquickcourses.github.io/rhde-build/[Building Red Hat Device Edge Images^] (prerequisite course)
+** *Deploying MicroShift on Red Hat Device Edge Quick Course* (this course)
+
+* For customers using RHEL image mode:
+** https://redhatquickcourses.github.io/rhde-microshift-bootc/[Deploying MicroShift on RHEL Image Mode]
 
 IMPORTANT: Red Hat employees must enroll using its https://training-lms.redhat.com/sso/saml/auth/rhlpint?RelayState=deeplinkoffering%3D71437146[LMS entry^] to get completion credits, and Red Hat Partners must enroll using its https://training-lms.redhat.com/sso/saml/auth/rhopen?RelayState=deeplinkoffering%3D71438619[Partner Portal entry^].
 
