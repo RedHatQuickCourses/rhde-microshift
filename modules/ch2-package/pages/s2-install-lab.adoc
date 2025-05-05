@@ -30,6 +30,18 @@ Perform all steps in this lab on your _test machine_.
 
 .. Check that the required package repositories from RHEL and OpenShift are available.
 +
+On the classroom environment, you will find configuration files which point to the _package server machine_ and the names of its DNF repositories match the names of Red Hat DNF repositories.
++
+[source,subs="verbatim,quotes"]
+--
+$ *ls /etc/yum.repos.d*
+fast-datapath-for-rhel-9-x86_64-rpms.repo  rhel-9.5-for-x86_64-baseos-rpms.repo
+rhel-9.5-for-x86_64-appstream-rpms.repo    rhocp-4.17-for-rhel-9-x86_64-rpms.repo
+$ *cat /etc/yum.repos.d/rhocp-4.17-for-rhel-9-x86_64-rpms.repo*
+include::1@samples:yum:example$ocp4.repo[lines=1..3]
+...
+--
++
 NOTE: If you were connected to the Internet, or to a Red Hat Satellite instance, and had registered your _test machine_ with a valid Red Hat subscription, you would notice something similar to:
 +
 [source,subs="verbatim,quotes"]
@@ -44,18 +56,6 @@ rhocp-4.17-for-rhel-9-x86_64-rpms                               Red Hat OpenShif
 --
 +
 IMPORTANT: Please do _not_ register any VM on your virtual labs. Conserve the limited internet bandwidth that is shared by all learners using ROLE.
-+
-On the classroom environment, you will find configuration files which point to the _package server machine_ and the names of its DNF repositories match the names of Red Hat DNF repositories.
-+
-[source,subs="verbatim,quotes"]
---
-$ *ls /etc/yum.repos.d*
-fast-datapath-for-rhel-9-x86_64-rpms.repo  rhel-9.5-for-x86_64-baseos-rpms.repo
-rhel-9.5-for-x86_64-appstream-rpms.repo    rhocp-4.17-for-rhel-9-x86_64-rpms.repo
-$ *cat /etc/yum.repos.d/rhocp-4.17-for-rhel-9-x86_64-rpms.repo*
-include::1@samples:yum:example$ocp4.repo[lines=1..3]
-...
---
 
 .. As an additional validation, search for packages from the OpenShift and Fast Datapath repositories.
 +
