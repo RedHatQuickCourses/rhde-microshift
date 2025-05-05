@@ -627,5 +627,5 @@ You succeed in provisioning an edge device, from an edge installer image, in an 
 
 == What's Next
 
-This was the final activity of this course. If you wish, you can create service accounts and kubeconfig files for developer access using the same steps from ch2-package:s3-access-lab.adoc[previous labs] already demonstrated on package-based RHEL.
+This was the final activity of this course. If you wish, you can create service accounts and kubeconfig files for developer access using the same steps from xref:ch2-package:s3-access-lab.adoc[previous labs] already demonstrated on package-based RHEL.
 
