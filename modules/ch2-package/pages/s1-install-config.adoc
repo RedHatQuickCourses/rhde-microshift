@@ -21,7 +21,7 @@ h| Task or Tool
 | Red Hat OpenShift
 
 h| Host OS
-| Red Hat Enterprise Linux, image mode or package mode
+| Red Hat Enterprise Linux, any of image mode, package mode, or rpm-ostree (RHEL for Edge)
 | Red Hat Enterprise Linux CoreOS
 
 h| Installation Method
@@ -33,8 +33,8 @@ h| Update Method
 | OpenShift Cluster Version Operator (CVO)
 
 h| Configuration
-| Custom resources of OpenShift cluster operators
 | MicroShift configuration files
+| Custom resources of OpenShift cluster operators
 
 h| Authentication
 | Trusted TLS certificates or bearer tokens embedded in a kubeconfig file
@@ -55,15 +55,15 @@ h| Command-Line Access
 
 Once you have a MicroShift cluster ready for work, deploying and managing Kubernetes applications is similar to doing so with Red Hat OpenShift and other Kubernetes: You create and change application resources such as deployments, secrets, and services. Container images and Kubernetes manifests from applications which work on Red Hat OpenShift are expected to work unchanged on MicroShift, as long as they do not require custom resources from add-on operators that are not available on their MicroShift instances.
 
-== Why Use MicroShift with Package-Based RHEL?
+== Why Use MicroShift with Package-Based RHEL and RHEL package mode?
 
-Red Hat recommends that production deployments of MicroShift use RHEL for Edge images, which include MicroShift and applications already preinstalled and preconfigured on system images. So why is this course covering how to deploy MicroShift using traditional RHEL, as a package-based operating system? There are two reasons:
+Red Hat recommends that production deployments of MicroShift use either RHEL for Edge images or RHEL image mode. Both would include MicroShift and (optionally) applications already preinstalled and preconfigured on system images. So why is this course covering how to deploy MicroShift using traditional RHEL, as a package-based operating system, in RHEL package mode? There are two reasons:
 
-1. It's easier to learn the configuration of MicroShift in a package-based system, where you can quickly perform and test individual configurations, instead of having it all done at once as part of an Image Builder blueprint and having the overhead of running new Image Builder composes every time your configuration changes.
+1. It's easier to learn the configuration of MicroShift in a package-based system, where you can quickly perform and test individual configurations, instead of having it all done at once, as part of an Image Builder blueprint and having the overhead of running new Image Builder composes every time your configuration changes; or all at once, as part of a Container file and having the overhead of building and deploying a bootc container.
 
-2. Developer testing, and sometimes integration testing (from a CI/CD pipeline), could be quicker and easier with a preconfigured package-based system than from building a new system image (running a new Image Builder compose) and booting a new system or VM from it.
+2. Developer testing, and sometimes integration testing (from a CI/CD pipeline), could be quicker and easier with a preconfigured package-based system than from building a new edge image or bootc image and booting a new system or VM from them.
 
-This course uses package-based RHEL so you can practice the skills required to configure and troubleshoot MicroShift instances, so later you can be confident when managing MicroShift as part of RHEL for Edge system images.
+This course uses package-based RHEL, also known as RHEL package mode, so you can practice the skills required to configure and troubleshoot MicroShift instances, and later be confident when managing MicroShift as part of Red Hat Device Edge images, be they ostree or bootc images.
 
 == MicroShift Installation
 
@@ -77,7 +77,7 @@ The majority of MicroShift instances require logical volume management (LVM) to 
 
 Unlike Red Hat OpenShift, MicroShift does _not_ place special network requirements on its host. Because it is a single-node cluster, there are no requirements for virtual IP addresses for load balancers to access the Kubernetes API and router pods. MicroShift listens on Transmission Control Protocol (TCP) and User Datagram Protocol (UDP) ports on all network interfaces available to its host, and the set of interfaces or IP addresses can be constrained by editing the MicroShift configuration files.
 
-If your main work machine runs RHEL, you could install and configure MicroShift on it; however, because your work machine likely runs a variety of other system services, Red Hat recommends that you install MicroShift in a dedicated VM or remote system. Local, unprivileged session VMs from Libvirt or any other desktop hypervisor should work well.
+If your main work machine runs RHEL, you could install and configure MicroShift on it; however, because your work machine likely runs a variety of other system services, Red Hat recommends that you install MicroShift in a dedicated VM or remote system. Local unprivileged session VMs from Libvirt  should work well, and also other desktop hypervisors.
 
 === Install and Configure MicroShift
 
@@ -89,7 +89,7 @@ Red Hat OpenShift Container Platform 4.17
 `fast-datapath-for-rhel-9-x86_64-rpms`::
 RHEL 9 Fast Data Path
 
-Change the names of the two previously mentioned repositories to align with the RHEL release you are using and the CPU architecture of your target system.  The first respository provides the MicroShift RPM packages, which are built together with each release of Red Hat OpenShift. The second repository provides Open Virtual Network (OVN) packages, which are required by MicroShift's virtual pod and service network.
+Change the names of the two previously mentioned repositories to align with the RHEL release you are using and the CPU architecture of your target system.  The first respository provides the MicroShift RPM packages, which are built together with each release of Red Hat OpenShift. The second repository provides Open Virtual Network (OVN) packages, which are required by MicroShift's CNI driver for managing Kubernetes pod and service networks.
 
 The `microshift` RPM package pulls, as dependencies, all required components of MicroShift. A few optional components can be installed as additional RPM packages.
 
@@ -124,7 +124,7 @@ Kubeconfig files can store user credentials and CA certificates for multiple dif
 
 == Access MicroShift with Developer Rights
 
-Developers used to Red Hat OpenShift will likely perceive significant differences in their regular workflows when working with MicroShift because it lacks certain components of OpenShift, such as the OpenShift OAuth server, and extension APIs, such as Templates and Projects.
+Developers used to Red Hat OpenShift will likely perceive significant differences in their regular workflows when working with MicroShift because it lacks certain components of OpenShift, such as the OpenShift OAuth server, and also lacks some extension APIs, such as Templates and Projects.
 
 === Use the OpenShift CLI with MicroShift
 
@@ -152,7 +152,7 @@ WARNING: The autogenerated kubeconfig files for cluster administration use clien
 
 === Use Namespaces Instead of Projects
 
-MicroShift is _not_ an application platform; it is merely a Kubernetes engine. It does _not_ provide self-service project creation and requires that cluster administrators create and configure namespaces for regular users and also authorize those users to deploy applications in their namespaces.
+MicroShift is _not_ an application platform; it is merely a Kubernetes engine. It does _not_ provide self-service project creation. Instead, it requires that cluster administrators create and configure namespaces for regular users and grant those users with rights to deploy applications in their namespaces.
 
 MicroShift cluster administrators use standard Kubernetes Role-Based Access Control (RBAC) APIs to grant rights to one or more namespaces. You could use the standard `admin`, `edit`, and `view` cluster roles from Kubernetes, or you could create your own custom cluster roles and namespace roles.
 
@@ -164,9 +164,9 @@ Selected users, such as project administrators and team leaders, may be granted 
 
 The `oc project` command works with MicroShift because it does not use the Project API; it just sets or queries context information stored in a kubeconfig file. Most other `oc` commands related to projects, however,  will fail on MicroShift.
 
-As a reminder, you can use the `-n` or `--namespace` option with most `oc` and `kubectl` commands to act on a namespace other than the one set by the current context in the kubeconfig file. Or you can change the current context in your kibneconfig file by using either the `oc project` or `kubectl config set-context --current --namespace` commands.
+As a reminder, you can use the `-n` or `--namespace` option with most `oc` and `kubectl` commands to act on a namespace other than the one set by the current context in the kubeconfig file. Or you can change the current context in your kibneconfig file by using either the `oc project` command or the `kubectl config set-context --current --namespace` command.
 
-Because there's no Projects API, you cannot list the namespaces to which you have access; you must know their names in advance.
+Because there's no Projects API, you cannot list the namespaces to which you have access; you must know their names in advance, like with upstream Kubernetes.
 
 === Templates, Kustomize, and Helm Charts
 
@@ -174,7 +174,9 @@ OpenShift developers may be used to templates, especially the quick start app te
 
 Templates are useful because they configure applications and common middleware services with recommended settings such as health probes and resource requests.
 
-While templates could be used with MicroShift, despite the lack of server-side support, using commands such as `oc process` with templates stored as YAML files, you could as well use regular YAML manifests, with or without Kustomize overlays, or Helm charts.
+If you wish, you can use templates with MicroShift, despite the lack of server-side support, if you have you templates stored as local YAML files and use the `oc process` command.
+
+Most developers will likely avoid OpenShift templates use regular YAML manifests, with or without Kustomize overlays, or Helm charts, as they would do with upstream Kubernetes.
 
 Kustomize support is included in the `oc` command, as is everything else from the standard `kubectl` command, and the `helm` command works with MicroShift as it would with any other Kubernetes cluster.
 
