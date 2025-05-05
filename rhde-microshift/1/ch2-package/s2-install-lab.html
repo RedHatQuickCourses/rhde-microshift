@@ -209,6 +209,21 @@
 <ol class="loweralpha" type="a">
 <li>
 <p>Check that the required package repositories from RHEL and OpenShift are available.</p>
+<div class="paragraph">
+<p>On the classroom environment, you will find configuration files which point to the <em>package server machine</em> and the names of its DNF repositories match the names of Red Hat DNF repositories.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ls /etc/yum.repos.d</strong>
+fast-datapath-for-rhel-9-x86_64-rpms.repo  rhel-9.5-for-x86_64-baseos-rpms.repo
+rhel-9.5-for-x86_64-appstream-rpms.repo    rhocp-4.17-for-rhel-9-x86_64-rpms.repo
+$ <strong>cat /etc/yum.repos.d/rhocp-4.17-for-rhel-9-x86_64-rpms.repo</strong>
+[rhocp-4.17-for-rhel-9-x86_64-rpms]
+baseurl = http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms
+enabled = true
+...</code></pre>
+</div>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -243,21 +258,6 @@ Please do <em>not</em> register any VM on your virtual labs. Conserve the limite
 </td>
 </tr>
 </table>
-</div>
-<div class="paragraph">
-<p>On the classroom environment, you will find configuration files which point to the <em>package server machine</em> and the names of its DNF repositories match the names of Red Hat DNF repositories.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>ls /etc/yum.repos.d</strong>
-fast-datapath-for-rhel-9-x86_64-rpms.repo  rhel-9.5-for-x86_64-baseos-rpms.repo
-rhel-9.5-for-x86_64-appstream-rpms.repo    rhocp-4.17-for-rhel-9-x86_64-rpms.repo
-$ <strong>cat /etc/yum.repos.d/rhocp-4.17-for-rhel-9-x86_64-rpms.repo</strong>
-[rhocp-4.17-for-rhel-9-x86_64-rpms]
-baseurl = http://content.example.com/rhde/rpms/rhocp-4.17-for-rhel-9-x86_64-rpms
-enabled = true
-...</code></pre>
-</div>
 </div>
 </li>
 <li>
