@@ -33,7 +33,7 @@ Complete!
 //
 // .. Log off and log in again to update the user membership of your unprivileged user and check that it can use Libvirt's session interface.
 
-.. Check that it can use Libvirt's session interface.
+.. Check that your unprivileged user can connect to Libvirt's session interface.
 +
 [source,subs="verbatim,quotes"]
 --

@@ -3,7 +3,7 @@
 +
 These steps are required for all kinds of MicroShift deployment, be they on package-based or image-based, if you are performing air-gaped deployments.
 
-.. The mirror registry for OpenShift runs as a local container, so install Podman.
+.. The mirror registry for OpenShift runs as a local container, so install Podman and the Linux container tools.
 +
 [source,subs="verbatim,quotes"]
 --
