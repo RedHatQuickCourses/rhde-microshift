@@ -11,8 +11,8 @@ It is part of a Red Hat Device Learning path, which currently includes three cou
 ** https://redhatquickcourses.github.io/rhde-build/[Building Red Hat Device Edge Images^] (prerequisite course)
 ** *Deploying MicroShift on Red Hat Device Edge* (this course)
 
-* For customers using RHEL image mode:
-** https://redhatquickcourses.github.io/rhde-microshift-bootc/[Deploying MicroShift on RHEL Image Mode]
+* For customers using image mode for RHEL:
+** https://redhatquickcourses.github.io/rhde-microshift-bootc/[Deploying MicroShift on Image Mode for RHEL]
 
 IMPORTANT: Red Hat employees must enroll using its https://training-lms.redhat.com/sso/saml/auth/rhlpint?RelayState=deeplinkoffering%3D71437146[LMS entry^] to get completion credits, and Red Hat Partners must enroll using its https://training-lms.redhat.com/sso/saml/auth/rhopen?RelayState=deeplinkoffering%3D71438619[Partner Portal entry^].
 
