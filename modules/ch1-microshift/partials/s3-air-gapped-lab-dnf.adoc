@@ -4,6 +4,6 @@
 +
 NOTE: In production environments, it is recommended that you deploy Red Hat Satellite to mirror RPM package repositories from Red Hat products, but the course environment uses an Apache Web Server.
 
-.. Open `http://content.example.com/rhel9.5/x86_64/dvd/` in a web browser. This directory is a copy of a RHEL offline installation DVD and contains the `baseos` and `appstreams` repositories.
+.. Open `\http://content.example.com/rhel9.5/x86_64/dvd/` in a web browser. This directory is a copy of a RHEL offline installation DVD and contains the `baseos` and `appstreams` repositories.
 
-.. Open `http://content.example.com/rhde/rpms/` in a web browser. This directory contains a copy of the Red Hat OpenShift and Fast Datapath for RHEL repositories, created using the `reposync` command.
+.. Open `\http://content.example.com/rhde/rpms/` in a web browser. This directory contains a copy of the Red Hat OpenShift and Fast Datapath for RHEL repositories, created using the `reposync` command.

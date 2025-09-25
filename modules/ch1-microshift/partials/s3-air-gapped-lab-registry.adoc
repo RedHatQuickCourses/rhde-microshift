@@ -24,7 +24,7 @@ success
 
 .. Download the installer for mirror registry for Red Hat OpenShift.
 +
-NOTE: In a connected environment, you would get it from the https://console.redhat.com/openshift/downloads#tool-mirror-registry[downloads] page of the Red Hat Hybrid Cloud Console, but there is already a copy of the installer in the course environment at \http://content.example.com/rhde/rhocp/.
+NOTE: In a connected environment, you would get it from the https://console.redhat.com/openshift/downloads#tool-mirror-registry[downloads] page of the Red Hat Hybrid Cloud Console, but there is already a copy of the installer in the course environment at `\http://content.example.com/rhde/rhocp/`.
 +
 [source,subs="verbatim,quotes"]
 --
@@ -220,7 +220,7 @@ servera.lab.example.com:8443/flozanorht/php-ubi
 servera.lab.example.com:8443/ubi9/ubi  
 --
 
-.. Alternatively, you can open the web GUI of Red Hat Quay at `https://servera.lab.example.com:8443/` and browse the images available in your mirror registry.
+.. Alternatively, you can open the web GUI of Red Hat Quay at `\https://servera.lab.example.com:8443/` and browse the images available in your mirror registry.
 +
 NOTE: The mirror registry for Red Hat OpenShift only supports a subset of the features of Red Hat Quay and it is not configured for reliability and high availability.
 
