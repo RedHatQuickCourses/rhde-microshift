@@ -432,7 +432,7 @@ You do <em>not</em> need to open the firewall for applications you deploy in Mic
 <p>Create a deployment for the hello word application and wait until its pod is ready and running.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc create deployment hello --image quay.io/flozanorht/php-ubi:9</strong>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ <strong>oc create deployment hello --image servera.lab.example.com:8443/flozanorht/php-ubi:9</strong>
 deployment.apps/hellp created
 $ <strong>oc get deployment,pod</strong>
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
