@@ -188,7 +188,7 @@ NOTE: You do _not_ need to open the firewall for applications you deploy in Micr
 +
 [source,subs="verbatim,quotes"]
 --
-$ *oc create deployment hello --image quay.io/flozanorht/php-ubi:9*
+$ *oc create deployment hello --image servera.lab.example.com:8443/flozanorht/php-ubi:9*
 deployment.apps/hellp created
 $ *oc get deployment,pod*
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
